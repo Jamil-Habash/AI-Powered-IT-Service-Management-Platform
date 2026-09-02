@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: project
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/smartdesk?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+
+# JWT settings (used later when you build auth) — replace secret before committing
+app:
+  jwt:
+    secret: change-this-to-a-long-random-secret-before-committing
+    expiration-ms: 86400000   # 24 hours
