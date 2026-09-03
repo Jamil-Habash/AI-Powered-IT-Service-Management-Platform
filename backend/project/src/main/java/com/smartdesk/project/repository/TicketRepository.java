@@ -1,12 +1,8 @@
 package com.smartdesk.project.repository;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import com.smartdesk.project.models.*;
-import java.util.List;
 
-@Repository
-public interface TicketRepository extends CrudRepository<Ticket, Long>{
-    List<Ticket> findAll();
+public interface TicketRepository extends JpaRepository<Ticket, Long>{
     
 }
