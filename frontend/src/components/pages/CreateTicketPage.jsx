@@ -1,11 +1,129 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Icon from '../Icon'
-import PageHeader from '../PageHeader'
-import Shell from '../Shell'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Icon from "../Icon";
+import PageHeader from "../PageHeader";
+import Shell from "../Shell";
 
 export default function CreateTicketPage() {
-  const navigate = useNavigate(); const [title, setTitle] = useState(''); const [category, setCategory] = useState(''); const [description, setDescription] = useState(''); const [files, setFiles] = useState([])
-  const submit = (event) => { event.preventDefault(); if (!title || !category || !description) return; window.alert('Ticket submitted successfully.'); navigate('/ticket/TICK-1094') }
-  return <Shell><PageHeader eyebrow="SELF-SERVICE PORTAL  •  IT SUPPORT DESK" title="Create a Support Ticket" description="Submit a detailed request and our IT support team or automated assistants will assist you." action={<button className="secondary-button" onClick={() => navigate('/tickets')}><Icon>arrow_back</Icon>Back to Tickets</button>} /><div className="content-grid"><form className="panel ticket-form" onSubmit={submit}><h2>Ticket Details</h2><p>Please provide clear details about the issue or request so we can route it quickly.</p><label>Ticket Title<input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Unable to connect to corporate VPN" required /></label><div className="form-row"><label>Category<select value={category} onChange={(event) => setCategory(event.target.value)} required><option value="">Select a category...</option><option>Hardware</option><option>Software</option><option>Network / VPN</option><option>Access & Permissions</option><option>Security</option></select></label><label>Urgency & Impact<select><option>Medium</option><option>Low</option><option>High</option><option>Critical</option></select></label></div><label>Description<textarea value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Describe the issue in detail..." rows="7" required /></label><label className="upload"><Icon>cloud_upload</Icon>Attach screenshots or logs<input type="file" multiple onChange={(event) => setFiles([...event.target.files])} /><small>{files.length ? `${files.length} file(s) attached` : 'PNG, JPG, PDF, LOG up to 25MB'}</small></label><div className="form-actions"><button type="button" className="secondary-button">Save Draft</button><button className="primary-button" type="submit">Submit Ticket <Icon>send</Icon></button></div></form><aside className="panel tips"><h2>Before Submitting</h2>{['Check System Health', 'Restart Device & Peripherals', 'Explore Knowledge Base'].map((tip, index) => <div key={tip}><b>{index + 1}</b><span><strong>{tip}</strong><small>Check our verified resolutions before raising a request.</small></span></div>)}</aside></div></Shell>
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [files, setFiles] = useState([]);
+  const submit = (event) => {
+    event.preventDefault();
+    if (!title || !category || !description) return;
+    window.alert("Ticket submitted successfully.");
+    navigate("/ticket/TICK-1094");
+  };
+  return (
+    <Shell>
+      <PageHeader
+        eyebrow="SELF-SERVICE PORTAL  •  IT SUPPORT DESK"
+        title="Create a Support Ticket"
+        description="Submit a detailed request and our IT support team or automated assistants will assist you."
+        action={
+          <button
+            className="secondary-button"
+            onClick={() => navigate("/tickets")}
+          >
+            <Icon>arrow_back</Icon>Back to Tickets
+          </button>
+        }
+      />
+      <div className="content-grid">
+        <form className="panel ticket-form" onSubmit={submit}>
+          <h2>Ticket Details</h2>
+          <p>
+            Please provide clear details about the issue or request so we can
+            route it quickly.
+          </p>
+          <label>
+            Ticket Title
+            <input
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              placeholder="Unable to connect to corporate VPN"
+              required
+            />
+          </label>
+          <div className="form-row">
+            <label>
+              Category
+              <select
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                required
+              >
+                <option value="">Select a category...</option>
+                <option>Hardware</option>
+                <option>Software</option>
+                <option>Network / VPN</option>
+                <option>Access & Permissions</option>
+                <option>Security</option>
+              </select>
+            </label>
+            <label>
+              Urgency & Impact
+              <select>
+                <option>Medium</option>
+                <option>Low</option>
+                <option>High</option>
+                <option>Critical</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            Description
+            <textarea
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder="Describe the issue in detail..."
+              rows="7"
+              required
+            />
+          </label>
+          <label className="upload">
+            <Icon>cloud_upload</Icon>Attach screenshots or logs
+            <input
+              type="file"
+              multiple
+              onChange={(event) => setFiles([...event.target.files])}
+            />
+            <small>
+              {files.length
+                ? `${files.length} file(s) attached`
+                : "PNG, JPG, PDF, LOG up to 25MB"}
+            </small>
+          </label>
+          <div className="form-actions">
+            <button type="button" className="secondary-button">
+              Save Draft
+            </button>
+            <button className="primary-button" type="submit">
+              Submit Ticket <Icon>send</Icon>
+            </button>
+          </div>
+        </form>
+        <aside className="panel tips">
+          <h2>Before Submitting</h2>
+          {[
+            "Check System Health",
+            "Restart Device & Peripherals",
+            "Explore Knowledge Base",
+          ].map((tip, index) => (
+            <div key={tip}>
+              <b>{index + 1}</b>
+              <span>
+                <strong>{tip}</strong>
+                <small>
+                  Check our verified resolutions before raising a request.
+                </small>
+              </span>
+            </div>
+          ))}
+        </aside>
+      </div>
+    </Shell>
+  );
 }
