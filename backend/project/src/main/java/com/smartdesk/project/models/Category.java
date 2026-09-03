@@ -28,6 +28,13 @@ public class Category {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
 
+    @Column(updatable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date createdAt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date updatedAt;
+
+
     public Category() {
     }
     
@@ -60,11 +67,13 @@ public class Category {
         this.description = description;
     }
 
-    @Column(updatable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date createdAt;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date updatedAt;
+    public List<Ticket> geTickets(){
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets){
+        this.tickets = tickets;
+    }
 
     @PrePersist
     protected void onCreate() {

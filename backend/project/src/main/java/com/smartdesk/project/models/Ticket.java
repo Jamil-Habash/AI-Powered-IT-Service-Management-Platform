@@ -10,7 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -122,6 +121,30 @@ public class Ticket {
 
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public User getAssignedAgent(){
+        return assignedAgent;
+    }
+
+    public void setAssignedAgent(User assignedAgent){
+        this.assignedAgent = assignedAgent;
+    }
+
+    public List<Comment> getComments(){
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments){
+        this.comments = comments;
+    }
+
+    public Category getCategory(){
+        return category;
+    }
+
+    public void setCategory(Category category){
+        this.category = category;
     }
 
     @PrePersist

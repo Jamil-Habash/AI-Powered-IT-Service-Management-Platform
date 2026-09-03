@@ -36,6 +36,7 @@ public class Comment {
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
+
     public Comment() {
 
     }
@@ -58,6 +59,22 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public User getWrittenBy(){
+        return writtenBy;
+    }
+
+    public void setWrittenBy(User writtenBy){
+        this.writtenBy = writtenBy;
+    }
+
+    public Ticket getTicket(){
+        return ticket;
+    }
+
+    public void setTicket(Ticket ticket){
+        this.ticket = ticket;
     }
 
     @PrePersist

@@ -8,9 +8,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -96,6 +94,30 @@ public class User {
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    public Role getRole(){
+        return role;
+    }
+
+    public void setRole(Role role){
+        this.role = role;
+    }
+
+    public List<Comment> getComments(){
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments){
+        this.comments = comments;
+    }
+
+    public List<Ticket> getAssignedTickets(){
+        return assignedTickets;
+    }
+
+    public void setAssignedTickets(List<Ticket> assignedTickets){
+        this.assignedTickets = assignedTickets;
     }
 
     @PrePersist
