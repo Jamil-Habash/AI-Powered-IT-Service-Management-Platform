@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartDesk - Create Account</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#1f3864',
+              hover: '#162847',
+              dark: '#142238',
+              accent: '#2563eb'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+<!-- Custom Styles for Typography and Background Effect -->
+<style data-purpose="page-layout">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f5fa;
+      background-image: 
+        radial-gradient(at 50% 10%, rgba(219, 234, 254, 0.7) 0px, transparent 65%),
+        radial-gradient(at 10% 90%, rgba(224, 236, 255, 0.5) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(219, 234, 254, 0.4) 0px, transparent 50%);
+      min-height: 100vh;
+    }
+
+    /* Bottom accent line on card matching the screenshot */
+    .card-bottom-accent {
+      position: relative;
+    }
+    .card-bottom-accent::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 50%, #60a5fa 100%);
+      border-bottom-left-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-center items-center py-10 px-4 sm:px-6 text-slate-800 antialiased selection:bg-blue-100 selection:text-brand">
+<!-- BEGIN: RegistrationContainer -->
+<main class="w-full max-w-[440px] my-auto">
+<!-- Registration Card -->
+<div class="bg-white rounded-lg border border-slate-200/90 shadow-[0_10px_35px_-4px_rgba(28,52,90,0.08),0_4px_12px_-2px_rgba(28,52,90,0.04)] px-8 pt-9 pb-8 card-bottom-accent" data-purpose="registration-card">
+<!-- BEGIN: CardHeader -->
+<header class="flex flex-col items-center text-center mb-7" data-purpose="card-header">
+<!-- Logo Image Icon -->
+<div class="mb-4">
+<img alt="SmartDesk IT Service Management Logo" class="h-9 w-auto object-contain rounded-md" src="https://lh3.googleusercontent.com/aida/AEtjO1WbhStFHhcd4sdd7eGx0wo6vx-dcxxg9jOlL4QhYHhDs76ReCcpIJQtAxGkWNIpluppPL8fEOKBC_A0f-IdfICntCOBqh-1emEyaJrXFc2u3uivqlmr2Q-pbGVroWDAKZEKLCiE8shk4imaZzcE4Skip5GEyDmQXdpnIqEJTHW2N6_eBWCro2qCo1J1wbvG1wdU3Xvf_YG0kMAQfsTXNqi4bmiDWhbVsGFR4Ayqo1pA9FTVSLURzxhUtjM"/>
+</div>
+<h1 class="text-2xl font-bold tracking-tight text-slate-900 mb-1">
+          Create your account
+        </h1>
+<p class="text-xs text-slate-500 font-normal leading-relaxed">
+          Join SmartDesk IT Service Management Platform
+        </p>
+<!-- Subtle Pre-assigned Role Badge -->
+<div class="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-medium text-slate-600">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>Assigned Role: Employee</span>
+</div>
+</header>
+<!-- END: CardHeader -->
+<!-- BEGIN: RegistrationForm -->
+<form action="#" class="space-y-4" data-purpose="registration-form" method="POST" onsubmit="return false;">
+<!-- Field 1: Full Name -->
+<div data-purpose="field-full-name">
+<label class="block text-xs font-semibold text-slate-700 mb-1.5" for="full-name">
+            Full Name
+          </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<!-- User Icon -->
+<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<input class="w-full pl-9 pr-3.5 py-2 text-xs text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition duration-150" id="full-name" name="full-name" placeholder="e.g. Alex Morgan" required="" type="text"/>
+</div>
+</div>
+<!-- Field 2: Work Email -->
+<div data-purpose="field-email">
+<label class="block text-xs font-semibold text-slate-700 mb-1.5" for="work-email">
+            Email Address
+          </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<!-- Mail Icon -->
+<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<input class="w-full pl-9 pr-3.5 py-2 text-xs text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition duration-150" id="work-email" name="work-email" placeholder="alex@company.com" required="" type="email"/>
+</div>
+</div>
+<!-- Field 3: Password -->
+<div data-purpose="field-password">
+<label class="block text-xs font-semibold text-slate-700 mb-1.5" for="password">
+            Password
+          </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<!-- Lock Icon -->
+<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<input class="w-full pl-9 pr-9 py-2 text-xs text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition duration-150" id="password" name="password" placeholder="Create a strong password" required="" type="password"/>
+<!-- Password toggle button -->
+<button aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none" onclick="togglePasswordVisibility('password', 'pwd-icon')" type="button">
+<svg class="h-4 w-4" fill="none" id="pwd-icon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<p class="mt-1 text-[11px] text-slate-500">Must be at least 8 characters</p>
+</div>
+<!-- Field 4: Confirm Password -->
+<div data-purpose="field-confirm-password">
+<label class="block text-xs font-semibold text-slate-700 mb-1.5" for="confirm-password">
+            Confirm Password
+          </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<!-- Lock Icon -->
+<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<input class="w-full pl-9 pr-9 py-2 text-xs text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition duration-150" id="confirm-password" name="confirm-password" placeholder="Re-enter your password" required="" type="password"/>
+<!-- Confirm password toggle button -->
+<button aria-label="Toggle confirm password visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none" onclick="togglePasswordVisibility('confirm-password', 'confirm-pwd-icon')" type="button">
+<svg class="h-4 w-4" fill="none" id="confirm-pwd-icon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Checkbox: Terms Agreement -->
+<div class="flex items-start pt-1.5" data-purpose="terms-agreement">
+<div class="flex items-center h-4">
+<input class="h-3.5 w-3.5 rounded border-slate-300 text-brand focus:ring-brand focus:ring-offset-0 cursor-pointer" id="terms" name="terms" required="" type="checkbox"/>
+</div>
+<label class="ml-2 text-xs text-slate-600 select-none leading-relaxed" for="terms">
+            I agree to the 
+            <a class="font-medium text-blue-600 hover:underline" href="#">Terms of Service</a> 
+            and 
+            <a class="font-medium text-blue-600 hover:underline" href="#">Privacy Policy</a>
+</label>
+</div>
+<!-- Submit Button -->
+<div class="pt-2">
+<button class="w-full flex justify-center items-center py-2.5 px-4 text-xs font-semibold rounded-md text-white bg-[#1f3864] hover:bg-[#162847] active:bg-[#121f37] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1f3864] transition-colors shadow-sm" data-purpose="submit-button" type="submit">
+            Create account
+          </button>
+</div>
+</form>
+<!-- END: RegistrationForm -->
+<!-- Footer navigation to Log in -->
+<footer class="mt-6 pt-4 text-center border-t border-slate-100" data-purpose="card-footer-nav">
+<p class="text-xs text-slate-600">
+          Already have an account? 
+          <a class="font-medium text-blue-600 hover:text-blue-700 hover:underline" href="#">
+            Log in
+          </a>
+</p>
+</footer>
+</div>
+</main>
+<!-- END: RegistrationContainer -->
+<!-- BEGIN: PageFooter -->
+<footer class="mt-8 text-center" data-purpose="page-footer">
+<nav class="flex justify-center items-center space-x-6 text-xs text-slate-600 font-medium">
+<a class="hover:text-slate-900 transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-slate-900 transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-slate-900 transition-colors" href="#">Help Center</a>
+</nav>
+</footer>
+<!-- END: PageFooter -->
+<!-- Interactive JavaScript -->
+<script data-purpose="interactive-password-toggle">
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (!input || !icon) return;
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        // Eye open icon
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+      } else {
+        input.type = 'password';
+        // Eye slashed icon
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />';
+      }
+    }
+  </script>
+</body></html>

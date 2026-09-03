@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>SmartDesk ITSM Platform</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container": "#e5eeff", "surface": "#f8f9ff", "background": "#f8f9ff", "on-tertiary": "#ffffff", "on-surface": "#0b1c30", "on-primary-fixed-variant": "#2e4673", "primary": "#03224d", "secondary-fixed-dim": "#adc6ff", "secondary-container": "#2170e4", "on-tertiary-container": "#9ea2a6", "tertiary-container": "#34393c", "surface-dim": "#cbdbf5", "on-tertiary-fixed": "#171c1f", "outline-variant": "#c4c6d0", "tertiary-fixed-dim": "#c3c7cb", "on-surface-variant": "#44474f", "on-error-container": "#93000a", "surface-tint": "#475e8c", "on-tertiary-fixed-variant": "#43474b", "error-container": "#ffdad6", "outline": "#747780", "surface-container-lowest": "#ffffff", "on-secondary-container": "#fefcff", "inverse-on-surface": "#eaf1ff", "surface-variant": "#d3e4fe", "secondary-fixed": "#d8e2ff", "on-secondary-fixed": "#001a42", "error": "#ba1a1a", "on-primary": "#ffffff", "on-background": "#0b1c30", "inverse-surface": "#213145", "on-secondary": "#ffffff", "primary-container": "#1f3864", "on-error": "#ffffff", "surface-bright": "#f8f9ff", "surface-container-high": "#dce9ff", "secondary": "#0058be", "inverse-primary": "#afc6fb", "on-primary-fixed": "#001a41", "tertiary": "#1f2427", "tertiary-fixed": "#dfe3e7", "primary-fixed-dim": "#afc6fb", "surface-container-highest": "#d3e4fe", "surface-container-low": "#eff4ff", "primary-fixed": "#d8e2ff", "on-primary-container": "#8ba2d5", "on-secondary-fixed-variant": "#004395" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "unit-md": "1rem", "gutter": "1.5rem", "unit-lg": "1.5rem", "unit-xs": "0.25rem", "unit-xl": "2rem", "container-padding": "2rem", "sidebar-width": "260px", "unit-sm": "0.5rem" }, "fontFamily": { "body-md": [ "Inter" ], "headline-sm": [ "Inter" ], "label-sm": [ "Inter" ], "headline-md": [ "Inter" ], "headline-lg": [ "Inter" ], "body-lg": [ "Inter" ], "label-md": [ "Inter" ] }, "fontSize": { "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "label-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "headline-lg": [ "30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "24px", "fontWeight": "400" } ], "label-md": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.03em", "fontWeight": "500" } ] } } } };</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-[260px] bg-primary-container z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)] text-on-primary"><div class="flex flex-col"><div class="h-16 px-unit-md flex items-center gap-unit-sm bg-primary/20"><img alt="SmartDesk IT Service Management Logo. Design context: - Primary color: #1f3864
+- Font: inter
+- Mode: light
+- Roundness: rounded-md
+. The logo should be visually consistent with these brand tokens." class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WbhStFHhcd4sdd7eGx0wo6vx-dcxxg9jOlL4QhYHhDs76ReCcpIJQtAxGkWNIpluppPL8fEOKBC_A0f-IdfICntCOBqh-1emEyaJrXFc2u3uivqlmr2Q-pbGVroWDAKZEKLCiE8shk4imaZzcE4Skip5GEyDmQXdpnIqEJTHW2N6_eBWCro2qCo1J1wbvG1wdU3Xvf_YG0kMAQfsTXNqi4bmiDWhbVsGFR4Ayqo1pA9FTVSLURzxhUtjM"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-primary font-bold leading-none">SmartDesk</span><span class="font-label-sm text-label-sm text-on-primary-container tracking-wider uppercase leading-none mt-1">ITSM Platform</span></div></div><div class="px-unit-md pt-unit-lg pb-unit-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-primary-container">Workspace</span></div><nav class="flex flex-col gap-1 px-unit-xs" data-active-classes="bg-surface/10 text-on-primary font-semibold border-l-4 border-secondary-container"><a aria-current="page" class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg transition-colors bg-surface/10 text-on-primary font-semibold border-l-4 border-secondary-container" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-body-md text-body-md">Dashboard</span></a><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="tickets" href="#"><span class="material-symbols-outlined text-[20px]">confirmation_number</span><span class="font-body-md text-body-md">Tickets</span></a><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="create-ticket" href="#"><span class="material-symbols-outlined text-[20px]">add_circle</span><span class="font-body-md text-body-md">Create Ticket</span></a><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="knowledge-base" href="#"><span class="material-symbols-outlined text-[20px]">menu_book</span><span class="font-body-md text-body-md">Knowledge Base</span></a><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md text-body-md">Settings</span></a></nav></div><div class="flex flex-col p-unit-md gap-unit-md"><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="logout" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span class="font-body-md text-body-md">Logout</span></a><div class="flex items-center gap-unit-sm p-unit-sm bg-surface/5 rounded-xl"><div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary font-headline-sm text-headline-sm flex-shrink-0">AM</div><div class="flex flex-col flex-1 min-w-0"><span class="font-body-md text-body-md font-semibold text-on-primary truncate leading-snug">Alex Morgan</span><span class="font-label-sm text-label-sm text-on-primary-container leading-snug">alex.m@company.org</span></div><span class="px-unit-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wide">Employee</span></div></div></aside><div class="pl-[260px] min-h-screen flex flex-col"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-unit-xl"><div class="flex items-center gap-unit-md flex-1 max-w-lg"><div class="relative w-full flex items-center"><span class="material-symbols-outlined absolute left-unit-md text-on-surface-variant text-[20px]">search</span><input class="w-full pl-10 pr-unit-md py-unit-xs rounded-lg bg-surface-container-low text-on-surface placeholder-on-surface-variant font-body-md text-body-md border-none focus:outline-none focus:ring-2 focus:ring-secondary-container" placeholder="Search tickets, articles, incident logs (Ctrl + /)" type="text"/></div></div><div class="flex items-center gap-unit-md"><button aria-label="Help and Documentation" class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">help</span></button><button aria-label="Notifications" class="relative w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="h-6 w-px bg-outline-variant mx-unit-xs"></div><div class="flex items-center gap-unit-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col text-left hidden sm:flex"><span class="font-label-md text-label-md font-semibold text-on-surface leading-tight">Alex Morgan</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">IT Operations</span></div></div></div></header><main class="w-full pt-16 bg-background flex-1 px-unit-xl py-unit-xl"><div class="flex flex-col w-full">
+<!-- Active Sidebar Nav Sync (Tickets) -->
+<script>
+    (function syncSidebar() {
+      const ticketsLink = document.querySelector('nav a[data-path="tickets"]');
+      if (ticketsLink) {
+        document.querySelectorAll('nav a').forEach(el => {
+          el.classList.remove('bg-surface/10', 'text-on-primary', 'font-semibold', 'border-l-4', 'border-secondary-container');
+          el.classList.add('text-on-primary-container');
+        });
+        ticketsLink.classList.remove('text-on-primary-container');
+        ticketsLink.classList.add('bg-surface/10', 'text-on-primary', 'font-semibold', 'border-l-4', 'border-secondary-container');
+      }
+    })();
+  </script>
+<!-- Top Hero / Page Context Header -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-unit-md mb-unit-lg">
+<div class="flex flex-col">
+<div class="flex items-center gap-unit-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Incident &amp; Service Management</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Queue Live Status</span>
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface text-label-sm font-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+          Realtime Stream Active
+        </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-bold mt-1">
+        IT Incident &amp; Service Queue
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl mt-0.5">
+        Manage, triage, and reassign incoming service requests and incident tickets across IT tiers with automated SLA monitoring.
+      </p>
+</div>
+<!-- Quick Global Action CTA Bar -->
+<div class="flex items-center flex-wrap gap-unit-sm">
+<button class="h-9 px-unit-md inline-flex items-center gap-unit-xs rounded-lg bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span class="font-label-md text-label-md">Export CSV</span>
+</button>
+<button class="h-9 px-unit-md inline-flex items-center gap-unit-xs rounded-lg bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">swap_horiz</span>
+<span class="font-label-md text-label-md">Batch Reassign</span>
+</button>
+<button class="h-9 px-unit-md inline-flex items-center gap-unit-xs rounded-lg bg-secondary-container text-on-secondary-container shadow-sm hover:bg-secondary transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">smart_toy</span>
+<span class="font-label-md text-label-md font-semibold">Auto-Triage Queue (AI)</span>
+</button>
+<button class="h-9 px-unit-md inline-flex items-center gap-unit-xs rounded-lg bg-primary text-on-primary shadow-sm hover:bg-primary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="font-label-md text-label-md font-semibold">Create Ticket</span>
+</button>
+</div>
+</div>
+<!-- KPI / Queue Health Metric Bento Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-unit-md mb-unit-lg">
+<!-- Unassigned Tickets -->
+<div class="p-unit-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Unassigned Tickets</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface">6</span>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> Action Required
+            </span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">inbox</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-unit-sm pt-unit-xs border-t-0 text-on-surface-variant font-label-sm text-label-sm">
+<span class="text-secondary font-medium hover:underline cursor-pointer flex items-center gap-0.5">
+          Triage pool now <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</span>
+<span class="text-outline">Avg intake: 4m ago</span>
+</div>
+</div>
+<!-- High / Critical Queue -->
+<div class="p-unit-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">High / Critical Queue</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg font-bold text-error">8</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">2 P1 Outages Active</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-error-container/40 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-unit-sm pt-unit-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="text-error font-medium flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span> Incident Commander Assigned
+        </span>
+<span class="text-outline">Escalated</span>
+</div>
+</div>
+<!-- My Assigned Queue -->
+<div class="p-unit-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">My Assigned Queue</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">5</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm font-semibold">3 In Progress</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[22px]">assignment_ind</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-unit-sm pt-unit-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="text-secondary font-medium">Alex Morgan (You)</span>
+<span class="text-outline">Cap: 8 max</span>
+</div>
+</div>
+<!-- SLA At Risk (< 2h) -->
+<div class="p-unit-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">SLA At Risk (&lt; 2h)</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface">3</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-semibold">91.4% Target</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary-container">
+<span class="material-symbols-outlined text-[22px]">alarm</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-unit-sm pt-unit-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="text-error font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">timer</span> 1 ticket &lt; 45m left
+        </span>
+<span class="text-secondary hover:underline cursor-pointer">Expedite</span>
+</div>
+</div>
+</div>
+<!-- Filter & Search Command Center -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-unit-md mb-unit-lg flex flex-col gap-unit-md">
+<!-- Primary Filter Controls -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-unit-sm items-center">
+<!-- Search Field -->
+<div class="md:col-span-4 relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full pl-10 pr-12 py-2 rounded-lg bg-surface-container-low text-on-surface placeholder-on-surface-variant font-body-md text-body-md border-none focus:outline-none focus:ring-2 focus:ring-secondary-container" id="ticket-search" placeholder="Search ticket ID, title, requester name, keywords... (Ctrl + K)" type="text"/>
+<span class="absolute right-3 px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">⌘K</span>
+</div>
+<!-- Status Dropdown -->
+<div class="md:col-span-2 relative">
+<select class="w-full px-3 py-2 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border-none focus:outline-none focus:ring-2 focus:ring-secondary-container appearance-none pr-8">
+<option>All Statuses</option>
+<option>Open (New)</option>
+<option>In Progress</option>
+<option>Pending User</option>
+<option>Resolved</option>
+<option>Closed</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<!-- Priority Dropdown -->
+<div class="md:col-span-2 relative">
+<select class="w-full px-3 py-2 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border-none focus:outline-none focus:ring-2 focus:ring-secondary-container appearance-none pr-8">
+<option>All Priorities</option>
+<option>Critical (P1)</option>
+<option>High (P2)</option>
+<option>Medium (P3)</option>
+<option>Low (P4)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<!-- Category Dropdown -->
+<div class="md:col-span-2 relative">
+<select class="w-full px-3 py-2 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border-none focus:outline-none focus:ring-2 focus:ring-secondary-container appearance-none pr-8">
+<option>All Categories</option>
+<option>Hardware</option>
+<option>Software</option>
+<option>Network / VPN</option>
+<option>Access &amp; Permissions</option>
+<option>Security</option>
+<option>Facilities</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<!-- Assignee Dropdown -->
+<div class="md:col-span-2 relative">
+<select class="w-full px-3 py-2 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md border-none focus:outline-none focus:ring-2 focus:ring-secondary-container appearance-none pr-8">
+<option>All Agents &amp; Tiers</option>
+<option>Unassigned</option>
+<option>Assigned to Me</option>
+<option>Tier 1 Support Desk</option>
+<option>Tier 2 Hardware Lab</option>
+<option>Tier 3 Systems &amp; Cloud</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Filter Quick Tabs & Column Personalizer -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-unit-sm pt-unit-xs border-t-0">
+<!-- Quick Filter Pill Tabs -->
+<div class="flex items-center gap-1.5 flex-wrap overflow-x-auto pb-1 sm:pb-0" id="filter-tabs">
+<button class="tab-pill px-3 py-1.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold transition-colors flex items-center gap-1.5" type="button">
+<span>All Tickets</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container-lowest/20 text-on-primary text-[11px]">34</span>
+</button>
+<button class="tab-pill px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5" type="button">
+<span>Unassigned</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container-high text-secondary font-semibold text-[11px]">6</span>
+</button>
+<button class="tab-pill px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5" type="button">
+<span>Assigned to Me</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container-high text-on-surface text-[11px]">5</span>
+</button>
+<button class="tab-pill px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5" type="button">
+<span>High Priority</span>
+<span class="px-1.5 py-0.2 rounded-full bg-error-container text-on-error-container font-semibold text-[11px]">8</span>
+</button>
+<button class="tab-pill px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5" type="button">
+<span>SLA Breaching</span>
+<span class="px-1.5 py-0.2 rounded-full bg-error-container text-on-error-container font-semibold text-[11px]">3</span>
+</button>
+</div>
+<!-- Action Utilities: Reset & Columns -->
+<div class="flex items-center gap-unit-sm self-end sm:self-auto">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary font-label-md text-label-md transition-colors" id="reset-filters-btn" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span>Reset Filters</span>
+</button>
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">view_column</span>
+<span>Columns (8/10)</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Incident & Service Ticket Queue Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse min-w-[1100px]">
+<!-- Table Header in SmartDesk Deep Navy -->
+<thead class="bg-primary-container text-on-primary">
+<tr class="h-12 font-label-md text-label-md">
+<th class="w-12 px-unit-md py-2.5 text-center">
+<input class="w-4 h-4 rounded text-secondary-container bg-surface-container-lowest focus:ring-offset-0 focus:ring-0 cursor-pointer" id="select-all-tickets" type="checkbox"/>
+</th>
+<th class="px-unit-sm py-2.5 font-semibold text-on-primary tracking-wide">ID</th>
+<th class="px-unit-md py-2.5 font-semibold text-on-primary tracking-wide min-w-[280px]">Subject / Issue Preview</th>
+<th class="px-unit-sm py-2.5 font-semibold text-on-primary tracking-wide min-w-[160px]">Employee / Requester</th>
+<th class="px-unit-sm py-2.5 font-semibold text-on-primary tracking-wide">Category</th>
+<th class="px-unit-sm py-2.5 font-semibold text-on-primary tracking-wide">Status</th>
+<th class="px-unit-sm py-2.5 font-semibold text-on-primary tracking-wide">Priority</th>
+<th class="px-unit-sm py-2.5 font-semibold text-on-primary tracking-wide min-w-[150px]">Assigned Agent</th>
+<th class="px-unit-sm py-2.5 font-semibold text-on-primary tracking-wide min-w-[150px]">Created / SLA Target</th>
+<th class="px-unit-md py-2.5 font-semibold text-on-primary tracking-wide text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-md text-body-md">
+<!-- Row 1: P1 Critical CrowdStrike sensor -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest group">
+<td class="px-unit-md py-3 text-center">
+<input class="ticket-row-check w-4 h-4 rounded text-secondary-container bg-surface-container-low cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-unit-sm py-3 font-semibold text-secondary hover:text-secondary-container cursor-pointer whitespace-nowrap">
+              #TICK-1094
+            </td>
+<td class="px-unit-md py-3">
+<div class="flex flex-col">
+<a class="font-semibold text-on-surface hover:text-secondary line-clamp-1" href="#">
+                  CrowdStrike Falcon endpoint sensor reporting degraded state
+                </a>
+<span class="font-label-sm text-label-sm text-on-surface-variant line-clamp-1 mt-0.5">
+                  Host: FIN-WS-8849 running macOS 14.4.1; real-time protection daemon stalled after policy push.
+                </span>
+</div>
+</td>
+<td class="px-unit-sm py-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md text-label-md font-semibold flex-shrink-0">
+                  DC
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">David Chen</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Engineering • L5</span>
+</div>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">shield</span> Security
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold">
+                In Progress
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> Critical
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center text-[10px] font-bold">
+                  AM
+                </div>
+<span class="font-label-md text-label-md text-on-surface font-medium">Alex Morgan (You)</span>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Oct 24, 08:30 AM</span>
+<span class="font-label-sm text-label-sm text-error font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">timer</span> SLA in 42m
+                </span>
+</div>
+</td>
+<td class="px-unit-md py-3 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-label-sm font-label-md transition-colors" type="button">
+                  View
+                </button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Unassigned P2 VPN Certificate -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest group">
+<td class="px-unit-md py-3 text-center">
+<input class="ticket-row-check w-4 h-4 rounded text-secondary-container bg-surface-container-low cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-unit-sm py-3 font-semibold text-secondary hover:text-secondary-container cursor-pointer whitespace-nowrap">
+              #TICK-1093
+            </td>
+<td class="px-unit-md py-3">
+<div class="flex flex-col">
+<a class="font-semibold text-on-surface hover:text-secondary line-clamp-1" href="#">
+                  VPN certificate renewal &amp; access for EMEA staging clusters
+                </a>
+<span class="font-label-sm text-label-sm text-on-surface-variant line-clamp-1 mt-0.5">
+                  OpenVPN profile revoked after Active Directory sync; unable to reach Dublin VPC subnets.
+                </span>
+</div>
+</td>
+<td class="px-unit-sm py-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-label-md text-label-md font-semibold flex-shrink-0">
+                  ET
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Emily Taylor</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DevOps • EMEA</span>
+</div>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">lan</span> Network / VPN
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-variant text-primary font-label-sm text-label-sm font-semibold">
+                Open
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container/60 text-on-error-container font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> High
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+<span class="material-symbols-outlined text-[13px] text-error">error</span> Unassigned
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Oct 24, 09:15 AM</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">timer</span> SLA in 1h 45m
+                </span>
+</div>
+</td>
+<td class="px-unit-md py-3 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed hover:bg-secondary-fixed-dim text-label-sm font-label-md transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">person_add</span>
+                  Assign to me
+                </button>
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-label-sm font-label-md transition-colors" type="button">
+                  View
+                </button>
+</div>
+</td>
+</tr>
+<!-- Row 3: MacBook Monitor Flicker -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest group">
+<td class="px-unit-md py-3 text-center">
+<input class="ticket-row-check w-4 h-4 rounded text-secondary-container bg-surface-container-low cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-unit-sm py-3 font-semibold text-secondary hover:text-secondary-container cursor-pointer whitespace-nowrap">
+              #TICK-1092
+            </td>
+<td class="px-unit-md py-3">
+<div class="flex flex-col">
+<a class="font-semibold text-on-surface hover:text-secondary line-clamp-1" href="#">
+                  MacBook Pro secondary monitor flickering via Thunderbolt dock
+                </a>
+<span class="font-label-sm text-label-sm text-on-surface-variant line-clamp-1 mt-0.5">
+                  CalDigit TS4 dock dual-screen dropouts every 15 minutes. Firmware update attempted.
+                </span>
+</div>
+</td>
+<td class="px-unit-sm py-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-primary flex items-center justify-center font-label-md text-label-md font-semibold flex-shrink-0">
+                  SK
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Siddharth Kumar</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Design System</span>
+</div>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">desktop_mac</span> Hardware
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold">
+                In Progress
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                Medium
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-[10px] font-bold">
+                  SJ
+                </div>
+<span class="font-label-md text-label-md text-on-surface font-medium">Sarah Jenkins</span>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Oct 24, 09:40 AM</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">timer</span> SLA in 4h 15m
+                </span>
+</div>
+</td>
+<td class="px-unit-md py-3 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-label-sm font-label-md transition-colors" type="button">
+                  View
+                </button>
+</div>
+</td>
+</tr>
+<!-- Row 4: SSO Login Issue -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest group">
+<td class="px-unit-md py-3 text-center">
+<input class="ticket-row-check w-4 h-4 rounded text-secondary-container bg-surface-container-low cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-unit-sm py-3 font-semibold text-secondary hover:text-secondary-container cursor-pointer whitespace-nowrap">
+              #TICK-1091
+            </td>
+<td class="px-unit-md py-3">
+<div class="flex flex-col">
+<a class="font-semibold text-on-surface hover:text-secondary line-clamp-1" href="#">
+                  SSO login issue with Internal Jira &amp; Confluence workspace
+                </a>
+<span class="font-label-sm text-label-sm text-on-surface-variant line-clamp-1 mt-0.5">
+                  Okta SAML assertion timing out with error SAML_RESPONSE_SIGNATURE_INVALID.
+                </span>
+</div>
+</td>
+<td class="px-unit-sm py-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-primary flex items-center justify-center font-label-md text-label-md font-semibold flex-shrink-0">
+                  MC
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Marcus Cole</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Product Ops</span>
+</div>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">lock</span> Access &amp; Permissions
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-highest text-tertiary-container font-label-sm text-label-sm font-semibold">
+                Pending User
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container/60 text-on-error-container font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> High
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center text-[10px] font-bold">
+                  AM
+                </div>
+<span class="font-label-md text-label-md text-on-surface font-medium">Alex Morgan (You)</span>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Oct 24, 10:02 AM</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">timer</span> SLA in 5h 20m
+                </span>
+</div>
+</td>
+<td class="px-unit-md py-3 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-label-sm font-label-md transition-colors" type="button">
+                  View
+                </button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Docker Enterprise License -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest group">
+<td class="px-unit-md py-3 text-center">
+<input class="ticket-row-check w-4 h-4 rounded text-secondary-container bg-surface-container-low cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-unit-sm py-3 font-semibold text-secondary hover:text-secondary-container cursor-pointer whitespace-nowrap">
+              #TICK-1090
+            </td>
+<td class="px-unit-md py-3">
+<div class="flex flex-col">
+<a class="font-semibold text-on-surface hover:text-secondary line-clamp-1" href="#">
+                  Request for Docker Enterprise license seat
+                </a>
+<span class="font-label-sm text-label-sm text-on-surface-variant line-clamp-1 mt-0.5">
+                  New contractor onboarding in Backend Core Team; cost center approved by VP Eng.
+                </span>
+</div>
+</td>
+<td class="px-unit-sm py-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-label-md text-label-md font-semibold flex-shrink-0">
+                  RH
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Rachel Hayes</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Engineering</span>
+</div>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">terminal</span> Software
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-variant text-primary font-label-sm text-label-sm font-semibold">
+                Open
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+                Low
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+<span class="material-symbols-outlined text-[13px] text-error">error</span> Unassigned
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Oct 24, 10:20 AM</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">timer</span> SLA in 7h 50m
+                </span>
+</div>
+</td>
+<td class="px-unit-md py-3 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed hover:bg-secondary-fixed-dim text-label-sm font-label-md transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">person_add</span>
+                  Assign to me
+                </button>
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-label-sm font-label-md transition-colors" type="button">
+                  View
+                </button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Figma Enterprise License -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest group">
+<td class="px-unit-md py-3 text-center">
+<input class="ticket-row-check w-4 h-4 rounded text-secondary-container bg-surface-container-low cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-unit-sm py-3 font-semibold text-secondary hover:text-secondary-container cursor-pointer whitespace-nowrap">
+              #TICK-1089
+            </td>
+<td class="px-unit-md py-3">
+<div class="flex flex-col">
+<a class="font-semibold text-on-surface hover:text-secondary line-clamp-1" href="#">
+                  Figma Enterprise license seat allocation for Design System team
+                </a>
+<span class="font-label-sm text-label-sm text-on-surface-variant line-clamp-1 mt-0.5">
+                  Provisioning required for new Brand &amp; Marketing design contractor.
+                </span>
+</div>
+</td>
+<td class="px-unit-sm py-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-primary flex items-center justify-center font-label-md text-label-md font-semibold flex-shrink-0">
+                  JL
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Jessica Lin</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Product Design</span>
+</div>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">terminal</span> Software
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold">
+                In Progress
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                Medium
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center text-[10px] font-bold">
+                  ER
+                </div>
+<span class="font-label-md text-label-md text-on-surface font-medium">Elena Rostova</span>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Oct 24, 11:05 AM</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">timer</span> SLA in 6h 10m
+                </span>
+</div>
+</td>
+<td class="px-unit-md py-3 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-label-sm font-label-md transition-colors" type="button">
+                  View
+                </button>
+</div>
+</td>
+</tr>
+<!-- Row 7: Keycard Access Failure -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest group">
+<td class="px-unit-md py-3 text-center">
+<input class="ticket-row-check w-4 h-4 rounded text-secondary-container bg-surface-container-low cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-unit-sm py-3 font-semibold text-secondary hover:text-secondary-container cursor-pointer whitespace-nowrap">
+              #TICK-1088
+            </td>
+<td class="px-unit-md py-3">
+<div class="flex flex-col">
+<a class="font-semibold text-on-surface hover:text-secondary line-clamp-1" href="#">
+                  Keycard access failure at Building 4 East Entrance
+                </a>
+<span class="font-label-sm text-label-sm text-on-surface-variant line-clamp-1 mt-0.5">
+                  Turnstiles rejecting HID card scans for entire floor 2 finance team after weekend badge reload.
+                </span>
+</div>
+</td>
+<td class="px-unit-sm py-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center font-label-md text-label-md font-semibold flex-shrink-0">
+                  TK
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Tanya Kapoor</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Facilities &amp; People</span>
+</div>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">apartment</span> Facilities
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-variant text-primary font-label-sm text-label-sm font-semibold">
+                Open
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container/60 text-on-error-container font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> High
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+<span class="material-symbols-outlined text-[13px] text-error">error</span> Unassigned
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Oct 24, 11:30 AM</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">timer</span> SLA in 1h 20m
+                </span>
+</div>
+</td>
+<td class="px-unit-md py-3 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed hover:bg-secondary-fixed-dim text-label-sm font-label-md transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">person_add</span>
+                  Assign to me
+                </button>
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-label-sm font-label-md transition-colors" type="button">
+                  View
+                </button>
+</div>
+</td>
+</tr>
+<!-- Row 8: Outlook Calendar Sync -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-lowest group">
+<td class="px-unit-md py-3 text-center">
+<input class="ticket-row-check w-4 h-4 rounded text-secondary-container bg-surface-container-low cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-unit-sm py-3 font-semibold text-secondary hover:text-secondary-container cursor-pointer whitespace-nowrap">
+              #TICK-1087
+            </td>
+<td class="px-unit-md py-3">
+<div class="flex flex-col">
+<a class="font-semibold text-on-surface hover:text-secondary line-clamp-1" href="#">
+                  Outlook calendar sync looping after Office 365 tenant migration
+                </a>
+<span class="font-label-sm text-label-sm text-on-surface-variant line-clamp-1 mt-0.5">
+                  Duplicate invites generating 100+ notifications per hour; cache reset recommended.
+                </span>
+</div>
+</td>
+<td class="px-unit-sm py-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-primary flex items-center justify-center font-label-md text-label-md font-semibold flex-shrink-0">
+                  PB
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Peter Bailey</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Corporate Sales</span>
+</div>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">terminal</span> Software
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">
+                Resolved
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                Medium
+              </span>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-[10px] font-bold">
+                  MC
+                </div>
+<span class="font-label-md text-label-md text-on-surface font-medium">Michael Chang</span>
+</div>
+</td>
+<td class="px-unit-sm py-3 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Oct 24, 07:15 AM</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">check_circle</span> Met SLA
+                </span>
+</div>
+</td>
+<td class="px-unit-md py-3 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-label-sm font-label-md transition-colors" type="button">
+                  View
+                </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer & Pagination Controller -->
+<div class="px-unit-md py-3.5 bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-unit-md border-t-0 shadow-inner">
+<!-- Showing results & page size -->
+<div class="flex items-center gap-unit-md text-on-surface-variant font-body-md text-body-md">
+<span>Showing <strong class="text-on-surface font-semibold">1 to 8</strong> of <strong class="text-on-surface font-semibold">34</strong> tickets</span>
+<div class="hidden sm:flex items-center gap-2">
+<span class="font-label-sm text-label-sm">Rows per page:</span>
+<select class="px-2 py-1 rounded bg-surface-container-low text-on-surface font-label-sm text-label-sm border-none focus:outline-none focus:ring-1 focus:ring-secondary-container">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+<option>100</option>
+</select>
+</div>
+</div>
+<!-- Pagination Buttons -->
+<div class="flex items-center gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md inline-flex items-center gap-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+<span>Previous</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center shadow-sm" type="button">
+          1
+        </button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+          2
+        </button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+          3
+        </button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+          4
+        </button>
+<button class="h-8 px-2.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md inline-flex items-center gap-1 transition-colors" type="button">
+<span>Next</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Client-side Interactive Micro-Behaviors -->
+<script>
+    // Select All Checkbox Handler
+    const selectAllBox = document.getElementById('select-all-tickets');
+    const rowBoxes = document.querySelectorAll('.ticket-row-check');
+
+    if (selectAllBox) {
+      selectAllBox.addEventListener('change', (e) => {
+        rowBoxes.forEach(box => {
+          box.checked = e.target.checked;
+        });
+      });
+    }
+
+    // Interactive Pill Tabs Filter Switching
+    const tabButtons = document.querySelectorAll('.tab-pill');
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        tabButtons.forEach(btn => {
+          btn.classList.remove('bg-primary', 'text-on-primary', 'font-semibold');
+          btn.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+        });
+        button.classList.add('bg-primary', 'text-on-primary', 'font-semibold');
+        button.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+      });
+    });
+
+    // Reset Filters Button Micro-behavior
+    const resetBtn = document.getElementById('reset-filters-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        const searchInput = document.getElementById('ticket-search');
+        if (searchInput) searchInput.value = '';
+        if (selectAllBox) selectAllBox.checked = false;
+        rowBoxes.forEach(box => box.checked = false);
+        if (tabButtons[0]) tabButtons[0].click();
+      });
+    }
+  </script>
+</div></main></div></body></html>

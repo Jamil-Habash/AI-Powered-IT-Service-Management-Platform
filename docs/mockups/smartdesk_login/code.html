@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartDesk - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#fefcff",
+                        "background": "#f8f9ff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#afc6fb",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-background": "#0b1c30",
+                        "primary-container": "#1f3864",
+                        "tertiary-container": "#34393c",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-fixed": "#171c1f",
+                        "on-surface-variant": "#44474f",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#001a41",
+                        "surface-container": "#e5eeff",
+                        "on-primary-fixed-variant": "#2e4673",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-tertiary-container": "#9ea2a6",
+                        "on-tertiary-fixed-variant": "#43474b",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "tertiary-fixed-dim": "#c3c7cb",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#001a42",
+                        "tertiary": "#1f2427",
+                        "surface-tint": "#475e8c",
+                        "inverse-surface": "#213145",
+                        "error": "#ba1a1a",
+                        "secondary": "#0058be",
+                        "tertiary-fixed": "#dfe3e7",
+                        "inverse-primary": "#afc6fb",
+                        "outline-variant": "#c4c6d0",
+                        "secondary-container": "#2170e4",
+                        "primary-fixed": "#d8e2ff",
+                        "on-surface": "#0b1c30",
+                        "on-primary": "#ffffff",
+                        "outline": "#747780",
+                        "surface-dim": "#cbdbf5",
+                        "primary": "#03224d",
+                        "on-primary-container": "#8ba2d5",
+                        "surface-bright": "#f8f9ff",
+                        "surface-variant": "#d3e4fe",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#004395",
+                        "secondary-fixed": "#d8e2ff",
+                        "surface": "#f8f9ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "1.5rem",
+                        "unit-sm": "0.5rem",
+                        "unit-xs": "0.25rem",
+                        "container-padding": "2rem",
+                        "sidebar-width": "260px",
+                        "unit-md": "1rem",
+                        "unit-lg": "1.5rem",
+                        "unit-xl": "2rem"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.03em", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .login-bg {
+            background: linear-gradient(135deg, #F8FAFC 0%, #dce9ff 100%);
+        }
+        .soft-shadow {
+            box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #3B82F6;
+        }
+    </style>
+</head>
+<body class="login-bg min-h-screen flex items-center justify-center p-4 font-body-md text-on-background">
+<!-- Suppressing TopAppBar and SideNavBar because this is a transactional Login screen -->
+<main class="w-full max-w-md">
+<div class="bg-surface-container-lowest rounded-lg soft-shadow border border-outline-variant p-8 w-full relative overflow-hidden">
+<!-- Logo Header -->
+<div class="flex flex-col items-center mb-8">
+<img alt="SmartDesk Logo" class="w-16 h-16 object-contain mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJDIoeF_LshziPnjbstLdl9AQvl1UpMmzC2abNrpNxbZF09fvyjJbMGOinu0lEldW3EW_Q775biNNynCaZ4PfhThlbjmGY2v1sRx6Vujnfx3JZpr4qh04KXP-sZZL5SU9x-fmqMQzPZ0eb-vyyktnb4rB-2TYFeR3l1LkbmY_SreJqlve4am5sXpPdYOFw8UkOAdXsXp8i6fQcvDgYQL31WjXmiGiLi7x-Ms2vAujPm3m2j5-vweST8A"/>
+<h1 class="font-headline-lg text-headline-lg text-primary">SmartDesk</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 text-center">IT Service Management Platform</p>
+</div>
+<!-- Login Form -->
+<form action="#" class="space-y-6" method="POST">
+<!-- Email Input -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-background mb-1" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline text-opacity-70 pointer-events-none" style="font-size: 20px;">mail</span>
+<input class="w-full pl-10 pr-3 py-2 border border-outline-variant rounded-md font-body-md text-body-md text-on-background bg-surface-container-lowest placeholder:text-outline focus:outline-none input-glow transition-all duration-200" id="email" name="email" placeholder="Enter your work email" required="" type="email"/>
+</div>
+</div>
+<!-- Password Input -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="block font-label-sm text-label-sm text-on-background" for="password">Password</label>
+<a class="font-label-sm text-label-sm text-secondary hover:text-secondary-container transition-colors duration-200" href="#">Forgot password?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline text-opacity-70 pointer-events-none" style="font-size: 20px;">lock</span>
+<input class="w-full pl-10 pr-10 py-2 border border-outline-variant rounded-md font-body-md text-body-md text-on-background bg-surface-container-lowest placeholder:text-outline focus:outline-none input-glow transition-all duration-200" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button aria-label="Toggle password visibility" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-outline hover:text-on-background focus:outline-none transition-colors duration-200" type="button">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Remember Me (Optional but good UX) -->
+<div class="flex items-center">
+<input class="h-4 w-4 text-secondary focus:ring-secondary border-outline-variant rounded" id="remember-me" name="remember-me" type="checkbox"/>
+<label class="ml-2 block font-body-md text-body-md text-on-surface-variant" for="remember-me">
+                        Remember me for 30 days
+                    </label>
+</div>
+<!-- Submit Button -->
+<button class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm font-label-md text-label-md text-on-primary bg-primary-container hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-200 h-[44px] items-center" type="submit">
+                    Log in
+                </button>
+</form>
+<!-- Registration Link -->
+<div class="mt-6 text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    Don't have an account? <a class="font-label-md text-label-md text-secondary hover:text-secondary-container transition-colors duration-200" href="#">Contact your IT Admin</a>
+</p>
+</div>
+<!-- Subtle decorative element to break the flat white card slightly -->
+<div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-secondary to-primary-fixed-dim"></div>
+</div>
+<!-- Footer links outside card -->
+<div class="mt-8 text-center flex justify-center space-x-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-background transition-colors duration-200" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-background transition-colors duration-200" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-background transition-colors duration-200" href="#">Help Center</a>
+</div>
+</main>
+<script>
+        // Simple script to toggle password visibility
+        const togglePassword = document.querySelector('button[aria-label="Toggle password visibility"]');
+        const passwordInput = document.querySelector('#password');
+
+        if(togglePassword && passwordInput) {
+            togglePassword.addEventListener('click', function (e) {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                const icon = this.querySelector('.material-symbols-outlined');
+                if (type === 'password') {
+                    icon.textContent = 'visibility_off';
+                } else {
+                    icon.textContent = 'visibility';
+                }
+            });
+        }
+    </script>
+</body></html>

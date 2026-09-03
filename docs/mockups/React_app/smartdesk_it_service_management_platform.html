@@ -1,0 +1,2469 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>SmartDesk - IT Service Management Platform</title>
+
+  <!-- Google Fonts & Material Symbols -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS with Forms & Container Queries -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#03224d",
+            "primary-container": "#1f3864",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#8ba2d5",
+            "primary-fixed": "#d8e2ff",
+            "primary-fixed-dim": "#afc6fb",
+            "secondary": "#0058be",
+            "secondary-container": "#2170e4",
+            "on-secondary": "#ffffff",
+            "on-secondary-container": "#fefcff",
+            "secondary-fixed": "#d8e2ff",
+            "secondary-fixed-dim": "#adc6ff",
+            "tertiary": "#1f2427",
+            "tertiary-container": "#34393c",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-container": "#9ea2a6",
+            "background": "#f8f9ff",
+            "on-background": "#0b1c30",
+            "surface": "#f8f9ff",
+            "on-surface": "#0b1c30",
+            "surface-variant": "#d3e4fe",
+            "on-surface-variant": "#44474f",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#eff4ff",
+            "surface-container": "#e5eeff",
+            "surface-container-high": "#dce9ff",
+            "surface-container-highest": "#d3e4fe",
+            "surface-tint": "#475e8c",
+            "outline": "#747780",
+            "outline-variant": "#c4c6d0",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error-container": "#93000a",
+            "brand": {
+              DEFAULT: '#1f3864',
+              hover: '#162847',
+              dark: '#142238',
+              accent: '#2563eb'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            headline: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .login-bg {
+      background: linear-gradient(135deg, #F8FAFC 0%, #dce9ff 100%);
+    }
+    .register-bg {
+      background-color: #f1f5fa;
+      background-image: 
+        radial-gradient(at 50% 10%, rgba(219, 234, 254, 0.7) 0px, transparent 65%),
+        radial-gradient(at 10% 90%, rgba(224, 236, 255, 0.5) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(219, 234, 254, 0.4) 0px, transparent 50%);
+    }
+    .card-bottom-accent {
+      position: relative;
+    }
+    .card-bottom-accent::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 50%, #60a5fa 100%);
+      border-bottom-left-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
+    .soft-shadow {
+      box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+  </style>
+
+  <!-- Required React and Router CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+  <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+  <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body class="bg-background text-on-surface antialiased">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    const { createRoot } = ReactDOM;
+    const { MemoryRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+
+    const LOGO_SRC = "https://lh3.googleusercontent.com/aida/AEtjO1WbhStFHhcd4sdd7eGx0wo6vx-dcxxg9jOlL4QhYHhDs76ReCcpIJQtAxGkWNIpluppPL8fEOKBC_A0f-IdfICntCOBqh-1emEyaJrXFc2u3uivqlmr2Q-pbGVroWDAKZEKLCiE8shk4imaZzcE4Skip5GEyDmQXdpnIqEJTHW2N6_eBWCro2qCo1J1wbvG1wdU3Xvf_YG0kMAQfsTXNqi4bmiDWhbVsGFR4Ayqo1pA9FTVSLURzxhUtjM";
+
+    // Reusable App Layout with Sidebar and Top Header
+    function AppLayout({ children, currentPath }) {
+      const navigate = useNavigate();
+      const [searchQuery, setSearchQuery] = useState("");
+
+      const navItems = [
+        { path: "/dashboard", label: "Dashboard", icon: "dashboard" },
+        { path: "/tickets", label: "Tickets", icon: "confirmation_number" },
+        { path: "/create-ticket", label: "Create Ticket", icon: "add_circle" },
+        { path: "/analytics", label: "Analytics & Ops", icon: "analytics" },
+        { path: "/knowledge-base", label: "Knowledge Base", icon: "menu_book" },
+        { path: "/settings", label: "Settings", icon: "settings" },
+      ];
+
+      return (
+        <div class="min-h-screen bg-background text-on-surface">
+          {/* Fixed Sidebar */}
+          <aside class="fixed left-0 top-0 h-screen w-[260px] bg-primary-container z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)] text-on-primary">
+            <div class="flex flex-col">
+              {/* Brand Logo */}
+              <div class="h-16 px-4 flex items-center gap-2 bg-primary/20 cursor-pointer" onClick={() => navigate("/dashboard")}>
+                <img alt="SmartDesk Logo" class="h-8 w-auto object-contain rounded-md" src={LOGO_SRC} />
+                <div class="flex flex-col">
+                  <span class="text-xl tracking-tight text-on-primary font-bold leading-none">SmartDesk</span>
+                  <span class="text-xs text-on-primary-container tracking-wider uppercase leading-none mt-1">ITSM Platform</span>
+                </div>
+              </div>
+
+              <div class="px-4 pt-6 pb-2">
+                <span class="text-xs uppercase tracking-wider text-on-primary-container font-semibold">Workspace</span>
+              </div>
+
+              {/* Navigation Items */}
+              <nav class="flex flex-col gap-1 px-2">
+                {navItems.map((item) => {
+                  const isActive = currentPath === item.path;
+                  return (
+                    <button
+                      key={item.path}
+                      onClick={() => navigate(item.path)}
+                      class={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-left transition-colors ${
+                        isActive
+                          ? "bg-surface/10 text-on-primary font-semibold border-l-4 border-secondary-container"
+                          : "text-on-primary-container hover:bg-surface/10 hover:text-on-primary"
+                      }`}
+                    >
+                      <span class="material-symbols-outlined text-[20px]">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* User Profile & Logout */}
+            <div class="flex flex-col p-4 gap-3">
+              <button
+                onClick={() => navigate("/")}
+                class="flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors text-left"
+              >
+                <span class="material-symbols-outlined text-[20px]">logout</span>
+                <span>Logout</span>
+              </button>
+
+              <div class="flex items-center gap-2 p-2 bg-surface/5 rounded-xl">
+                <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary font-bold text-xs flex-shrink-0">
+                  AM
+                </div>
+                <div class="flex flex-col flex-1 min-w-0">
+                  <span class="text-sm font-semibold text-on-primary truncate leading-snug">Alex Morgan</span>
+                  <span class="text-xs text-on-primary-container leading-snug truncate">alex.m@company.org</span>
+                </div>
+                <span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold uppercase tracking-wide">
+                  Employee
+                </span>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Area */}
+          <div class="pl-[260px] min-h-screen flex flex-col">
+            {/* Top Navbar */}
+            <header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-8">
+              <div class="flex items-center gap-4 flex-1 max-w-lg">
+                <div class="relative w-full flex items-center">
+                  <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">search</span>
+                  <input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    class="w-full pl-10 pr-4 py-1.5 rounded-lg bg-surface-container-low text-on-surface placeholder-on-surface-variant text-sm border-none focus:outline-none focus:ring-2 focus:ring-secondary-container"
+                    placeholder="Search tickets, articles, incident logs (Ctrl + /)"
+                    type="text"
+                  />
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <button
+                  aria-label="Help and Documentation"
+                  onClick={() => navigate("/knowledge-base")}
+                  class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[22px]">help</span>
+                </button>
+                <button
+                  aria-label="Notifications"
+                  class="relative w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[22px]">notifications</span>
+                  <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span>
+                </button>
+                <div class="h-6 w-px bg-outline-variant mx-1"></div>
+                <div class="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/settings")}>
+                  <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-xs font-bold">
+                    AM
+                  </div>
+                  <div class="flex flex-col text-left hidden sm:flex">
+                    <span class="text-xs font-semibold text-on-surface leading-tight">Alex Morgan</span>
+                    <span class="text-[11px] text-on-surface-variant leading-tight">IT Operations</span>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            {/* Page View Container */}
+            <main class="w-full pt-16 bg-background flex-1 px-8 py-8">
+              {children}
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Screen 1: Login Page
+    // ----------------------------------------------------
+    function LoginPage() {
+      const navigate = useNavigate();
+      const [email, setEmail] = useState("alex.m@company.org");
+      const [password, setPassword] = useState("password123");
+      const [showPassword, setShowPassword] = useState(false);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        navigate("/dashboard");
+      };
+
+      return (
+        <div class="login-bg min-h-screen flex items-center justify-center p-4 text-on-background">
+          <main class="w-full max-w-md">
+            <div class="bg-surface-container-lowest rounded-lg soft-shadow border border-outline-variant p-8 w-full relative overflow-hidden">
+              <div class="flex flex-col items-center mb-8">
+                <img alt="SmartDesk Logo" class="w-16 h-16 object-contain mb-4 rounded-md" src={LOGO_SRC} />
+                <h1 class="text-2xl font-bold text-primary">SmartDesk</h1>
+                <p class="text-sm text-on-surface-variant mt-1 text-center">IT Service Management Platform</p>
+              </div>
+
+              <form onSubmit={handleSubmit} class="space-y-5">
+                <div>
+                  <label class="block text-xs font-semibold text-on-background mb-1" htmlFor="email">Email Address</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline text-[20px]">mail</span>
+                    <input
+                      class="w-full pl-10 pr-3 py-2 border border-outline-variant rounded-md text-sm text-on-background bg-surface-container-lowest placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary transition-all"
+                      id="email"
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your work email"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="block text-xs font-semibold text-on-background" htmlFor="password">Password</label>
+                    <a class="text-xs text-secondary hover:underline" href="#" onClick={(e) => { e.preventDefault(); alert("Password reset instructions sent to your registered work email."); }}>Forgot password?</a>
+                  </div>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline text-[20px]">lock</span>
+                    <input
+                      class="w-full pl-10 pr-10 py-2 border border-outline-variant rounded-md text-sm text-on-background bg-surface-container-lowest placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary transition-all"
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                    />
+                    <button
+                      type="button"
+                      aria-label="Toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      class="absolute right-3 top-1/2 transform -translate-y-1/2 text-outline hover:text-on-background focus:outline-none"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">{showPassword ? "visibility" : "visibility_off"}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex items-center">
+                  <input class="h-4 w-4 text-secondary focus:ring-secondary border-outline-variant rounded" id="remember-me" type="checkbox" defaultChecked />
+                  <label class="ml-2 block text-sm text-on-surface-variant cursor-pointer" htmlFor="remember-me">
+                    Remember me for 30 days
+                  </label>
+                </div>
+
+                <button
+                  class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-on-primary bg-primary-container hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-200 h-[44px] items-center"
+                  type="submit"
+                >
+                  Log in
+                </button>
+              </form>
+
+              <div class="mt-6 text-center">
+                <p class="text-sm text-on-surface-variant">
+                  Don't have an account?{" "}
+                  <Link to="/register" class="text-sm font-semibold text-secondary hover:underline">
+                    Create employee account
+                  </Link>
+                </p>
+              </div>
+
+              <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-secondary to-primary-fixed-dim"></div>
+            </div>
+
+            <div class="mt-8 text-center flex justify-center space-x-6 text-xs text-on-surface-variant">
+              <a class="hover:text-on-background" href="#" onClick={(e)=>e.preventDefault()}>Privacy Policy</a>
+              <a class="hover:text-on-background" href="#" onClick={(e)=>e.preventDefault()}>Terms of Service</a>
+              <a class="hover:text-on-background" href="#" onClick={(e)=>e.preventDefault()}>Help Center</a>
+            </div>
+          </main>
+        </div>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Screen 2: Registration Page
+    // ----------------------------------------------------
+    function RegisterPage() {
+      const navigate = useNavigate();
+      const [name, setName] = useState("");
+      const [email, setEmail] = useState("");
+      const [password, setPassword] = useState("");
+      const [confirmPassword, setConfirmPassword] = useState("");
+      const [showPass, setShowPass] = useState(false);
+      const [showConfirmPass, setShowConfirmPass] = useState(false);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        alert("Account created successfully! Redirecting to dashboard...");
+        navigate("/dashboard");
+      };
+
+      return (
+        <div class="register-bg min-h-screen flex flex-col justify-center items-center py-10 px-4 text-slate-800">
+          <main class="w-full max-w-[440px] my-auto">
+            <div class="bg-white rounded-lg border border-slate-200/90 shadow-[0_10px_35px_-4px_rgba(28,52,90,0.08),0_4px_12px_-2px_rgba(28,52,90,0.04)] px-8 pt-9 pb-8 card-bottom-accent">
+              <header class="flex flex-col items-center text-center mb-7">
+                <div class="mb-3">
+                  <img alt="SmartDesk Logo" class="h-10 w-auto object-contain rounded-md" src={LOGO_SRC} />
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900 mb-1">Create your account</h1>
+                <p class="text-xs text-slate-500 font-normal leading-relaxed">Join SmartDesk IT Service Management Platform</p>
+                <div class="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-medium text-slate-600">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span>Assigned Role: Employee</span>
+                </div>
+              </header>
+
+              <form onSubmit={handleSubmit} class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1" htmlFor="reg-name">Full Name</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">person</span>
+                    <input
+                      id="reg-name"
+                      class="w-full pl-9 pr-3.5 py-2 text-xs text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                      placeholder="e.g. Alex Morgan"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      type="text"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1" htmlFor="reg-email">Work Email</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">mail</span>
+                    <input
+                      id="reg-email"
+                      class="w-full pl-9 pr-3.5 py-2 text-xs text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                      placeholder="alex@company.com"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      type="email"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1" htmlFor="reg-pass">Password</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">lock</span>
+                    <input
+                      id="reg-pass"
+                      class="w-full pl-9 pr-9 py-2 text-xs text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                      placeholder="Create a strong password"
+                      required
+                      type={showPass ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
+                      onClick={() => setShowPass(!showPass)}
+                    >
+                      <span class="material-symbols-outlined text-[18px]">{showPass ? "visibility" : "visibility_off"}</span>
+                    </button>
+                  </div>
+                  <p class="mt-1 text-[11px] text-slate-500">Must be at least 8 characters</p>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1" htmlFor="reg-confirm-pass">Confirm Password</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">lock</span>
+                    <input
+                      id="reg-confirm-pass"
+                      class="w-full pl-9 pr-9 py-2 text-xs text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                      placeholder="Re-enter your password"
+                      required
+                      type={showConfirmPass ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
+                      onClick={() => setShowConfirmPass(!showConfirmPass)}
+                    >
+                      <span class="material-symbols-outlined text-[18px]">{showConfirmPass ? "visibility" : "visibility_off"}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex items-start pt-1">
+                  <input class="h-3.5 w-3.5 rounded border-slate-300 text-brand focus:ring-brand cursor-pointer mt-0.5" id="reg-terms" required type="checkbox" />
+                  <label class="ml-2 text-xs text-slate-600 leading-relaxed cursor-pointer" htmlFor="reg-terms">
+                    I agree to the <a class="font-medium text-blue-600 hover:underline" href="#">Terms of Service</a> and <a class="font-medium text-blue-600 hover:underline" href="#">Privacy Policy</a>
+                  </label>
+                </div>
+
+                <div class="pt-2">
+                  <button class="w-full flex justify-center items-center py-2.5 px-4 text-xs font-semibold rounded-md text-white bg-[#1f3864] hover:bg-[#162847] active:bg-[#121f37] transition-colors shadow-sm" type="submit">
+                    Create account
+                  </button>
+                </div>
+              </form>
+
+              <footer class="mt-6 pt-4 text-center border-t border-slate-100">
+                <p class="text-xs text-slate-600">
+                  Already have an account?{" "}
+                  <Link to="/" class="font-medium text-blue-600 hover:text-blue-700 hover:underline">
+                    Log in
+                  </Link>
+                </p>
+              </footer>
+            </div>
+          </main>
+        </div>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Screen 3: Self-Service Employee Dashboard
+    // ----------------------------------------------------
+    function DashboardPage() {
+      const navigate = useNavigate();
+      const [filter, setFilter] = useState("all");
+      const [searchTerm, setSearchTerm] = useState("");
+
+      const tickets = [
+        { id: "#TICK-1094", fleet: "Apple Fleet", title: "MacBook Pro secondary monitor flickering via Thunderbolt dock", detail: "Connected to CalDigit TS4 dock, HDMI flickering at 144Hz refresh rate", category: "Hardware", status: "In Progress", priority: "High", priorityColor: "text-error bg-error-container/40", created: "Today, 10:15 AM", ago: "2 hours ago", icon: "laptop_mac" },
+        { id: "#TICK-1091", fleet: "GlobalProtect", title: "Request VPN certificate renewal & access for EMEA staging", detail: "Expiring within 48h; required for upcoming deployment validation sprint", category: "Network / VPN", status: "Open", priority: "Medium", priorityColor: "text-secondary bg-secondary-fixed-dim/30", created: "Yesterday, 3:45 PM", ago: "19 hours ago", icon: "vpn_lock" },
+        { id: "#TICK-1088", fleet: "Software Licensing", title: "Figma Enterprise license seat allocation for Design System team", detail: "Manager approval verified in BambooHR; waiting on IT admin provision", category: "Software", status: "In Progress", priority: "Medium", priorityColor: "text-secondary bg-secondary-fixed-dim/30", created: "Oct 22, 2023", ago: "2 days ago", icon: "brush" },
+        { id: "#TICK-1085", fleet: "Okta Auth", title: "SSO login issue with Internal Jira & Confluence workspace", detail: "SAML assertion response parsing failed on identity redirect token", category: "Access & Permissions", status: "Open", priority: "Critical", priorityColor: "text-on-error-container bg-error-container font-bold", created: "Oct 21, 2023", ago: "3 days ago", icon: "key" },
+        { id: "#TICK-1079", fleet: "Productivity", title: "Slack notification latency and desktop audio device failure", detail: "Audio driver dropouts during Huddle calls after macOS Ventura patch", category: "Software", status: "Open", priority: "Low", priorityColor: "text-on-surface-variant bg-surface-container-high", created: "Oct 20, 2023", ago: "4 days ago", icon: "forum" }
+      ];
+
+      const filteredTickets = tickets.filter(t => {
+        const matchesSearch = t.title.toLowerCase().includes(searchTerm.toLowerCase()) || t.id.toLowerCase().includes(searchTerm.toLowerCase());
+        if (filter === "resolved") return false; // mockup shows active tickets
+        return matchesSearch;
+      });
+
+      return (
+        <AppLayout currentPath="/dashboard">
+          <div class="flex flex-col w-full">
+            {/* Header Greeting */}
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-1 mb-1">
+                  <span class="text-xs uppercase tracking-wider text-secondary font-semibold">Self-Service Portal</span>
+                  <span class="text-outline-variant font-bold">•</span>
+                  <span class="text-xs text-on-surface-variant font-medium">IT Support Desk</span>
+                </div>
+                <h1 class="text-2xl font-bold text-on-surface tracking-tight">Welcome back, Alex</h1>
+                <p class="text-sm text-on-surface-variant mt-0.5">Here is an overview of your IT service requests and real-time support status.</p>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <button
+                  onClick={() => navigate("/knowledge-base")}
+                  class="h-10 px-4 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-colors shadow-sm flex items-center gap-2 text-xs font-semibold"
+                >
+                  <span class="material-symbols-outlined text-[19px] text-secondary">menu_book</span>
+                  <span>Browse Knowledge Base</span>
+                </button>
+                <button
+                  onClick={() => navigate("/create-ticket")}
+                  class="h-10 px-4 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-colors shadow-sm flex items-center gap-1.5 text-xs font-semibold"
+                >
+                  <span class="material-symbols-outlined text-[20px]">add</span>
+                  <span>New Ticket</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Metric Status Cards */}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">My Open Tickets</span>
+                    <div class="flex items-baseline gap-1 mt-2">
+                      <span class="text-4xl font-bold leading-none text-primary">3</span>
+                      <span class="text-xs text-on-surface-variant font-medium">tickets</span>
+                    </div>
+                  </div>
+                  <div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center text-secondary">
+                    <span class="material-symbols-outlined text-[24px]">inbox</span>
+                  </div>
+                </div>
+                <div class="mt-4 pt-2 flex items-center justify-between bg-surface-container-low/60 rounded-lg px-3 py-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+                    <span class="text-xs text-on-surface font-medium">1 awaiting IT triage</span>
+                  </div>
+                  <span class="text-xs text-secondary font-semibold">Avg. 18m SLA</span>
+                </div>
+              </div>
+
+              <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">In Progress</span>
+                    <div class="flex items-baseline gap-1 mt-2">
+                      <span class="text-4xl font-bold leading-none text-primary">2</span>
+                      <span class="text-xs text-on-surface-variant font-medium">active</span>
+                    </div>
+                  </div>
+                  <div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-primary-container">
+                    <span class="material-symbols-outlined text-[24px]">timelapse</span>
+                  </div>
+                </div>
+                <div class="mt-4 pt-2 flex items-center justify-between bg-surface-container-low/60 rounded-lg px-3 py-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                    <span class="text-xs text-on-surface truncate">Hardware & Access Tier 2</span>
+                  </div>
+                  <span class="text-xs text-on-surface-variant">Active desk</span>
+                </div>
+              </div>
+
+              <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Resolved</span>
+                    <div class="flex items-baseline gap-1 mt-2">
+                      <span class="text-4xl font-bold leading-none text-primary">14</span>
+                      <span class="text-xs text-on-surface-variant font-medium">this quarter</span>
+                    </div>
+                  </div>
+                  <div class="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center text-secondary">
+                    <span class="material-symbols-outlined text-[24px]">check_circle</span>
+                  </div>
+                </div>
+                <div class="mt-4 pt-2 flex items-center justify-between bg-surface-container-low/60 rounded-lg px-3 py-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px] text-secondary">verified</span>
+                    <span class="text-xs text-on-surface font-medium">Last resolved yesterday</span>
+                  </div>
+                  <span class="text-xs text-secondary font-semibold">100% CSAT</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Tickets Table Section */}
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+              <div class="p-6 flex flex-col gap-4 bg-surface-container-lowest border-b border-surface-container">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h2 class="text-lg text-on-surface font-bold">Recent Tickets</h2>
+                    <p class="text-xs text-on-surface-variant">Track ongoing service requests, incident updates, and hardware provisioning.</p>
+                  </div>
+                  <div class="inline-flex p-1 bg-surface-container-low rounded-lg self-start sm:self-auto">
+                    <button
+                      onClick={() => setFilter("all")}
+                      class={`px-3 py-1 rounded text-xs font-semibold ${filter === "all" ? "bg-surface-container-lowest text-primary shadow-sm" : "text-on-surface-variant"}`}
+                    >
+                      All (5)
+                    </button>
+                    <button
+                      onClick={() => setFilter("active")}
+                      class={`px-3 py-1 rounded text-xs font-semibold ${filter === "active" ? "bg-surface-container-lowest text-primary shadow-sm" : "text-on-surface-variant"}`}
+                    >
+                      Active (5)
+                    </button>
+                    <button
+                      onClick={() => setFilter("resolved")}
+                      class={`px-3 py-1 rounded text-xs font-semibold ${filter === "resolved" ? "bg-surface-container-lowest text-primary shadow-sm" : "text-on-surface-variant"}`}
+                    >
+                      Resolved (14)
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div class="relative w-full sm:w-80">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-on-surface-variant">search</span>
+                    <input
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      class="w-full pl-9 pr-3 py-2 bg-surface-container-low rounded-lg text-xs text-on-surface placeholder-on-surface-variant focus:outline-none focus:bg-surface-container-lowest shadow-inner"
+                      placeholder="Search tickets by ID, title, or keywords..."
+                      type="text"
+                    />
+                  </div>
+                  <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <button
+                      onClick={() => navigate("/tickets")}
+                      class="px-3 py-2 rounded-lg bg-surface-container-low text-on-surface text-xs font-medium flex items-center gap-1 hover:bg-surface-container transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-[18px] text-on-surface-variant">list</span>
+                      <span>Full IT Queue</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* High Fidelity Table */}
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                  <thead>
+                    <tr class="bg-surface-container-low text-on-surface-variant text-xs uppercase tracking-wider">
+                      <th class="py-3 px-6 font-semibold">Ticket Details</th>
+                      <th class="py-3 px-4 font-semibold">Category</th>
+                      <th class="py-3 px-4 font-semibold">Status</th>
+                      <th class="py-3 px-4 font-semibold">Priority</th>
+                      <th class="py-3 px-4 font-semibold">Created</th>
+                      <th class="py-3 px-6 font-semibold text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-surface-container-low">
+                    {filteredTickets.map((t) => (
+                      <tr
+                        key={t.id}
+                        onClick={() => navigate("/ticket/TICK-1094")}
+                        class="hover:bg-surface-container-low/60 transition-colors group cursor-pointer"
+                      >
+                        <td class="py-4 px-6">
+                          <div class="flex items-start gap-3">
+                            <div class="mt-0.5 w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary shrink-0">
+                              <span class="material-symbols-outlined text-[18px]">{t.icon}</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                              <div class="flex items-center gap-1 text-xs">
+                                <span class="font-bold text-secondary">{t.id}</span>
+                                <span class="text-on-surface-variant">• {t.fleet}</span>
+                              </div>
+                              <span class="font-semibold text-on-surface group-hover:text-secondary transition-colors truncate max-w-md">
+                                {t.title}
+                              </span>
+                              <span class="text-xs text-on-surface-variant line-clamp-1">{t.detail}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="py-4 px-4 whitespace-nowrap">
+                          <span class="px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface text-xs font-medium">
+                            {t.category}
+                          </span>
+                        </td>
+                        <td class="py-4 px-4 whitespace-nowrap">
+                          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-variant text-primary text-xs font-semibold">
+                            <span class={`w-1.5 h-1.5 rounded-full ${t.status === "In Progress" ? "bg-secondary-container animate-pulse" : "bg-secondary"}`}></span>
+                            <span>{t.status}</span>
+                          </div>
+                        </td>
+                        <td class="py-4 px-4 whitespace-nowrap">
+                          <span class={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold ${t.priorityColor}`}>
+                            {t.priority}
+                          </span>
+                        </td>
+                        <td class="py-4 px-4 whitespace-nowrap">
+                          <div class="flex flex-col text-xs">
+                            <span class="text-on-surface font-medium">{t.created}</span>
+                            <span class="text-on-surface-variant">{t.ago}</span>
+                          </div>
+                        </td>
+                        <td class="py-4 px-6 whitespace-nowrap text-right">
+                          <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors">
+                            <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Smart Help Recommendation Cards */}
+            <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col justify-between">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary shrink-0">
+                    <span class="material-symbols-outlined text-[22px]">wifi_protected_setup</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <h3 class="text-base font-bold text-on-surface">Global VPN Setup FAQ</h3>
+                    <p class="text-xs text-on-surface-variant mt-1">Self-install configuration profiles and update multi-factor tokens without raising an IT ticket.</p>
+                  </div>
+                </div>
+                <button onClick={() => navigate("/knowledge-base")} class="mt-4 inline-flex items-center gap-1 text-xs text-secondary font-semibold hover:underline self-start">
+                  <span>View step-by-step article</span>
+                  <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </button>
+              </div>
+
+              <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col justify-between">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-surface-variant flex items-center justify-center text-primary-container shrink-0">
+                    <span class="material-symbols-outlined text-[22px]">devices</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <h3 class="text-base font-bold text-on-surface">Standard Peripheral Kit</h3>
+                    <p class="text-xs text-on-surface-variant mt-1">Need an external 4K display, ergonomics mount, or YubiKey 5C? Order via automatic hardware catalog.</p>
+                  </div>
+                </div>
+                <button onClick={() => navigate("/create-ticket")} class="mt-4 inline-flex items-center gap-1 text-xs text-secondary font-semibold hover:underline self-start">
+                  <span>Open Equipment Portal</span>
+                  <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </button>
+              </div>
+
+              <div class="bg-surface-container-high p-6 rounded-xl shadow-sm flex flex-col justify-between">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shrink-0">
+                    <span class="material-symbols-outlined text-[22px]">support_agent</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <div class="flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-secondary-container animate-ping"></span>
+                      <span class="text-xs font-semibold text-secondary">Walk-in Tech Bar</span>
+                    </div>
+                    <h3 class="text-base font-bold text-primary mt-1">Building 4, Floor 3 (HQ)</h3>
+                    <p class="text-xs text-on-surface-variant mt-1">IT technicians available for immediate physical diagnostic and equipment swaps.</p>
+                  </div>
+                </div>
+                <div class="mt-4 flex items-center justify-between text-xs">
+                  <span class="text-on-surface-variant">Hours: 8:00 AM – 6:00 PM EST</span>
+                  <span class="px-2 py-0.5 rounded bg-surface-container-lowest text-primary font-bold">Open</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </AppLayout>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Screen 4: Create Ticket Page
+    // ----------------------------------------------------
+    function CreateTicketPage() {
+      const navigate = useNavigate();
+      const [title, setTitle] = useState("");
+      const [category, setCategory] = useState("");
+      const [urgency, setUrgency] = useState("medium");
+      const [description, setDescription] = useState("");
+      const [files, setFiles] = useState([]);
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [showToast, setShowToast] = useState(false);
+
+      // Auto-category smart inference
+      const handleTitleChange = (val) => {
+        setTitle(val);
+        const lower = val.toLowerCase();
+        if (!category) {
+          if (lower.includes('vpn') || lower.includes('wifi') || lower.includes('network') || lower.includes('dns')) {
+            setCategory('network');
+          } else if (lower.includes('monitor') || lower.includes('dock') || lower.includes('laptop') || lower.includes('keyboard')) {
+            setCategory('hardware');
+          } else if (lower.includes('password') || lower.includes('login') || lower.includes('sso') || lower.includes('account')) {
+            setCategory('account');
+          }
+        }
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!title.trim()) {
+          alert("Please enter a ticket title.");
+          return;
+        }
+        setIsSubmitting(true);
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setShowToast(true);
+          setTimeout(() => {
+            setShowToast(false);
+            navigate("/ticket/TICK-1094");
+          }, 1500);
+        }, 800);
+      };
+
+      return (
+        <AppLayout currentPath="/create-ticket">
+          <div class="flex flex-col w-full relative">
+            {/* Header */}
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-1 mb-1">
+                  <span class="text-xs text-secondary tracking-wider font-semibold uppercase">Self-Service Portal</span>
+                  <span class="text-outline-variant text-xs">•</span>
+                  <span class="text-xs text-on-surface-variant font-medium">IT Support Desk</span>
+                </div>
+                <h1 class="text-2xl font-bold text-on-surface tracking-tight">Create a Support Ticket</h1>
+                <p class="text-sm text-on-surface-variant mt-1">Submit a detailed request and our IT support team or automated assistants will assist you.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button
+                  onClick={() => navigate("/tickets")}
+                  class="h-9 px-4 flex items-center gap-1 rounded-lg bg-surface-container-lowest text-primary text-xs font-semibold shadow-sm hover:bg-surface-container-high transition-colors"
+                >
+                  <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                  <span>Back to Tickets</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Grid Form */}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <div class="lg:col-span-8 flex flex-col gap-6">
+                <form onSubmit={handleSubmit} class="bg-surface-container-lowest rounded-xl p-8 shadow-sm flex flex-col gap-6">
+                  <div class="flex flex-col pb-1">
+                    <div class="flex items-center justify-between">
+                      <h2 class="text-lg text-primary font-bold">Ticket Details</h2>
+                      <span class="text-xs text-on-surface-variant flex items-center gap-1">
+                        <span class="text-error font-bold">*</span> Mandatory fields
+                      </span>
+                    </div>
+                    <p class="text-xs text-on-surface-variant mt-1">Please provide clear details about the issue or request so we can route it quickly.</p>
+                  </div>
+
+                  <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-on-surface flex items-center gap-1" htmlFor="ticketTitle">
+                      Ticket Title <span class="text-error font-bold">*</span>
+                    </label>
+                    <input
+                      id="ticketTitle"
+                      value={title}
+                      onChange={(e) => handleTitleChange(e.target.value)}
+                      placeholder="e.g., Unable to connect to corporate VPN after password reset"
+                      required
+                      class="w-full px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface placeholder-on-surface-variant/60 text-sm border border-outline-variant shadow-sm focus:outline-none focus:ring-1 focus:ring-secondary"
+                      type="text"
+                    />
+                    <span class="text-[11px] text-on-surface-variant">Summarize the problem concisely in a single sentence.</span>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1.5">
+                      <label class="text-xs font-semibold text-on-surface flex items-center gap-1" htmlFor="category">
+                        Category <span class="text-error font-bold">*</span>
+                      </label>
+                      <div class="relative">
+                        <select
+                          id="category"
+                          value={category}
+                          onChange={(e) => setCategory(e.target.value)}
+                          required
+                          class="w-full appearance-none px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface text-sm border border-outline-variant shadow-sm focus:outline-none pr-10 cursor-pointer"
+                        >
+                          <option value="" disabled>Select a category...</option>
+                          <option value="hardware">Hardware (Monitors, Laptops, Peripherals)</option>
+                          <option value="software">Software (License, Installation, Application Bugs)</option>
+                          <option value="network">Network (VPN, Wi-Fi, DNS, Firewall)</option>
+                          <option value="account">Account (SSO, Password Reset, Permissions)</option>
+                          <option value="security">Security (Phishing, Access Request, Malware Alert)</option>
+                          <option value="other">Other (General inquiries, Consultation)</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[20px]">
+                          expand_more
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                      <label class="text-xs font-semibold text-on-surface" htmlFor="urgency">Urgency & Impact</label>
+                      <div class="relative">
+                        <select
+                          id="urgency"
+                          value={urgency}
+                          onChange={(e) => setUrgency(e.target.value)}
+                          class="w-full appearance-none px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface text-sm border border-outline-variant shadow-sm focus:outline-none pr-10 cursor-pointer"
+                        >
+                          <option value="low">Low (Minor inconvenience, work can proceed)</option>
+                          <option value="medium">Medium (Standard operations impeded)</option>
+                          <option value="high">High (Major blocker, individual blocked)</option>
+                          <option value="critical">Critical (Department or business stoppage)</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[20px]">
+                          expand_more
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col gap-1.5">
+                    <div class="flex items-center justify-between">
+                      <label class="text-xs font-semibold text-on-surface flex items-center gap-1" htmlFor="description">
+                        Description <span class="text-error font-bold">*</span>
+                      </label>
+                      <span class="text-[11px] text-on-surface-variant">Markdown supported</span>
+                    </div>
+                    <div class="rounded-lg shadow-sm bg-surface-container-lowest border border-outline-variant overflow-hidden flex flex-col">
+                      <div class="bg-surface-container-low px-3 py-1.5 flex items-center gap-1 text-on-surface-variant">
+                        <button type="button" class="w-7 h-7 flex items-center justify-center rounded hover:bg-surface-container"><span class="material-symbols-outlined text-[18px]">format_bold</span></button>
+                        <button type="button" class="w-7 h-7 flex items-center justify-center rounded hover:bg-surface-container"><span class="material-symbols-outlined text-[18px]">format_italic</span></button>
+                        <button type="button" class="w-7 h-7 flex items-center justify-center rounded hover:bg-surface-container"><span class="material-symbols-outlined text-[18px]">format_list_bulleted</span></button>
+                        <button type="button" class="w-7 h-7 flex items-center justify-center rounded hover:bg-surface-container"><span class="material-symbols-outlined text-[18px]">code</span></button>
+                      </div>
+                      <textarea
+                        id="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Describe the issue in detail. What were you doing when it occurred? What error message was shown? Include device hostname or IP if applicable."
+                        required
+                        rows="5"
+                        class="w-full p-4 bg-transparent text-on-surface placeholder-on-surface-variant/60 text-sm focus:outline-none resize-y min-h-[140px]"
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-on-surface flex items-center justify-between">
+                      <span>Attachment Files (Optional)</span>
+                      <span class="text-xs text-on-surface-variant font-normal">PNG, JPG, PDF, LOG up to 25MB</span>
+                    </label>
+                    <div
+                      onClick={() => document.getElementById("file-upload").click()}
+                      class="bg-surface-container-low hover:bg-surface-container border-2 border-dashed border-outline-variant transition-all rounded-lg p-6 flex flex-col items-center justify-center text-center cursor-pointer group"
+                    >
+                      <div class="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary mb-2">
+                        <span class="material-symbols-outlined text-[24px]">cloud_upload</span>
+                      </div>
+                      <p class="text-xs font-medium text-on-surface">
+                        <span class="text-secondary font-semibold hover:underline">Click to upload</span> or drag and drop logs
+                      </p>
+                      <p class="text-[11px] text-on-surface-variant mt-0.5">
+                        {files.length > 0 ? `${files.length} file(s) attached` : "Maximum file size: 25 MB per attachment"}
+                      </p>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        multiple
+                        class="hidden"
+                        onChange={(e) => setFiles(Array.from(e.target.files))}
+                      />
+                    </div>
+                  </div>
+
+                  <div class="bg-surface-container-low rounded-xl p-4 flex items-start gap-3 shadow-sm">
+                    <div class="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-on-secondary shrink-0">
+                      <span class="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>auto_awesome</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <div class="flex items-center gap-2">
+                        <span class="text-sm text-primary font-bold">Smart Triage Active</span>
+                        <span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold uppercase tracking-wider">
+                          Instant Routing
+                        </span>
+                      </div>
+                      <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">
+                        Our AI continuously analyzes your subject and description to auto-categorize priority levels and match your ticket with the highest-rated available specialist.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+                    <div class="flex items-center gap-1 text-on-surface-variant text-xs">
+                      <span class="material-symbols-outlined text-[16px]">lock</span>
+                      <span>Standard ITSM SLA applies (Response &lt; 2 hours)</span>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                      <button
+                        type="button"
+                        onClick={() => alert("Draft saved locally.")}
+                        class="h-10 px-4 rounded-lg bg-surface-container-low text-primary text-xs font-semibold hover:bg-surface-container-high transition-colors"
+                      >
+                        Save Draft
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        class="h-10 px-6 rounded-lg bg-primary-container text-on-primary text-xs font-semibold flex items-center gap-1.5 shadow-md hover:bg-primary transition-all disabled:opacity-50"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+                            <span>Routing Ticket...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Submit Ticket</span>
+                            <span class="material-symbols-outlined text-[18px]">send</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              {/* Sidebar recommendations */}
+              <div class="lg:col-span-4 flex flex-col gap-6">
+                <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-secondary text-[20px]">info</span>
+                      <h3 class="text-sm text-primary font-bold">Before Submitting</h3>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-primary text-[10px] font-bold">Self-Help</span>
+                  </div>
+
+                  <div class="flex flex-col gap-3">
+                    <div class="flex items-start gap-2.5 p-3 rounded-lg bg-surface-container-low text-xs">
+                      <div class="w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 font-bold">1</div>
+                      <div>
+                        <span class="font-semibold text-on-surface">Check System Health</span>
+                        <p class="text-on-surface-variant text-[11px] mt-0.5">All internal gateways and VPN nodes are running normally.</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-2.5 p-3 rounded-lg bg-surface-container-low text-xs">
+                      <div class="w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 font-bold">2</div>
+                      <div>
+                        <span class="font-semibold text-on-surface">Restart Peripherals</span>
+                        <p class="text-on-surface-variant text-[11px] mt-0.5">For docks and monitors, perform a quick 30-second power cycle.</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-2.5 p-3 rounded-lg bg-surface-container-low text-xs">
+                      <div class="w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 font-bold">3</div>
+                      <div>
+                        <span class="font-semibold text-on-surface">Explore Knowledge Base</span>
+                        <p class="text-on-surface-variant text-[11px] mt-0.5">Over 450 verified resolutions for macOS and Windows 11.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-3">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-sm text-primary font-bold">Popular Articles</h3>
+                    <span class="material-symbols-outlined text-on-surface-variant text-[18px]">menu_book</span>
+                  </div>
+                  <div class="space-y-2">
+                    <button
+                      onClick={() => navigate("/knowledge-base")}
+                      class="w-full text-left p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container flex items-center justify-between text-xs text-on-surface font-medium"
+                    >
+                      <span class="truncate">Fixing GlobalProtect VPN connection timeout</span>
+                      <span class="material-symbols-outlined text-[16px] text-on-surface-variant">chevron_right</span>
+                    </button>
+                    <button
+                      onClick={() => navigate("/knowledge-base")}
+                      class="w-full text-left p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container flex items-center justify-between text-xs text-on-surface font-medium"
+                    >
+                      <span class="truncate">Okta Multi-Factor authentication reset</span>
+                      <span class="material-symbols-outlined text-[16px] text-on-surface-variant">chevron_right</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="bg-surface-container rounded-xl p-6 shadow-sm flex flex-col gap-2">
+                  <div class="flex items-center gap-2 text-primary font-bold text-sm">
+                    <span class="material-symbols-outlined text-[20px]">support_agent</span>
+                    <span>Need Immediate Dispatch?</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant">Emergency outage blocking mission critical workflow? Call the Rapid Response line.</p>
+                  <div class="mt-2 pt-2 border-t border-surface-container-highest flex items-center justify-between">
+                    <span class="text-xs font-bold text-primary">+1 (800) 555-0199</span>
+                    <span class="px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container text-xs font-semibold">Ext. 4004</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Notification Toast */}
+            {showToast && (
+              <div class="fixed bottom-6 right-6 bg-primary-container text-on-primary px-6 py-4 rounded-xl shadow-xl flex items-center gap-4 z-50 animate-bounce">
+                <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary">
+                  <span class="material-symbols-outlined text-[20px]">check</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-xs font-bold">Ticket Submitted</span>
+                  <span class="text-[11px] text-on-primary-container">Assigned to IT Operations queue.</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </AppLayout>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Screen 5: Ticket Details Page
+    // ----------------------------------------------------
+    function TicketDetailPage() {
+      const navigate = useNavigate();
+      const [replyText, setReplyText] = useState("");
+      const [isInternal, setIsInternal] = useState(false);
+      const [comments, setComments] = useState([
+        {
+          author: "Sarah Jenkins",
+          role: "Tier 2 Hardware",
+          avatar: "SJ",
+          isStaff: true,
+          time: "2 hours ago",
+          body: "Hi Alex, thank you for attaching the system profiler log. We've detected this handshake issue with the recent macOS Sonoma update on TS4 docks. I've sent a staged firmware updater to your self-service portal."
+        },
+        {
+          author: "Alex Morgan",
+          role: "Requester",
+          avatar: "AM",
+          isStaff: false,
+          time: "1 hour ago",
+          body: "Thanks Sarah! I ran the self-service update and restarted, but the HDMI port still flickers intermittently. Should I try the DisplayPort output instead?"
+        },
+        {
+          author: "Sarah Jenkins",
+          role: "Internal Note",
+          avatar: "SJ",
+          isInternalNote: true,
+          time: "25 mins ago",
+          body: "Yes, please switch to the DisplayPort output using the DP-to-USB-C dongle if available. I've prepared a backup dock at the Floor 3 Tech Bar if needed."
+        }
+      ]);
+
+      const handleAddReply = () => {
+        if (!replyText.trim()) return;
+        setComments([
+          ...comments,
+          {
+            author: "Alex Morgan",
+            role: isInternal ? "Internal Note" : "Requester",
+            avatar: "AM",
+            isInternalNote: isInternal,
+            time: "Just now",
+            body: replyText
+          }
+        ]);
+        setReplyText("");
+      };
+
+      return (
+        <AppLayout currentPath="/tickets">
+          <div class="flex flex-col w-full">
+            {/* Breadcrumb & Navigation */}
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-2">
+              <div class="flex items-center gap-2 text-xs">
+                <button
+                  onClick={() => navigate("/tickets")}
+                  class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-semibold transition-all shadow-sm"
+                >
+                  <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                  <span>Back to Tickets</span>
+                </button>
+                <span class="text-outline-variant">/</span>
+                <span class="text-on-surface-variant font-semibold uppercase tracking-wider">TICKETS</span>
+                <span class="text-outline-variant">/</span>
+                <span class="text-secondary font-bold bg-secondary-fixed/50 px-2 py-0.5 rounded">#TICK-1094</span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button onClick={() => window.print()} class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface shadow-sm text-xs font-semibold">
+                  <span class="material-symbols-outlined text-[16px]">print</span>
+                  <span>Print Summary</span>
+                </button>
+                <button onClick={() => alert("Audit log: State changed to 'In Progress' by Sarah Jenkins at 09:40 AM")} class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface shadow-sm text-xs font-semibold">
+                  <span class="material-symbols-outlined text-[16px]">history</span>
+                  <span>Audit Log</span>
+                </button>
+                <button onClick={() => alert("Share link copied to clipboard!")} class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-secondary text-on-secondary shadow-sm text-xs font-semibold">
+                  <span class="material-symbols-outlined text-[16px]">share</span>
+                  <span>Share</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Main 2-Column Responsive Layout */}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              {/* Left Column (Content & Thread) */}
+              <div class="lg:col-span-8 flex flex-col gap-6">
+                {/* Header Card */}
+                <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-4">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 text-xs font-bold">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                        In Progress
+                      </span>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-700 text-xs font-bold">
+                        <span class="material-symbols-outlined text-[15px]">priority_high</span>
+                        High Priority
+                      </span>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-700 text-xs font-medium">
+                        <span class="material-symbols-outlined text-[15px]">timer</span>
+                        SLA Due: In 1h 45m
+                      </span>
+                    </div>
+                    <span class="text-xs text-on-surface-variant">Created Oct 24, 2023, 09:15 AM (3 hrs ago)</span>
+                  </div>
+
+                  <h1 class="text-xl font-bold text-primary tracking-tight">
+                    MacBook Pro secondary monitor flickering via Thunderbolt dock
+                  </h1>
+
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-surface-container-low/60 rounded-lg p-3 text-xs">
+                    <div>
+                      <span class="uppercase tracking-wider text-on-surface-variant font-medium text-[10px]">Ticket ID</span>
+                      <div class="font-bold text-primary">#TICK-1094</div>
+                    </div>
+                    <div>
+                      <span class="uppercase tracking-wider text-on-surface-variant font-medium text-[10px]">Requester</span>
+                      <div class="font-medium text-on-surface">Alex Morgan</div>
+                    </div>
+                    <div>
+                      <span class="uppercase tracking-wider text-on-surface-variant font-medium text-[10px]">Assignee</span>
+                      <div class="font-medium text-on-surface">Sarah Jenkins</div>
+                    </div>
+                    <div>
+                      <span class="uppercase tracking-wider text-on-surface-variant font-medium text-[10px]">Category</span>
+                      <div class="font-medium text-on-surface truncate">Displays & Docks</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Copilot Analysis Card */}
+                <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-surface-container-lowest via-surface-container-low to-secondary-fixed/20 p-6 shadow-sm border border-secondary/20">
+                  <div class="flex items-center justify-between gap-2 mb-4 pb-1">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+                        <span class="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>auto_awesome</span>
+                      </div>
+                      <div>
+                        <div class="flex items-center gap-2">
+                          <span class="text-sm font-bold text-primary">SmartDesk AI Copilot Analysis</span>
+                          <span class="px-2 py-0.5 rounded-full bg-secondary-container/10 text-secondary text-[11px] font-semibold">Confidence 94%</span>
+                        </div>
+                        <span class="text-xs text-on-surface-variant">Automated telemetry diagnostics & triage recommendations</span>
+                      </div>
+                    </div>
+                    <span class="material-symbols-outlined text-secondary text-[24px]">psychology</span>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-surface-container-lowest/90 p-3 rounded-lg shadow-sm">
+                      <span class="text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold">Root Cause Identification</span>
+                      <p class="text-xs text-on-surface mt-1">
+                        Display signal drops triggered by <strong class="font-semibold text-primary">Thunderbolt handshake timeout</strong> post-macOS Sonoma 14.1 update on CalDigit TS4 chipset v39.1.
+                      </p>
+                    </div>
+                    <div class="bg-surface-container-lowest/90 p-3 rounded-lg shadow-sm flex flex-col justify-between">
+                      <div>
+                        <span class="text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold">Triage Accuracy</span>
+                        <div class="flex items-center gap-2 mt-1 text-xs font-semibold text-secondary">
+                          <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                          <span>Hardware / Displays Confirmed</span>
+                        </div>
+                      </div>
+                      <div class="w-full bg-surface-container-high rounded-full h-1.5 mt-2">
+                        <div class="bg-secondary-container h-1.5 rounded-full" style={{ width: '94%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col gap-2">
+                    <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Suggested Quick Actions</span>
+                    <div class="flex flex-col gap-2">
+                      <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-lg bg-surface-container-lowest shadow-sm gap-2">
+                        <div class="flex items-center gap-2 text-xs">
+                          <span class="material-symbols-outlined text-secondary text-[18px]">system_update</span>
+                          <span>Push CalDigit TS4 firmware patch v41.2 via Workspace ONE MDM</span>
+                        </div>
+                        <button onClick={() => alert("Firmware patch v41.2 pushed to host machine.")} class="px-2.5 py-1 bg-secondary text-on-secondary rounded text-xs font-semibold hover:bg-secondary/90 shadow-sm">
+                          Apply Patch
+                        </button>
+                      </div>
+                      <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-lg bg-surface-container-lowest shadow-sm gap-2">
+                        <div class="flex items-center gap-2 text-xs">
+                          <span class="material-symbols-outlined text-secondary text-[18px]">inventory_2</span>
+                          <span>Dispatch loaner USB-C to DisplayPort cable via Tech Bar Floor 3</span>
+                        </div>
+                        <button onClick={() => alert("Cable reserved at Tech Bar Floor 3.")} class="px-2.5 py-1 bg-surface-container text-primary rounded text-xs font-semibold hover:bg-surface-container-high">
+                          Reserve Cable
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description & Logs */}
+                <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-4">
+                  <div class="flex items-center justify-between">
+                    <h2 class="text-base font-bold text-primary">Issue Description</h2>
+                    <span class="text-xs text-on-surface-variant flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[16px]">devices</span>
+                      macOS Sonoma 14.1
+                    </span>
+                  </div>
+                  <div class="text-sm text-on-surface space-y-2 leading-relaxed">
+                    <p>Since updating to macOS Sonoma 14.1 yesterday morning, my external Dell 4K display connected through the CalDigit TS4 dock flickers violently every 10-15 seconds and periodically drops signal completely.</p>
+                    <p>I have tested swapping HDMI and DisplayPort cables with no success. The dock firmware is version 39.1. It disrupts client calls and makes dual-screen design workflows nearly unusable.</p>
+                  </div>
+
+                  <div class="pt-2">
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Attached Diagnostic Files (2)</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                      <div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low shadow-sm">
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="material-symbols-outlined text-secondary text-[22px]">description</span>
+                          <div class="truncate text-xs">
+                            <span class="font-medium text-on-surface block truncate">system_profiler_display_dump.log</span>
+                            <span class="text-on-surface-variant">1.2 MB • Plaintext</span>
+                          </div>
+                        </div>
+                        <button onClick={() => alert("Downloading system log...")} class="p-1 text-on-surface-variant hover:text-on-surface">
+                          <span class="material-symbols-outlined text-[18px]">download</span>
+                        </button>
+                      </div>
+
+                      <div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low shadow-sm">
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="material-symbols-outlined text-secondary text-[22px]">movie</span>
+                          <div class="truncate text-xs">
+                            <span class="font-medium text-on-surface block truncate">dock_flicker_capture.mov</span>
+                            <span class="text-on-surface-variant">14.8 MB • QuickTime</span>
+                          </div>
+                        </div>
+                        <button onClick={() => alert("Previewing clip...")} class="p-1 text-on-surface-variant hover:text-on-surface">
+                          <span class="material-symbols-outlined text-[18px]">play_circle</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Activity & Comments */}
+                <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-4">
+                  <div class="flex items-center justify-between">
+                    <h2 class="text-base font-bold text-primary">Activity & Discussion</h2>
+                    <span class="text-xs text-on-surface-variant">{comments.length} message(s)</span>
+                  </div>
+
+                  <div class="space-y-3">
+                    {comments.map((c, i) => (
+                      <div
+                        key={i}
+                        class={`flex items-start gap-3 p-3.5 rounded-lg ${
+                          c.isInternalNote ? "bg-amber-500/10" : "bg-surface-container-low/50"
+                        }`}
+                      >
+                        <div class={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-on-primary ${
+                          c.isInternalNote ? "bg-amber-600" : "bg-primary"
+                        }`}>
+                          {c.avatar}
+                        </div>
+                        <div class="flex-1 min-w-0 text-xs">
+                          <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-2">
+                              <span class={`font-bold ${c.isInternalNote ? "text-amber-950" : "text-primary"}`}>{c.author}</span>
+                              <span class={`px-2 py-0.2 rounded font-semibold text-[10px] ${
+                                c.isInternalNote ? "bg-amber-600/20 text-amber-900" : "bg-primary/10 text-primary"
+                              }`}>
+                                {c.role}
+                              </span>
+                            </div>
+                            <span class="text-on-surface-variant">{c.time}</span>
+                          </div>
+                          <p class={`leading-relaxed ${c.isInternalNote ? "text-amber-950" : "text-on-surface"}`}>{c.body}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Reply Form */}
+                  <div class="mt-2 bg-surface-container-low/70 rounded-xl p-4 flex flex-col gap-3">
+                    <div class="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsInternal(false)}
+                        class={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
+                          !isInternal ? "bg-surface-container-lowest text-primary shadow-sm" : "text-on-surface-variant"
+                        }`}
+                      >
+                        Public Reply
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsInternal(true)}
+                        class={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
+                          isInternal ? "bg-amber-600 text-on-primary shadow-sm" : "text-on-surface-variant"
+                        }`}
+                      >
+                        Internal Note
+                      </button>
+                    </div>
+
+                    <textarea
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      placeholder={isInternal ? "Type internal note visible only to IT specialists..." : "Type your response to the employee..."}
+                      rows="3"
+                      class="w-full p-3 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface text-xs focus:outline-none"
+                    ></textarea>
+
+                    <div class="flex items-center justify-between">
+                      <span class="text-[11px] text-on-surface-variant">Press Send to notify followers</span>
+                      <button
+                        type="button"
+                        onClick={handleAddReply}
+                        class="px-4 py-1.5 rounded-lg bg-primary text-on-primary text-xs font-semibold shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-1"
+                      >
+                        <span class="material-symbols-outlined text-[16px]">send</span>
+                        <span>Send Reply</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Agent Controls & Profile */}
+              <div class="lg:col-span-4 flex flex-col gap-6">
+                <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-4">
+                  <div class="flex items-center justify-between pb-1">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-secondary text-[20px]">tune</span>
+                      <h2 class="text-sm font-bold text-primary">Agent Controls</h2>
+                    </div>
+                  </div>
+
+                  <div class="space-y-3 text-xs">
+                    <div>
+                      <label class="font-semibold text-on-surface-variant block mb-1">Assignee</label>
+                      <select class="w-full p-2 rounded-lg bg-surface-container-low text-on-surface border-none focus:ring-1 focus:ring-secondary cursor-pointer">
+                        <option>Sarah Jenkins (Tier 2 Hardware)</option>
+                        <option>Marcus Cole (Product Ops)</option>
+                        <option>Elena Rostova (DevOps)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="font-semibold text-on-surface-variant block mb-1">Ticket Status</label>
+                      <select class="w-full p-2 rounded-lg bg-surface-container-low text-on-surface border-none focus:ring-1 focus:ring-secondary cursor-pointer">
+                        <option>Open</option>
+                        <option selected>In Progress</option>
+                        <option>Pending Response</option>
+                        <option>Resolved</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="font-semibold text-on-surface-variant block mb-1">Priority Level</label>
+                      <select class="w-full p-2 rounded-lg bg-surface-container-low text-on-surface border-none focus:ring-1 focus:ring-secondary cursor-pointer">
+                        <option>P1 - Critical</option>
+                        <option selected>P2 - High</option>
+                        <option>P3 - Medium</option>
+                        <option>P4 - Low</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Requester Profile */}
+                <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-3">
+                  <h2 class="text-sm font-bold text-primary">Requester Profile</h2>
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-secondary text-on-secondary flex items-center justify-center font-bold text-sm">
+                      AM
+                    </div>
+                    <div class="truncate text-xs">
+                      <span class="font-bold text-primary block">Alex Morgan</span>
+                      <span class="text-on-surface-variant">Senior Product Designer</span>
+                    </div>
+                  </div>
+                  <div class="space-y-1.5 text-xs text-on-surface pt-2">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[16px] text-on-surface-variant">apartment</span>
+                      <span>Product & UX Design</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[16px] text-on-surface-variant">location_on</span>
+                      <span>Austin HQ, Floor 3</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[16px] text-on-surface-variant">laptop_mac</span>
+                      <span>MacBook Pro 16" M2 Max</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Operations */}
+                <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-2">
+                  <h2 class="text-sm font-bold text-primary mb-1">Quick Operations</h2>
+                  <button onClick={() => alert("Zoom screen share meeting invited.")} class="w-full py-2 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">screen_share</span>
+                    <span>Request Screen Share</span>
+                  </button>
+                  <button onClick={() => alert("Ticket marked as Resolved.")} class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-on-primary text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                    <span>Resolve Ticket</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </AppLayout>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Screen 6: IT Queue Management Table
+    // ----------------------------------------------------
+    function TicketsQueuePage() {
+      const navigate = useNavigate();
+      const [filterTab, setFilterTab] = useState("all");
+      const [search, setSearch] = useState("");
+      const [selectedTickets, setSelectedTickets] = useState([]);
+
+      const initialTickets = [
+        { id: "#TICK-1094", title: "CrowdStrike Falcon endpoint sensor reporting degraded state", detail: "Host: FIN-WS-8849 running macOS 14.4.1; real-time protection daemon stalled.", requester: "David Chen", reqRole: "Engineering • L5", category: "Security", status: "In Progress", priority: "Critical", assignee: "Alex Morgan (You)", sla: "42m", slaUrgent: true, categoryIcon: "shield" },
+        { id: "#TICK-1093", title: "VPN certificate renewal & access for EMEA staging clusters", detail: "OpenVPN profile revoked after Active Directory sync; unable to reach Dublin VPC.", requester: "Emily Taylor", reqRole: "DevOps • EMEA", category: "Network / VPN", status: "Open", priority: "High", assignee: "Unassigned", sla: "1h 45m", categoryIcon: "lan" },
+        { id: "#TICK-1092", title: "MacBook Pro secondary monitor flickering via Thunderbolt dock", detail: "CalDigit TS4 dock dual-screen dropouts every 15 minutes. Firmware update attempted.", requester: "Siddharth Kumar", reqRole: "Design System", category: "Hardware", status: "In Progress", priority: "Medium", assignee: "Sarah Jenkins", sla: "4h 15m", categoryIcon: "desktop_mac" },
+        { id: "#TICK-1091", title: "SSO login issue with Internal Jira & Confluence workspace", detail: "Okta SAML assertion timing out with error SAML_RESPONSE_SIGNATURE_INVALID.", requester: "Marcus Cole", reqRole: "Product Ops", category: "Access & Permissions", status: "Pending User", priority: "High", assignee: "Alex Morgan (You)", sla: "5h 20m", categoryIcon: "lock" },
+        { id: "#TICK-1090", title: "Request for Docker Enterprise license seat", detail: "New contractor onboarding in Backend Core Team; cost center approved by VP Eng.", requester: "Rachel Hayes", reqRole: "Engineering", category: "Software", status: "Open", priority: "Low", assignee: "Unassigned", sla: "7h 50m", categoryIcon: "terminal" },
+        { id: "#TICK-1089", title: "Figma Enterprise license seat allocation for Design System team", detail: "Provisioning required for new Brand & Marketing design contractor.", requester: "Jessica Lin", reqRole: "Product Design", category: "Software", status: "In Progress", priority: "Medium", assignee: "Elena Rostova", sla: "6h 10m", categoryIcon: "terminal" },
+        { id: "#TICK-1088", title: "Keycard access failure at Building 4 East Entrance", detail: "Turnstiles rejecting HID card scans for entire floor 2 finance team.", requester: "Tanya Kapoor", reqRole: "Facilities & People", category: "Facilities", status: "Open", priority: "High", assignee: "Unassigned", sla: "1h 20m", categoryIcon: "apartment" },
+        { id: "#TICK-1087", title: "Outlook calendar sync looping after Office 365 tenant migration", detail: "Duplicate invites generating 100+ notifications per hour.", requester: "Peter Bailey", reqRole: "Corporate Sales", category: "Software", status: "Resolved", priority: "Medium", assignee: "Michael Chang", sla: "Met SLA", categoryIcon: "terminal" }
+      ];
+
+      const toggleSelectAll = (checked) => {
+        if (checked) {
+          setSelectedTickets(initialTickets.map(t => t.id));
+        } else {
+          setSelectedTickets([]);
+        }
+      };
+
+      const toggleSelect = (id) => {
+        if (selectedTickets.includes(id)) {
+          setSelectedTickets(selectedTickets.filter(item => item !== id));
+        } else {
+          setSelectedTickets([...selectedTickets, id]);
+        }
+      };
+
+      const filtered = initialTickets.filter((t) => {
+        const matchesText = t.title.toLowerCase().includes(search.toLowerCase()) || t.id.toLowerCase().includes(search.toLowerCase()) || t.requester.toLowerCase().includes(search.toLowerCase());
+        if (filterTab === "unassigned") return matchesText && t.assignee === "Unassigned";
+        if (filterTab === "mine") return matchesText && t.assignee.includes("You");
+        if (filterTab === "high") return matchesText && (t.priority === "Critical" || t.priority === "High");
+        if (filterTab === "sla") return matchesText && t.slaUrgent;
+        return matchesText;
+      });
+
+      return (
+        <AppLayout currentPath="/tickets">
+          <div class="flex flex-col w-full">
+            {/* Header */}
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-1.5 text-xs">
+                  <span class="uppercase tracking-wider text-secondary font-semibold">Incident & Service Management</span>
+                  <span class="text-outline-variant">•</span>
+                  <span class="text-on-surface-variant">Queue Live Status</span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface text-[10px] font-semibold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary-container animate-pulse"></span>
+                    Realtime Active
+                  </span>
+                </div>
+                <h1 class="text-2xl text-primary tracking-tight font-bold mt-1">IT Incident & Service Queue</h1>
+                <p class="text-xs text-on-surface-variant max-w-3xl mt-0.5">Manage, triage, and reassign incoming service requests and incident tickets across IT tiers.</p>
+              </div>
+
+              <div class="flex items-center flex-wrap gap-2">
+                <button onClick={() => alert("Exporting 34 tickets to tickets_export.csv...")} class="h-9 px-3 inline-flex items-center gap-1.5 rounded-lg bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container text-xs font-semibold">
+                  <span class="material-symbols-outlined text-[16px]">download</span>
+                  <span>Export CSV</span>
+                </button>
+                <button onClick={() => alert("Batch reassign modal opened for selected tickets: " + selectedTickets.join(", "))} class="h-9 px-3 inline-flex items-center gap-1.5 rounded-lg bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container text-xs font-semibold">
+                  <span class="material-symbols-outlined text-[16px]">swap_horiz</span>
+                  <span>Batch Reassign ({selectedTickets.length})</span>
+                </button>
+                <button onClick={() => navigate("/create-ticket")} class="h-9 px-3.5 inline-flex items-center gap-1.5 rounded-lg bg-primary text-on-primary shadow-sm hover:bg-primary-container text-xs font-semibold">
+                  <span class="material-symbols-outlined text-[16px]">add</span>
+                  <span>Create Ticket</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Bento Metric Cards */}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Unassigned Tickets</span>
+                    <div class="flex items-baseline gap-2 mt-1">
+                      <span class="text-2xl font-bold text-on-surface">6</span>
+                      <span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-[11px] font-semibold">Action Required</span>
+                    </div>
+                  </div>
+                  <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-[20px]">inbox</span>
+                  </div>
+                </div>
+                <button onClick={() => setFilterTab("unassigned")} class="mt-3 text-left text-xs text-secondary font-medium hover:underline flex items-center gap-1">
+                  <span>Triage pool now</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </button>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">High / Critical Queue</span>
+                    <div class="flex items-baseline gap-2 mt-1">
+                      <span class="text-2xl font-bold text-error">8</span>
+                      <span class="text-xs text-on-surface-variant">2 Outages</span>
+                    </div>
+                  </div>
+                  <div class="w-9 h-9 rounded-lg bg-error-container/40 flex items-center justify-center text-error">
+                    <span class="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>emergency</span>
+                  </div>
+                </div>
+                <button onClick={() => setFilterTab("high")} class="mt-3 text-left text-xs text-error font-medium hover:underline">
+                  View Critical Blockers
+                </button>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">My Assigned Queue</span>
+                    <div class="flex items-baseline gap-2 mt-1">
+                      <span class="text-2xl font-bold text-primary">5</span>
+                      <span class="px-2 py-0.5 rounded-full bg-surface-container text-secondary text-[11px] font-semibold">3 In Progress</span>
+                    </div>
+                  </div>
+                  <div class="w-9 h-9 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary">
+                    <span class="material-symbols-outlined text-[20px]">assignment_ind</span>
+                  </div>
+                </div>
+                <button onClick={() => setFilterTab("mine")} class="mt-3 text-left text-xs text-secondary font-medium hover:underline">
+                  Manage My Tickets
+                </button>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">SLA At Risk (&lt; 2h)</span>
+                    <div class="flex items-baseline gap-2 mt-1">
+                      <span class="text-2xl font-bold text-on-surface">3</span>
+                      <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-primary text-[11px] font-semibold">91.4% Target</span>
+                    </div>
+                  </div>
+                  <div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary-container">
+                    <span class="material-symbols-outlined text-[20px]">alarm</span>
+                  </div>
+                </div>
+                <button onClick={() => setFilterTab("sla")} class="mt-3 text-left text-xs text-error font-medium hover:underline">
+                  Expedite Breaching (1 left)
+                </button>
+              </div>
+            </div>
+
+            {/* Filter Tabs & Search Strip */}
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm p-4 mb-6 flex flex-col gap-3">
+              <div class="flex flex-col md:flex-row items-center gap-3">
+                <div class="relative flex-1 w-full">
+                  <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search ticket ID, title, requester name, keywords... (Ctrl + K)"
+                    class="w-full pl-10 pr-4 py-2 rounded-lg bg-surface-container-low text-xs text-on-surface placeholder-on-surface-variant border-none focus:ring-1 focus:ring-secondary"
+                  />
+                </div>
+                <div class="flex items-center gap-2 self-start md:self-auto">
+                  <button
+                    onClick={() => { setSearch(""); setFilterTab("all"); setSelectedTickets([]); }}
+                    class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-xs font-medium"
+                  >
+                    <span class="material-symbols-outlined text-[16px]">restart_alt</span>
+                    <span>Reset</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 overflow-x-auto pb-1">
+                {[
+                  { key: "all", label: "All Tickets", count: 34 },
+                  { key: "unassigned", label: "Unassigned", count: 6 },
+                  { key: "mine", label: "Assigned to Me", count: 5 },
+                  { key: "high", label: "High Priority", count: 8 },
+                  { key: "sla", label: "SLA Breaching", count: 3 }
+                ].map(tab => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setFilterTab(tab.key)}
+                    class={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+                      filterTab === tab.key ? "bg-primary text-on-primary" : "bg-surface-container-low text-on-surface-variant hover:bg-surface-container"
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    <span class={`px-1.5 py-0.2 rounded-full text-[10px] ${filterTab === tab.key ? "bg-white/20 text-on-primary" : "bg-surface-container-high text-on-surface"}`}>
+                      {tab.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Queue Table */}
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+              <div class="overflow-x-auto w-full">
+                <table class="w-full text-left border-collapse min-w-[1000px]">
+                  <thead class="bg-primary-container text-on-primary">
+                    <tr class="h-11 text-xs">
+                      <th class="w-12 px-4 py-2 text-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedTickets.length === initialTickets.length}
+                          onChange={(e) => toggleSelectAll(e.target.checked)}
+                          class="w-4 h-4 rounded text-secondary-container bg-surface-container-lowest cursor-pointer"
+                        />
+                      </th>
+                      <th class="px-3 py-2 font-semibold">ID</th>
+                      <th class="px-4 py-2 font-semibold min-w-[260px]">Subject / Issue Preview</th>
+                      <th class="px-3 py-2 font-semibold">Requester</th>
+                      <th class="px-3 py-2 font-semibold">Category</th>
+                      <th class="px-3 py-2 font-semibold">Status</th>
+                      <th class="px-3 py-2 font-semibold">Priority</th>
+                      <th class="px-3 py-2 font-semibold">Assignee</th>
+                      <th class="px-3 py-2 font-semibold">SLA</th>
+                      <th class="px-4 py-2 font-semibold text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-surface-container-low text-xs">
+                    {filtered.map((t) => (
+                      <tr key={t.id} class="hover:bg-surface-container-low transition-colors">
+                        <td class="px-4 py-3 text-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedTickets.includes(t.id)}
+                            onChange={() => toggleSelect(t.id)}
+                            class="w-4 h-4 rounded text-secondary-container bg-surface-container-low cursor-pointer"
+                          />
+                        </td>
+                        <td class="px-3 py-3 font-semibold text-secondary hover:underline cursor-pointer" onClick={() => navigate("/ticket/TICK-1094")}>
+                          {t.id}
+                        </td>
+                        <td class="px-4 py-3">
+                          <div class="flex flex-col cursor-pointer" onClick={() => navigate("/ticket/TICK-1094")}>
+                            <span class="font-semibold text-on-surface hover:text-secondary truncate max-w-sm">{t.title}</span>
+                            <span class="text-on-surface-variant truncate max-w-sm mt-0.5 text-[11px]">{t.detail}</span>
+                          </div>
+                        </td>
+                        <td class="px-3 py-3 whitespace-nowrap">
+                          <div class="flex flex-col">
+                            <span class="font-semibold text-on-surface">{t.requester}</span>
+                            <span class="text-on-surface-variant text-[11px]">{t.reqRole}</span>
+                          </div>
+                        </td>
+                        <td class="px-3 py-3 whitespace-nowrap">
+                          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface text-[11px]">
+                            <span class="material-symbols-outlined text-[13px]">{t.categoryIcon}</span>
+                            <span>{t.category}</span>
+                          </span>
+                        </td>
+                        <td class="px-3 py-3 whitespace-nowrap">
+                          <span class="px-2 py-0.5 rounded-full bg-surface-variant text-primary font-semibold text-[11px]">
+                            {t.status}
+                          </span>
+                        </td>
+                        <td class="px-3 py-3 whitespace-nowrap">
+                          <span class={`px-2 py-0.5 rounded font-semibold text-[11px] ${
+                            t.priority === "Critical" ? "bg-error-container text-on-error-container" :
+                            t.priority === "High" ? "bg-error-container/50 text-error" : "bg-surface-container text-on-surface"
+                          }`}>
+                            {t.priority}
+                          </span>
+                        </td>
+                        <td class="px-3 py-3 whitespace-nowrap">
+                          <span class={`text-[11px] font-medium ${t.assignee === "Unassigned" ? "text-error flex items-center gap-1" : "text-on-surface"}`}>
+                            {t.assignee === "Unassigned" && <span class="material-symbols-outlined text-[13px]">error</span>}
+                            {t.assignee}
+                          </span>
+                        </td>
+                        <td class="px-3 py-3 whitespace-nowrap">
+                          <span class={`text-[11px] font-semibold ${t.slaUrgent ? "text-error flex items-center gap-0.5" : "text-on-surface-variant"}`}>
+                            {t.slaUrgent && <span class="material-symbols-outlined text-[13px]">timer</span>}
+                            {t.sla}
+                          </span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-right">
+                          <button
+                            onClick={() => navigate("/ticket/TICK-1094")}
+                            class="h-7 px-2.5 rounded bg-surface-container-low text-on-surface hover:bg-surface-container font-semibold transition-colors"
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Table Pagination */}
+              <div class="px-4 py-3 bg-surface-container-lowest flex items-center justify-between text-xs text-on-surface-variant border-t border-surface-container-low">
+                <span>Showing 1 to {filtered.length} of {initialTickets.length} tickets</span>
+                <div class="flex items-center gap-1">
+                  <button class="h-7 px-2 rounded bg-surface-container-low text-on-surface-variant disabled:opacity-50" disabled>Previous</button>
+                  <button class="w-7 h-7 rounded bg-primary text-on-primary font-bold">1</button>
+                  <button class="w-7 h-7 rounded bg-surface-container-low text-on-surface">2</button>
+                  <button class="h-7 px-2 rounded bg-surface-container-low text-on-surface-variant">Next</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </AppLayout>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Screen 7: IT Operations & Analytics Dashboard
+    // ----------------------------------------------------
+    function AnalyticsPage() {
+      const [metricType, setMetricType] = useState("volume");
+      const [dateRange, setDateRange] = useState("Last 30 Days");
+      const [showDropdown, setShowDropdown] = useState(false);
+      const [categorySearch, setCategorySearch] = useState("");
+      const [showModal, setShowModal] = useState(false);
+      const [newCategoryName, setNewCategoryName] = useState("");
+      const [categories, setCategories] = useState([
+        { id: 1, name: "Network & VPN", desc: "Gateways, DNS, Zero-trust client, subnets", queue: "Tier 2 Infrastructure", resp: "< 30m", res: "< 4h", activeTickets: 78, active: true, icon: "router" },
+        { id: 2, name: "Software & Applications", desc: "SaaS suites, enterprise licenses, bug triage", queue: "Tier 1 Service Desk", resp: "< 1h", res: "< 8h", activeTickets: 64, active: true, icon: "apps" },
+        { id: 3, name: "Hardware & Peripherals", desc: "Laptops, docks, audio-video conference rigs", queue: "Tech Bar Tier 2", resp: "< 2h", res: "< 24h", activeTickets: 52, active: true, icon: "devices" },
+        { id: 4, name: "Accounts & Identity", desc: "SSO, Okta tokens, role privileges, onboarding", queue: "IT Security & IAM", resp: "< 15m", res: "< 2h", activeTickets: 41, active: true, icon: "manage_accounts" },
+        { id: 5, name: "Security & Compliance", desc: "Phishing reports, policy violations, audits", queue: "SecOps Incident Team", resp: "Immediate", res: "< 4h", activeTickets: 28, active: true, icon: "gshield" },
+        { id: 6, name: "Legacy Telephony (VoIP)", desc: "On-prem PBX, analog desks, fax relays", queue: "Telecom Tier 3", resp: "< 4h", res: "< 48h", activeTickets: 0, active: false, icon: "phone_in_talk" }
+      ]);
+
+      const toggleCategoryStatus = (id) => {
+        setCategories(categories.map(c => c.id === id ? { ...c, active: !c.active } : c));
+      };
+
+      const handleAddCategory = (e) => {
+        e.preventDefault();
+        if (!newCategoryName.trim()) return;
+        const newCat = {
+          id: Date.now(),
+          name: newCategoryName,
+          desc: "Custom IT service category",
+          queue: "Tier 1 Service Desk",
+          resp: "< 1h",
+          res: "< 8h",
+          activeTickets: 0,
+          active: true,
+          icon: "category"
+        };
+        setCategories([...categories, newCat]);
+        setNewCategoryName("");
+        setShowModal(false);
+      };
+
+      const filteredCategories = categories.filter(c => c.name.toLowerCase().includes(categorySearch.toLowerCase()));
+
+      return (
+        <AppLayout currentPath="/analytics">
+          <div class="flex flex-col w-full gap-6">
+            {/* Header */}
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-1 mb-1">
+                  <span class="text-xs text-secondary uppercase tracking-wider font-semibold">ITSM Operational Intelligence</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+                  <span class="text-xs text-on-surface-variant font-medium">Live Telemetry</span>
+                </div>
+                <h1 class="text-2xl font-bold text-on-surface tracking-tight">IT Operations & Analytics</h1>
+                <p class="text-xs text-on-surface-variant max-w-2xl mt-0.5">Real-time performance tracking, ticket volume trends, agent allocation, and service category management.</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="relative inline-flex items-center">
+                  <button
+                    onClick={() => setShowDropdown(!showDropdown)}
+                    class="h-9 px-3 bg-surface-container-lowest rounded-lg shadow-sm hover:bg-surface-container-low transition-colors flex items-center gap-2 text-xs font-semibold text-on-surface"
+                  >
+                    <span class="material-symbols-outlined text-[16px] text-on-surface-variant">calendar_today</span>
+                    <span>{dateRange}</span>
+                    <span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span>
+                  </button>
+                  {showDropdown && (
+                    <div class="absolute right-0 top-10 w-40 bg-surface-container-lowest rounded-lg shadow-md z-30 py-1 flex flex-col text-xs border border-surface-container">
+                      {["Last 7 Days", "Last 30 Days", "This Quarter", "Year to Date"].map(d => (
+                        <button
+                          key={d}
+                          onClick={() => { setDateRange(d); setShowDropdown(false); }}
+                          class="w-full text-left px-3 py-2 hover:bg-surface-container-low"
+                        >
+                          {d}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => alert("IT Operations Report generated and downloaded as PDF.")}
+                  class="h-9 px-3 bg-surface-container-lowest text-primary hover:bg-surface-container-low rounded-lg shadow-sm text-xs font-semibold flex items-center gap-1.5"
+                >
+                  <span class="material-symbols-outlined text-[16px]">file_download</span>
+                  <span>Export Report</span>
+                </button>
+
+                <button
+                  onClick={() => setShowModal(true)}
+                  class="h-9 px-3 bg-primary-container hover:bg-primary text-on-primary rounded-lg shadow-sm text-xs font-semibold flex items-center gap-1.5"
+                >
+                  <span class="material-symbols-outlined text-[16px]">add_circle</span>
+                  <span>+ Add Service Category</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Top Metric Bento Grid */}
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-medium">Open Tickets</span>
+                    <div class="flex items-baseline gap-2 mt-1">
+                      <span class="text-3xl text-on-surface font-bold">42</span>
+                      <span class="px-1.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-semibold">+8%</span>
+                    </div>
+                  </div>
+                  <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-[22px]">inbox</span>
+                  </div>
+                </div>
+                <span class="text-xs text-on-surface-variant mt-3">12 unassigned in triage</span>
+              </div>
+
+              <div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-error font-semibold">High / Critical Priority</span>
+                    <div class="flex items-baseline gap-2 mt-1">
+                      <span class="text-3xl text-error font-bold">9</span>
+                      <span class="px-1.5 py-0.5 rounded bg-error-container text-on-error-container text-[11px] font-semibold">Needs Attention</span>
+                    </div>
+                  </div>
+                  <div class="w-10 h-10 rounded-lg bg-error-container/60 flex items-center justify-center text-error">
+                    <span class="material-symbols-outlined text-[22px]" style={{fontVariationSettings: "'FILL' 1"}}>warning</span>
+                  </div>
+                </div>
+                <span class="text-xs text-error font-medium mt-3">3 P1 SLA warnings pending</span>
+              </div>
+
+              <div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-medium">In Progress</span>
+                    <div class="flex items-baseline gap-2 mt-1">
+                      <span class="text-3xl text-on-surface font-bold">28</span>
+                      <span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px]">On Track</span>
+                    </div>
+                  </div>
+                  <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-secondary">
+                    <span class="material-symbols-outlined text-[22px]">pending_actions</span>
+                  </div>
+                </div>
+                <span class="text-xs text-on-surface-variant mt-3">Avg resolution: <strong class="text-on-surface font-semibold">3.4 hrs</strong></span>
+              </div>
+
+              <div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-xs uppercase tracking-wider text-on-surface-variant font-medium">Resolved (Period)</span>
+                    <div class="flex items-baseline gap-2 mt-1">
+                      <span class="text-3xl text-on-surface font-bold">184</span>
+                      <span class="px-1.5 py-0.5 rounded bg-surface-container-high text-primary-container text-[11px] font-semibold">96.2% SLA</span>
+                    </div>
+                  </div>
+                  <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-container">
+                    <span class="material-symbols-outlined text-[22px]">check_circle</span>
+                  </div>
+                </div>
+                <span class="text-xs text-on-surface-variant mt-3"><strong class="text-on-surface">4.9 / 5.0</strong> CSAT rating</span>
+              </div>
+            </div>
+
+            {/* Middle Section: Side-by-Side Analytics Panels */}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* Category Breakdown */}
+              <div class="lg:col-span-6 bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-primary text-[20px]">category</span>
+                      <h2 class="text-base text-on-surface font-semibold">Tickets by Category</h2>
+                      <span class="px-2 py-0.5 rounded-full bg-surface-container-low text-primary text-xs font-semibold">263 total</span>
+                    </div>
+                    <div class="flex items-center p-0.5 bg-surface-container-low rounded-lg">
+                      <button
+                        onClick={() => setMetricType("volume")}
+                        class={`px-2.5 py-1 text-xs rounded-md font-semibold transition-all ${
+                          metricType === "volume" ? "bg-surface-container-lowest text-primary shadow-sm" : "text-on-surface-variant"
+                        }`}
+                      >
+                        Volume
+                      </button>
+                      <button
+                        onClick={() => setMetricType("sla")}
+                        class={`px-2.5 py-1 text-xs rounded-md font-semibold transition-all ${
+                          metricType === "sla" ? "bg-surface-container-lowest text-primary shadow-sm" : "text-on-surface-variant"
+                        }`}
+                      >
+                        SLA Breach %
+                      </button>
+                    </div>
+                  </div>
+
+                  <p class="text-xs text-on-surface-variant mb-6">Distribution of active incident requests across operational service groups.</p>
+
+                  {metricType === "volume" ? (
+                    <div class="space-y-4">
+                      {[
+                        { name: "Network & VPN", count: 78, pct: 30, color: "bg-primary-container" },
+                        { name: "Software & Applications", count: 64, pct: 24, color: "bg-secondary-container" },
+                        { name: "Hardware & Peripherals", count: 52, pct: 20, color: "bg-surface-tint" },
+                        { name: "Accounts & Access", count: 41, pct: 16, color: "bg-secondary" },
+                        { name: "Security & Compliance", count: 28, pct: 10, color: "bg-tertiary-container" },
+                      ].map((item, i) => (
+                        <div key={i}>
+                          <div class="flex items-center justify-between mb-1 text-xs">
+                            <span class="font-semibold text-on-surface">{item.name}</span>
+                            <div class="flex items-center gap-1 font-bold text-on-surface">
+                              <span>{item.count} tickets</span>
+                              <span class="text-on-surface-variant font-normal">({item.pct}%)</span>
+                            </div>
+                          </div>
+                          <div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
+                            <div class={`h-full ${item.color} rounded-full`} style={{ width: `${item.pct * 2.5}%` }}></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div class="space-y-4">
+                      {[
+                        { name: "Security & Compliance", breach: "12.4%", width: "62%", color: "bg-error" },
+                        { name: "Network & VPN", breach: "5.8%", width: "32%", color: "bg-primary-container" },
+                        { name: "Hardware & Peripherals", breach: "3.2%", width: "20%", color: "bg-surface-tint" },
+                        { name: "Software & Applications", breach: "2.1%", width: "14%", color: "bg-secondary-container" },
+                        { name: "Accounts & Access", breach: "0.8%", width: "6%", color: "bg-secondary" },
+                      ].map((item, i) => (
+                        <div key={i}>
+                          <div class="flex items-center justify-between mb-1 text-xs">
+                            <span class="font-semibold text-on-surface">{item.name}</span>
+                            <span class="font-bold text-error">{item.breach} Breach Rate</span>
+                          </div>
+                          <div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden">
+                            <div class={`h-full ${item.color} rounded-full`} style={{ width: item.width }}></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div class="mt-6 p-3 rounded-lg bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-on-surface-variant">
+                  <span>Highest Volume: <strong class="text-on-surface font-semibold">Network & VPN (30%)</strong></span>
+                  <span>Fastest SLA: <strong class="text-on-surface font-semibold">Accounts (42m avg)</strong></span>
+                </div>
+              </div>
+
+              {/* Agent Workload */}
+              <div class="lg:col-span-6 bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-primary text-[20px]">badge</span>
+                      <h2 class="text-base text-on-surface font-semibold">Agent Workload & Allocation</h2>
+                    </div>
+                    <span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed text-xs font-semibold">Avg Cap: 74%</span>
+                  </div>
+
+                  <p class="text-xs text-on-surface-variant mb-6">Real-time concurrency vs capacity threshold per active technician.</p>
+
+                  <div class="space-y-3">
+                    {[
+                      { name: "Sarah Jenkins", role: "Tier 2 Hardware", avatar: "SJ", active: 8, max: 8, pct: 100, status: "Near Limit (100%)", color: "bg-error", badgeColor: "bg-error-container text-on-error-container" },
+                      { name: "Marcus Cole", role: "Product Ops", avatar: "MC", active: 7, max: 8, pct: 88, status: "88% Heavy", color: "bg-surface-tint", badgeColor: "bg-surface-container-highest text-on-surface-variant" },
+                      { name: "David Chen", role: "Engineering L5", avatar: "DC", active: 5, max: 8, pct: 63, status: "Optimal", color: "bg-secondary-container", badgeColor: "bg-surface-container text-primary" },
+                      { name: "Emily Taylor", role: "DevOps EMEA", avatar: "ET", active: 5, max: 8, pct: 63, status: "Optimal", color: "bg-secondary-container", badgeColor: "bg-surface-container text-primary" },
+                      { name: "Jessica Lin", role: "Access & Security", avatar: "JL", active: 3, max: 8, pct: 38, status: "Available (38%)", color: "bg-secondary", badgeColor: "bg-surface-container-high text-on-surface-variant" },
+                    ].map((agent, i) => (
+                      <div key={i} class="p-2.5 rounded-lg bg-surface-container-low/50">
+                        <div class="flex items-center justify-between mb-1.5 text-xs">
+                          <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-primary-container text-on-primary font-bold text-[10px] flex items-center justify-center">
+                              {agent.avatar}
+                            </div>
+                            <div class="flex flex-col">
+                              <span class="font-semibold text-on-surface leading-none">{agent.name}</span>
+                              <span class="text-[10px] text-on-surface-variant leading-none mt-0.5">{agent.role}</span>
+                            </div>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <span class={`px-1.5 py-0.2 rounded font-semibold text-[10px] ${agent.badgeColor}`}>{agent.status}</span>
+                            <span class="font-bold text-on-surface">{agent.active} / {agent.max}</span>
+                          </div>
+                        </div>
+                        <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+                          <div class={`h-full ${agent.color} rounded-full`} style={{ width: `${agent.pct}%` }}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div class="mt-6 pt-3 flex items-center justify-between text-xs text-on-surface-variant">
+                  <span>Auto-routing threshold: <strong>≤ 7 tickets</strong></span>
+                  <button onClick={() => alert("Rebalancing queues automatically across available agents...")} class="text-secondary font-semibold hover:underline flex items-center gap-1">
+                    <span>Rebalance Queues</span>
+                    <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Section: Manage Ticket Categories Table */}
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+              <div class="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-surface-container-low">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[20px]">account_tree</span>
+                    <h2 class="text-base text-on-surface font-semibold">Manage Ticket Categories</h2>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Configure ITSM taxonomy, default routing queues, SLA commitments, and activation statuses.</p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-2.5 top-2 text-on-surface-variant text-[16px]">search</span>
+                    <input
+                      value={categorySearch}
+                      onChange={(e) => setCategorySearch(e.target.value)}
+                      placeholder="Filter categories..."
+                      class="h-8 pl-8 pr-3 rounded-lg bg-surface-container-low text-xs text-on-surface focus:outline-none"
+                    />
+                  </div>
+                  <button
+                    onClick={() => setShowModal(true)}
+                    class="h-8 px-3 bg-primary-container text-on-primary hover:bg-primary text-xs font-semibold rounded-lg shadow-sm flex items-center gap-1 whitespace-nowrap"
+                  >
+                    <span class="material-symbols-outlined text-[16px]">add</span>
+                    <span>New Category</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead>
+                    <tr class="bg-surface-container-low/60 text-on-surface-variant uppercase tracking-wider">
+                      <th class="py-3 px-6 font-semibold">Category Name</th>
+                      <th class="py-3 px-4 font-semibold">Routing Assignment</th>
+                      <th class="py-3 px-4 font-semibold">SLA Targets</th>
+                      <th class="py-3 px-4 font-semibold text-center">Active Tickets</th>
+                      <th class="py-3 px-4 font-semibold text-center">Status</th>
+                      <th class="py-3 px-6 font-semibold text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-surface-container-low">
+                    {filteredCategories.map((cat) => (
+                      <tr key={cat.id} class={`hover:bg-surface-container-low/30 transition-colors ${!cat.active ? "opacity-60" : ""}`}>
+                        <td class="py-3.5 px-6">
+                          <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+                              <span class="material-symbols-outlined text-[18px]">{cat.icon}</span>
+                            </div>
+                            <div class="flex flex-col">
+                              <span class="font-semibold text-on-surface">{cat.name}</span>
+                              <span class="text-on-surface-variant text-[11px]">{cat.desc}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="py-3.5 px-4 font-medium text-on-surface">
+                          {cat.queue}
+                        </td>
+                        <td class="py-3.5 px-4 text-on-surface-variant">
+                          <div>Response: <strong class="text-on-surface">{cat.resp}</strong></div>
+                          <div>Resolve: <strong class="text-on-surface">{cat.res}</strong></div>
+                        </td>
+                        <td class="py-3.5 px-4 text-center">
+                          <span class="px-2.5 py-0.5 rounded-full bg-surface-container text-primary font-bold">{cat.activeTickets}</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-center">
+                          <span class={`px-2 py-0.5 rounded-full font-semibold ${
+                            cat.active ? "bg-surface-container-high text-primary-container" : "bg-surface-container-highest text-on-surface-variant"
+                          }`}>
+                            {cat.active ? "Active" : "Inactive"}
+                          </span>
+                        </td>
+                        <td class="py-3.5 px-6 text-right">
+                          <div class="inline-flex items-center gap-2">
+                            <button
+                              onClick={() => toggleCategoryStatus(cat.id)}
+                              class={`px-2 py-1 rounded font-semibold transition-colors ${
+                                cat.active ? "bg-surface-container text-on-surface-variant hover:text-error" : "bg-primary-container text-on-primary"
+                              }`}
+                            >
+                              {cat.active ? "Deactivate" : "Activate"}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Modal: New Service Category */}
+            {showModal && (
+              <div class="fixed inset-0 bg-primary/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div class="bg-surface-container-lowest rounded-xl shadow-xl w-full max-w-lg p-6 relative flex flex-col">
+                  <div class="flex items-center justify-between pb-2 border-b border-surface-container">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-[20px]">add_task</span>
+                      </div>
+                      <h3 class="text-base font-bold text-on-surface">New Service Category</h3>
+                    </div>
+                    <button onClick={() => setShowModal(false)} class="p-1 rounded text-on-surface-variant hover:bg-surface-container">
+                      <span class="material-symbols-outlined text-[20px]">close</span>
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleAddCategory} class="space-y-4 mt-4 text-xs">
+                    <div>
+                      <label class="block font-semibold text-on-surface mb-1">Category Name *</label>
+                      <input
+                        value={newCategoryName}
+                        onChange={(e) => setNewCategoryName(e.target.value)}
+                        placeholder="e.g. Cloud Infrastructure & DevOps"
+                        required
+                        class="w-full h-9 px-3 rounded-lg bg-surface-container-low text-on-surface border border-outline-variant focus:outline-none"
+                      />
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <label class="block font-semibold text-on-surface mb-1">Default Routing</label>
+                        <select class="w-full h-9 px-2 rounded-lg bg-surface-container-low border border-outline-variant">
+                          <option>Tier 1 Service Desk</option>
+                          <option>Tier 2 Infrastructure</option>
+                          <option>IT Security & IAM</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="block font-semibold text-on-surface mb-1">Priority Default</label>
+                        <select class="w-full h-9 px-2 rounded-lg bg-surface-container-low border border-outline-variant">
+                          <option>P3 - Standard</option>
+                          <option>P2 - High</option>
+                          <option>P1 - Critical</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-2 pt-3">
+                      <button
+                        type="button"
+                        onClick={() => setShowModal(false)}
+                        class="px-3 h-8 bg-surface-container-low rounded-lg font-semibold hover:bg-surface-container"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        class="px-4 h-8 bg-primary-container text-on-primary rounded-lg font-semibold shadow-sm hover:bg-primary"
+                      >
+                        Save Category
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        </AppLayout>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Knowledge Base Placeholder Page
+    // ----------------------------------------------------
+    function KnowledgeBasePage() {
+      const navigate = useNavigate();
+      return (
+        <AppLayout currentPath="/knowledge-base">
+          <div class="flex flex-col w-full gap-6">
+            <div class="flex flex-col">
+              <h1 class="text-2xl font-bold text-primary">Knowledge Base & Self-Service Guides</h1>
+              <p class="text-xs text-on-surface-variant mt-1">Browse 450+ verified IT resolutions, software deployment procedures, and troubleshooting wikis.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { title: "Fixing GlobalProtect VPN connection timeout", cat: "Network", reads: "1.4k reads", icon: "vpn_key" },
+                { title: "Okta Multi-Factor Authentication token reset guide", cat: "Security", reads: "2.8k reads", icon: "lock_reset" },
+                { title: "CalDigit TS4 Thunderbolt display firmware patch", cat: "Hardware", reads: "920 reads", icon: "devices" },
+                { title: "macOS Sonoma DisplayLink driver installation", cat: "macOS", reads: "640 reads", icon: "laptop_mac" },
+                { title: "Requesting software license seats via BambooHR", cat: "Licensing", reads: "3.1k reads", icon: "badge" },
+                { title: "Office 365 Outlook duplicate notifications reset", cat: "Productivity", reads: "810 reads", icon: "mail" },
+              ].map((kb, idx) => (
+                <div key={idx} class="p-5 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary shrink-0">
+                      <span class="material-symbols-outlined text-[22px]">{kb.icon}</span>
+                    </div>
+                    <div>
+                      <span class="px-2 py-0.5 rounded bg-surface-container-high text-primary text-[10px] font-bold">{kb.cat}</span>
+                      <h3 class="text-sm font-semibold text-on-surface mt-1.5">{kb.title}</h3>
+                    </div>
+                  </div>
+                  <div class="mt-4 pt-2 border-t border-surface-container flex items-center justify-between text-xs">
+                    <span class="text-on-surface-variant text-[11px]">{kb.reads}</span>
+                    <button onClick={() => alert(`Opening KB article: ${kb.title}`)} class="text-secondary font-semibold hover:underline flex items-center gap-0.5">
+                      <span>Read Guide</span>
+                      <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </AppLayout>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Settings Placeholder Page
+    // ----------------------------------------------------
+    function SettingsPage() {
+      return (
+        <AppLayout currentPath="/settings">
+          <div class="flex flex-col w-full max-w-2xl bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+            <h1 class="text-xl font-bold text-primary mb-1">User & Workspace Preferences</h1>
+            <p class="text-xs text-on-surface-variant mb-6">Manage profile details, notification preferences, and self-service routing configurations.</p>
+
+            <div class="space-y-4 text-xs">
+              <div>
+                <label class="block font-semibold text-on-surface mb-1">Full Name</label>
+                <input class="w-full p-2.5 rounded-lg bg-surface-container-low border border-outline-variant" defaultValue="Alex Morgan" />
+              </div>
+              <div>
+                <label class="block font-semibold text-on-surface mb-1">Work Email</label>
+                <input class="w-full p-2.5 rounded-lg bg-surface-container-low border border-outline-variant" defaultValue="alex.m@company.org" disabled />
+              </div>
+              <div>
+                <label class="block font-semibold text-on-surface mb-1">Assigned Department</label>
+                <input class="w-full p-2.5 rounded-lg bg-surface-container-low border border-outline-variant" defaultValue="Product & UX Design (HQ Austin)" />
+              </div>
+              <div class="pt-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" defaultChecked class="rounded text-secondary focus:ring-secondary" />
+                  <span class="text-on-surface font-medium">Receive email digests for ticket SLA status changes</span>
+                </label>
+              </div>
+              <div class="pt-4">
+                <button onClick={() => alert("Settings preferences saved.")} class="px-5 py-2.5 bg-primary text-on-primary rounded-lg font-semibold hover:bg-primary/90">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </AppLayout>
+      );
+    }
+
+    // ----------------------------------------------------
+    // Main App Component with Router
+    // ----------------------------------------------------
+    function App() {
+      return (
+        <MemoryRouter initialEntries={["/dashboard"]}>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/create-ticket" element={<CreateTicketPage />} />
+            <Route path="/tickets" element={<TicketsQueuePage />} />
+            <Route path="/ticket/:id" element={<TicketDetailPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/knowledge-base" element={<KnowledgeBasePage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+          </Routes>
+        </MemoryRouter>
+      );
+    }
+
+    const root = createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
