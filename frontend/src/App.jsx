@@ -1,122 +1,97 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom'
+import Icon from './components/Icon'
+import PageHeader from './components/PageHeader'
+import Shell, { LOGO_SRC } from './components/Shell'
+import TicketTable from './components/TicketTable'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+function FieldIcon({ children }) {
+  return <span className="field-icon" aria-hidden="true">{children}</span>
+}
 
+function EyeIcon({ visible }) {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <svg className="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      {visible ? <><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" strokeLinecap="round" strokeLinejoin="round" /><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" strokeLinecap="round" strokeLinejoin="round" /></> : <path d="M13.875 18.825A10.05 10.05 0 0 1 12 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 0 1 1.563-3.029m5.858.908a3 3 0 1 1 4.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532 3.29 3.29M3 3l18 18" strokeLinecap="round" strokeLinejoin="round" />}
+    </svg>
   )
 }
+
+const tickets = [
+  ['#TICK-1094', 'MacBook Pro secondary monitor flickering via Thunderbolt dock', 'Hardware', 'In Progress', 'High'],
+  ['#TICK-1091', 'Request VPN certificate renewal & access for EMEA staging', 'Network / VPN', 'Open', 'Medium'],
+  ['#TICK-1088', 'Figma Enterprise license seat allocation for Design System team', 'Software', 'In Progress', 'Medium'],
+  ['#TICK-1085', 'SSO login issue with Internal Jira & Confluence workspace', 'Access & Permissions', 'Open', 'Critical'],
+]
+
+
+function DashboardPage() {
+  const navigate = useNavigate(); const [search, setSearch] = useState('')
+  const shown = tickets.filter((ticket) => ticket[1].toLowerCase().includes(search.toLowerCase()) || ticket[0].toLowerCase().includes(search.toLowerCase()))
+  return <Shell><PageHeader eyebrow="SELF-SERVICE PORTAL  •  IT SUPPORT DESK" title="Welcome back, Alex" description="Here is an overview of your IT service requests and real-time support status." action={<button className="primary-button" onClick={() => navigate('/create-ticket')}><Icon>add</Icon>New Ticket</button>} />
+    <div className="stats-grid">{[['My Open Tickets', '3', 'tickets'], ['In Progress', '2', 'active'], ['Resolved', '14', 'this quarter']].map(([label, value, suffix]) => <section className="stat-card" key={label}><span>{label}</span><strong>{value}</strong><small>{suffix}</small><p>{label === 'Resolved' ? '100% CSAT' : 'Avg. 18m SLA'}</p></section>)}</div>
+    <section className="panel"><div className="panel-heading"><div><h2>Recent Tickets</h2><p>Track ongoing service requests, incident updates, and hardware provisioning.</p></div><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search tickets..." /></div><TicketTable rows={shown} onSelect={() => navigate('/ticket/TICK-1094')} /></section>
+  </Shell>
+}
+
+
+function CreateTicketPage() {
+  const navigate = useNavigate(); const [title, setTitle] = useState(''); const [category, setCategory] = useState(''); const [description, setDescription] = useState(''); const [files, setFiles] = useState([])
+  const submit = (event) => { event.preventDefault(); if (!title || !category || !description) return; window.alert('Ticket submitted successfully.'); navigate('/ticket/TICK-1094') }
+  return <Shell><PageHeader eyebrow="SELF-SERVICE PORTAL  •  IT SUPPORT DESK" title="Create a Support Ticket" description="Submit a detailed request and our IT support team or automated assistants will assist you." action={<button className="secondary-button" onClick={() => navigate('/tickets')}><Icon>arrow_back</Icon>Back to Tickets</button>} /><div className="content-grid"><form className="panel ticket-form" onSubmit={submit}><h2>Ticket Details</h2><p>Please provide clear details about the issue or request so we can route it quickly.</p><label>Ticket Title<input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Unable to connect to corporate VPN" required /></label><div className="form-row"><label>Category<select value={category} onChange={(e) => setCategory(e.target.value)} required><option value="">Select a category...</option><option>Hardware</option><option>Software</option><option>Network / VPN</option><option>Access & Permissions</option><option>Security</option></select></label><label>Urgency & Impact<select><option>Medium</option><option>Low</option><option>High</option><option>Critical</option></select></label></div><label>Description<textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe the issue in detail..." rows="7" required /></label><label className="upload"> <Icon>cloud_upload</Icon>Attach screenshots or logs<input type="file" multiple onChange={(e) => setFiles([...e.target.files])} /><small>{files.length ? `${files.length} file(s) attached` : 'PNG, JPG, PDF, LOG up to 25MB'}</small></label><div className="form-actions"><button type="button" className="secondary-button">Save Draft</button><button className="primary-button" type="submit">Submit Ticket <Icon>send</Icon></button></div></form><aside className="panel tips"><h2>Before Submitting</h2>{['Check System Health', 'Restart Device & Peripherals', 'Explore Knowledge Base'].map((tip, index) => <div key={tip}><b>{index + 1}</b><span><strong>{tip}</strong><small>Check our verified resolutions before raising a request.</small></span></div>)}</aside></div></Shell>
+}
+
+function RegisterPage() {
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '', terms: false })
+  const [visible, setVisible] = useState({ password: false, confirmPassword: false })
+  const updateField = (field) => (event) => setForm((current) => ({ ...current, [field]: event.target.type === 'checkbox' ? event.target.checked : event.target.value }))
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const confirmPassword = event.currentTarget.elements.confirmPassword
+    confirmPassword.setCustomValidity(form.password === form.confirmPassword ? '' : 'Passwords do not match')
+    if (!event.currentTarget.checkValidity()) { event.currentTarget.reportValidity(); return }
+    window.alert('Account created successfully!')
+  }
+  const icon = (path) => <FieldIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d={path} strokeLinecap="round" strokeLinejoin="round" /></svg></FieldIcon>
+
+  return (
+    <div className="registration-page">
+      <main className="registration-card">
+        <header className="card-header"><img className="logo" src={LOGO_SRC} alt="SmartDesk IT Service Management Logo" /><h1>Create your account</h1><p>Join SmartDesk IT Service Management Platform</p><div className="role-badge"><span />Assigned Role: Employee</div></header>
+        <form className="registration-form" onSubmit={handleSubmit}>
+          <label htmlFor="full-name">Full Name</label><div className="input-wrap">{icon('M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z')}<input id="full-name" name="name" placeholder="e.g. Alex Morgan" value={form.name} onChange={updateField('name')} required /></div>
+          <label htmlFor="work-email">Email Address</label><div className="input-wrap">{icon('M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z')}<input id="work-email" name="email" type="email" placeholder="alex@company.com" value={form.email} onChange={updateField('email')} required /></div>
+          <label htmlFor="password">Password</label><div className="input-wrap">{icon('M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z')}<input id="password" name="password" type={visible.password ? 'text' : 'password'} placeholder="Create a strong password" minLength="8" value={form.password} onChange={updateField('password')} required /><button className="visibility-button" type="button" aria-label="Toggle password visibility" onClick={() => setVisible((current) => ({ ...current, password: !current.password }))}><EyeIcon visible={visible.password} /></button></div><p className="hint">Must be at least 8 characters</p>
+          <label htmlFor="confirm-password">Confirm Password</label><div className="input-wrap">{icon('M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z')}<input id="confirm-password" name="confirmPassword" type={visible.confirmPassword ? 'text' : 'password'} placeholder="Re-enter your password" value={form.confirmPassword} onChange={updateField('confirmPassword')} required /><button className="visibility-button" type="button" aria-label="Toggle confirm password visibility" onClick={() => setVisible((current) => ({ ...current, confirmPassword: !current.confirmPassword }))}><EyeIcon visible={visible.confirmPassword} /></button></div>
+          <label className="terms"><input type="checkbox" checked={form.terms} onChange={updateField('terms')} required /><span>I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a></span></label>
+          <button className="submit-button" type="submit">Create account</button>
+        </form>
+        <footer className="card-footer">Already have an account? <a href="#login">Log in</a></footer>
+      </main>
+      <footer className="page-footer"><a href="#privacy">Privacy Policy</a><a href="#terms">Terms of Service</a><a href="#help">Help Center</a></footer>
+    </div>
+  )
+}
+
+function TicketsPage() {
+  const navigate = useNavigate(); const [filter, setFilter] = useState('')
+  const rows = tickets.concat([['#TICK-1087', 'Outlook calendar sync looping after Office 365 migration', 'Software', 'Resolved', 'Low']]).filter((row) => !filter || row[3] === filter)
+  return <Shell><PageHeader eyebrow="INCIDENT & SERVICE MANAGEMENT  •  QUEUE LIVE STATUS" title="IT Incident & Service Queue" description="Manage, triage, and reassign incoming service requests and incident tickets across IT tiers." action={<button className="primary-button" onClick={() => navigate('/create-ticket')}><Icon>add</Icon>Create Ticket</button>} /><div className="stats-grid queue-stats">{[['Unassigned Tickets', '6', 'Action Required'], ['High / Critical Queue', '8', 'Needs Attention'], ['My Assigned Queue', '5', '3 In Progress'], ['SLA At Risk (< 2h)', '3', '91.4% Target']].map(([label, value, note]) => <section className="stat-card" key={label}><span>{label}</span><strong>{value}</strong><small>{note}</small></section>)}</div><section className="panel"><div className="filter-row"><input placeholder="Search ticket ID, title, requester..." /><select value={filter} onChange={(e) => setFilter(e.target.value)}><option value="">All Statuses</option><option>Open</option><option>In Progress</option><option>Resolved</option></select><button className="secondary-button" onClick={() => setFilter('')}>Reset Filters</button></div><div className="tabs">{['', 'Open', 'In Progress', 'Resolved'].map((value) => <button className={filter === value ? 'selected' : ''} onClick={() => setFilter(value)} key={value}>{value || 'All Tickets'}</button>)}</div><TicketTable rows={rows} onSelect={() => navigate('/ticket/TICK-1094')} /></section></Shell>
+}
+
+function TicketDetailPage() {
+  const [reply, setReply] = useState(''); const [comments, setComments] = useState(['Sarah Jenkins: We detected a Thunderbolt handshake issue after the macOS Sonoma update.', 'Alex Morgan: The HDMI port still flickers intermittently after the firmware update.'])
+  return <Shell><PageHeader eyebrow="TICKETS  /  #TICK-1094  /  DETAILS" title="MacBook Pro secondary monitor flickering via Thunderbolt dock" description="Created Oct 24, 2023, 09:15 AM" action={<button className="secondary-button" onClick={() => window.print()}><Icon>print</Icon>Print Summary</button>} /><div className="content-grid detail-grid"><div><section className="panel ticket-overview"><span className="status">In Progress</span><span className="priority high">High Priority</span><span className="sla">SLA Due: In 1h 45m</span><div className="metadata"><span><small>Ticket ID</small><b>#TICK-1094</b></span><span><small>Requester</small><b>Alex Morgan</b></span><span><small>Assignee</small><b>Sarah Jenkins</b></span><span><small>Category</small><b>Displays & Docks</b></span></div></section><section className="panel ai-panel"><h2><Icon>auto_awesome</Icon>SmartDesk AI Copilot Analysis</h2><p>Display signal drops triggered by a Thunderbolt handshake timeout post-macOS Sonoma 14.1 update on CalDigit TS4 chipset v39.1.</p><div className="progress"><span /></div><button className="primary-button">Apply Firmware Patch</button></section><section className="panel"><h2>Issue Description</h2><p>Since updating to macOS Sonoma 14.1, the external Dell 4K display connected through the CalDigit TS4 dock flickers every 10-15 seconds and periodically drops signal completely.</p><p>I have tested swapping HDMI and DisplayPort cables with no success. It disrupts client calls and makes dual-screen workflows nearly unusable.</p></section><section className="panel"><div className="panel-heading"><h2>Activity & Discussion</h2><small>{comments.length} messages</small></div>{comments.map((comment) => <p className="comment" key={comment}>{comment}</p>)}<textarea value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Type your response to the employee..." rows="3" /><button className="primary-button" onClick={() => { if (reply.trim()) { setComments([...comments, `Alex Morgan: ${reply}`]); setReply('') } }}>Send Reply</button></section></div><aside className="panel side-panel"><h2>Agent Controls</h2><label>Assignee<select><option>Sarah Jenkins (Tier 2 Hardware)</option><option>Alex Morgan</option></select></label><label>Ticket Status<select><option>In Progress</option><option>Open</option><option>Resolved</option></select></label><h2>Requester Profile</h2><div className="profile large"><b>AM</b><span><strong>Alex Morgan</strong><small>Senior Product Designer</small></span></div><button className="secondary-button">Request Screen Share</button><button className="success-button">Resolve Ticket</button></aside></div></Shell>
+}
+
+function AnalyticsPage() { const [metric, setMetric] = useState('volume'); const [date, setDate] = useState('Last 30 Days'); return <Shell><PageHeader eyebrow="ITSM OPERATIONAL INTELLIGENCE  •  LIVE TELEMETRY" title="IT Operations & Analytics" description="Real-time performance tracking, ticket volume trends, agent allocation, and service category management." action={<select value={date} onChange={(e) => setDate(e.target.value)}><option>Last 7 Days</option><option>Last 30 Days</option><option>This Quarter</option><option>Year to Date</option></select>} /><div className="stats-grid analytics-stats">{[['Open Tickets', '42', '+8%'], ['High / Critical Priority', '9', 'Needs Attention'], ['In Progress', '28', 'On Track'], ['Resolved (Period)', '184', '96.2% SLA']].map(([label, value, note]) => <section className="stat-card" key={label}><span>{label}</span><strong>{value}</strong><small>{note}</small></section>)}</div><div className="content-grid analytics-grid"><section className="panel chart"><div className="panel-heading"><h2>Tickets by Category</h2><div className="tabs"><button className={metric === 'volume' ? 'selected' : ''} onClick={() => setMetric('volume')}>Volume</button><button className={metric === 'sla' ? 'selected' : ''} onClick={() => setMetric('sla')}>SLA Breach %</button></div></div>{[['Network & VPN', 78], ['Software & Applications', 64], ['Hardware & Peripherals', 52], ['Accounts & Access', 41], ['Security & Compliance', 28]].map(([name, value]) => <div className="bar-row" key={name}><span>{name}<b>{metric === 'volume' ? `${value} tickets` : `${Math.round(value / 8)}% breach`}</b></span><i><em style={{ width: `${metric === 'volume' ? value : value / 2}%` }} /></i></div>)}</section><section className="panel"><h2>Agent Workload & Allocation</h2>{[['Sarah Jenkins', 100], ['Marcus Cole', 88], ['David Chen', 63], ['Emily Taylor', 63], ['Jessica Lin', 38]].map(([name, value]) => <div className="bar-row" key={name}><span>{name}<b>{value}%</b></span><i><em style={{ width: `${value}%` }} /></i></div>)}</section></div><section className="panel"><div className="panel-heading"><div><h2>Manage Ticket Categories</h2><p>Configure routing queues, SLA commitments, and activation statuses.</p></div><button className="primary-button">+ Add Service Category</button></div>{['Network & VPN', 'Software & Applications', 'Hardware & Peripherals', 'Accounts & Identity', 'Security & Compliance'].map((category) => <div className="category-row" key={category}><strong>{category}</strong><span>Tier 1 Service Desk</span><span>Response &lt; 1h · Resolve &lt; 8h</span><button className="secondary-button">Active</button></div>)}</section></Shell> }
+
+function LoginPage() { const navigate = useNavigate(); const [show, setShow] = useState(false); return <div className="login-page"><main className="login-card"><img src={LOGO_SRC} alt="SmartDesk logo" /><h1>SmartDesk</h1><p>IT Service Management Platform</p><form onSubmit={(e) => { e.preventDefault(); navigate('/dashboard') }}><label>Email Address<input type="email" placeholder="Enter your work email" required /></label><label>Password<div className="password-input"><input type={show ? 'text' : 'password'} placeholder="••••••••" required /><button type="button" onClick={() => setShow(!show)} aria-label="Toggle password visibility"><Icon>{show ? 'visibility' : 'visibility_off'}</Icon></button></div></label><label className="remember"><input type="checkbox" />Remember me for 30 days</label><button className="primary-button" type="submit">Log in</button></form><p>Don't have an account? <Link to="/register">Create employee account</Link></p><footer><a href="#privacy">Privacy Policy</a><a href="#terms">Terms of Service</a><a href="#help">Help Center</a></footer></main></div> }
+
+function KnowledgeBasePage() { const articles = ['Fixing GlobalProtect VPN connection timeout', 'Okta Multi-Factor authentication reset guide', 'CalDigit TS4 Thunderbolt display firmware patch', 'macOS Sonoma DisplayLink driver installation', 'Requesting software license seats via BambooHR', 'Office 365 Outlook duplicate notifications reset']; return <Shell><PageHeader eyebrow="SELF-SERVICE" title="Knowledge Base & Self-Service Guides" description="Browse verified IT resolutions, deployment procedures, and troubleshooting wikis." /><div className="article-grid">{articles.map((article, index) => <article className="panel article" key={article}><Icon>{['vpn_key', 'lock_reset', 'devices', 'laptop_mac', 'badge', 'mail'][index]}</Icon><small>{['Network', 'Security', 'Hardware', 'macOS', 'Licensing', 'Productivity'][index]}</small><h2>{article}</h2><button className="text-button">Read Guide <Icon>arrow_forward</Icon></button></article>)}</div></Shell> }
+function SettingsPage() { return <Shell><PageHeader eyebrow="WORKSPACE" title="User & Workspace Preferences" description="Manage profile details, notification preferences, and routing configurations." /><section className="panel settings"><label>Full Name<input defaultValue="Alex Morgan" /></label><label>Work Email<input defaultValue="alex.m@company.org" disabled /></label><label>Assigned Department<input defaultValue="Product & UX Design (HQ Austin)" /></label><label className="remember"><input type="checkbox" defaultChecked />Receive email digests for ticket SLA status changes</label><button className="primary-button">Save Changes</button></section></Shell> }
+
+function App() { return <BrowserRouter><Routes><Route path="/" element={<LoginPage />} /><Route path="/login" element={<LoginPage />} /><Route path="/register" element={<RegisterPage />} /><Route path="/dashboard" element={<DashboardPage />} /><Route path="/create-ticket" element={<CreateTicketPage />} /><Route path="/tickets" element={<TicketsPage />} /><Route path="/ticket/:id" element={<TicketDetailPage />} /><Route path="/analytics" element={<AnalyticsPage />} /><Route path="/knowledge-base" element={<KnowledgeBasePage />} /><Route path="/settings" element={<SettingsPage />} /></Routes></BrowserRouter> }
 
 export default App
