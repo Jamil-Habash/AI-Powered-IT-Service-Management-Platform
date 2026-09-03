@@ -1,5 +1,3 @@
 package com.smartdesk.project.enums;
 
-public class TicketStatus {
-    
-}
+public enum TicketStatus {OPEN, IN_PROGRESS, RESOLVED}

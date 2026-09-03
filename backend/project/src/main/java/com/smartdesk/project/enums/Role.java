@@ -1,5 +1,3 @@
 package com.smartdesk.project.enums;
 
-public class Role {
-    
-}
+public enum Role {EMPLOYEE, IT_AGENT, ADMIN}

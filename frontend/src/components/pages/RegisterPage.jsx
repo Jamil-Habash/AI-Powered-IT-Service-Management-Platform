@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { LOGO_SRC } from '../Shell'
 
 function EyeIcon({ visible }) {
-  return <svg className="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+  return <svg className="eye-icon" style={{ width: '18px', height: '18px', display: 'block' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
     {visible ? <g><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" /></g> : <path d="M13.875 18.825A10.05 10.05 0 0 1 12 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 0 1 1.563-3.029m5.858.908a3 3 0 1 1 4.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532 3.29 3.29M3 3l18 18" />}
   </svg>
 }
@@ -26,13 +26,13 @@ export default function RegisterPage() {
       </div>
     </>
   )
-  return <div className="registration-page">
+  return<div className="registration-page">
     <main className="registration-card">
         <header className="card-header">
             <img className="logo" src={LOGO_SRC} alt="SmartDesk IT Service Management Logo" />
             <h1>Create your account</h1>
             <p>Join SmartDesk IT Service Management Platform</p>
-            <div className="role-badge"><span />Assigned Role: Employee</div>
+            <div className="role-badge" style={{ width: '208px', justifyContent: 'center', textAlign: 'center' }}><span />Assigned Role: Employee</div>
         </header>
             <form className="registration-form" onSubmit={submit}>
                 {field('name', 'Full Name', userPath, { placeholder: 'e.g. Alex Morgan', value: form.name, onChange: update('name') })}
@@ -63,11 +63,11 @@ export default function RegisterPage() {
             <footer className="card-footer">
                 Already have an account? <Link to="/login">Log in</Link>
             </footer>
-        </main>
-        <footer className="page-footer">
+            <footer className="page-footer">
             <a href="#privacy">Privacy Policy</a>
             <a href="#terms">Terms of Service</a>
             <a href="#help">Help Center</a>
         </footer>
-    </div>
+    </main>
+</div>
 }
