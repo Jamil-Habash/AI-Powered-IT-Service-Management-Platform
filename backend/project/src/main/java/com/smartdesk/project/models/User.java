@@ -2,6 +2,8 @@ package com.smartdesk.project.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,17 +27,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(unique = true)
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "writtenBy", fetch = FetchType.LAZY)
     private List<Comment> comments;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_agent_id")
-    private User assignedAgent;
+
+    @OneToMany(mappedBy = "assignedAgent", fetch = FetchType.LAZY)
+    private List<Ticket> assignedTickets;
 
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")

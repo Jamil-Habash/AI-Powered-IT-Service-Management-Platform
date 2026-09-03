@@ -7,6 +7,8 @@ import jakarta.persistence.JoinColumn;
 import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -27,7 +29,9 @@ public class Ticket {
     private Long id;
     private String title;
     private String description;
+    @Enumerated(EnumType.STRING)
     private TicketStatus status;
+    @Enumerated(EnumType.STRING)
     private Priority priority;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date resolvedAt;
@@ -36,8 +40,10 @@ public class Ticket {
     @JoinColumn(name = "created_by")
     private User createdBy;
 
-    @OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY)
-    private List<User> assignedTo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_to")
+    private User assignedAgent;
+
     @OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
