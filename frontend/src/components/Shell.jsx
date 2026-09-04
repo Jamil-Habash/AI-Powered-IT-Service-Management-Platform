@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/smartdesk_logo.png";
 import Icon from "./Icon";
+import { useAuth } from "../context/AuthContext";
 
 const navigation = [
   ["/dashboard", "dashboard", "Dashboard"],
@@ -16,6 +17,13 @@ export const LOGO_SRC = logo;
 export default function Shell({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const initials = (user?.name || "User")
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <div className="app-shell">
@@ -41,16 +49,16 @@ export default function Shell({ children }) {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <button onClick={() => navigate("/login")}>
+          <button onClick={() => { logout(); navigate("/login"); }}>
             <Icon>logout</Icon>Logout
           </button>
           <div className="profile">
-            <b>AM</b>
+            <b>{initials}</b>
             <span>
-              <strong>Alex Morgan</strong>
-              <small>alex.m@company.org</small>
+              <strong>{user?.name || "User"}</strong>
+              <small>{user?.email || ""}</small>
             </span>
-            <em>Employee</em>
+            <em>{user?.role || "User"}</em>
           </div>
         </div>
       </aside>
@@ -64,9 +72,9 @@ export default function Shell({ children }) {
             <button aria-label="Notifications">
               <Icon>notifications</Icon>
             </button>
-            <span className="avatar">AM</span>
+            <span className="avatar">{initials}</span>
             <span className="user-name">
-              Alex Morgan<small>IT Operations</small>
+              {user?.name || "User"}<small>{user?.role || ""}</small>
             </span>
           </div>
         </header>

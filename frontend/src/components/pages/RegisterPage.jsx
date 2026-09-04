@@ -1,29 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LOGO_SRC } from "../Shell";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../services/authService";
+import Icon from "../Icon";
 
-function EyeIcon({ visible }) {
-  return (
-    <svg
-      className="eye-icon"
-      style={{ width: "18px", height: "18px", display: "block" }}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
-      {visible ? (
-        <g>
-          <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-        </g>
-      ) : (
-        <path d="M13.875 18.825A10.05 10.05 0 0 1 12 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 0 1 1.563-3.029m5.858.908a3 3 0 1 1 4.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532 3.29 3.29M3 3l18 18" />
-      )}
-    </svg>
-  );
-}
 function FieldIcon({ path }) {
   return (
     <span className="field-icon" aria-hidden="true">
@@ -65,18 +46,38 @@ export default function RegisterPage() {
           ? event.target.checked
           : event.target.value,
     }));
-  const submit = (event) => {
-    event.preventDefault();
-    const confirm = event.currentTarget.elements.confirmPassword;
-    confirm.setCustomValidity(
-      form.password === form.confirmPassword ? "" : "Passwords do not match",
-    );
-    if (!event.currentTarget.checkValidity()) {
-      event.currentTarget.reportValidity();
-      return;
-    }
-    window.alert("Account created successfully!");
-  };
+const navigate = useNavigate();
+const [error, setError] = useState("");
+const [loading, setLoading] = useState(false);
+
+// Replace your existing `submit` function with this:
+const submit = async (event) => {
+  event.preventDefault();
+  setError("");
+
+  const confirm = event.currentTarget.elements.confirmPassword;
+  confirm.setCustomValidity(
+    form.password === form.confirmPassword ? "" : "Passwords do not match",
+  );
+  if (!event.currentTarget.checkValidity()) {
+    event.currentTarget.reportValidity();
+    return;
+  }
+
+  setLoading(true);
+  try {
+    await registerUser(form.name, form.email, form.password);
+    navigate("/login");
+  } catch (err) {
+    const msg =
+      err.response?.data?.error ||
+      Object.values(err.response?.data || {})[0] ||
+      "Registration failed";
+    setError(msg);
+  } finally {
+    setLoading(false);
+  }
+};
   const field = (id, label, path, props) => (
     <>
       <label htmlFor={id}>{label}</label>
@@ -109,6 +110,7 @@ export default function RegisterPage() {
             Assigned Role: Employee
           </div>
         </header>
+        {error && <p className="form-error">{error}</p>}
         <form className="registration-form" onSubmit={submit}>
           {field("name", "Full Name", userPath, {
             placeholder: "e.g. Alex Morgan",
@@ -134,19 +136,6 @@ export default function RegisterPage() {
               onChange={update("password")}
               required
             />
-            <button
-              className="visibility-button"
-              type="button"
-              onClick={() =>
-                setVisible((current) => ({
-                  ...current,
-                  password: !current.password,
-                }))
-              }
-              aria-label="Toggle password visibility"
-            >
-              <EyeIcon visible={visible.password} />
-            </button>
           </div>
           <p className="hint">Must be at least 8 characters</p>
           <label htmlFor="confirmPassword">Confirm Password</label>
@@ -161,19 +150,6 @@ export default function RegisterPage() {
               onChange={update("confirmPassword")}
               required
             />
-            <button
-              className="visibility-button"
-              type="button"
-              onClick={() =>
-                setVisible((current) => ({
-                  ...current,
-                  confirmPassword: !current.confirmPassword,
-                }))
-              }
-              aria-label="Toggle confirm password visibility"
-            >
-              <EyeIcon visible={visible.confirmPassword} />
-            </button>
           </div>
           <label className="terms">
             <input
@@ -187,8 +163,8 @@ export default function RegisterPage() {
               <a href="#privacy">Privacy Policy</a>
             </span>
           </label>
-          <button className="submit-button" type="submit">
-            Create account
+          <button className="submit-button" type="submit" disabled={loading}>
+            {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
         <footer className="card-footer">

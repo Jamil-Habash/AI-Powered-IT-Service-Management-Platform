@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
+import { getCategories } from "../../services/categoryService";
+import { createTicket } from "../../services/ticketService";
 
 export default function CreateTicketPage() {
   const navigate = useNavigate();
@@ -10,11 +12,33 @@ export default function CreateTicketPage() {
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState([]);
-  const submit = (event) => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getCategories()
+      .then((response) => setCategories(response.data))
+      .catch(() => setError("Unable to load ticket categories."));
+  }, []);
+
+  const submit = async (event) => {
     event.preventDefault();
     if (!title || !category || !description) return;
-    window.alert("Ticket submitted successfully.");
-    navigate("/ticket/TICK-1094");
+    setError("");
+    setLoading(true);
+    try {
+      const response = await createTicket({
+        title,
+        description,
+        categoryId: Number(category),
+      });
+      navigate(`/ticket/${response.data.id}`);
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to submit ticket.");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <Shell>
@@ -33,6 +57,7 @@ export default function CreateTicketPage() {
       />
       <div className="content-grid">
         <form className="panel ticket-form" onSubmit={submit}>
+          {error && <p className="form-error">{error}</p>}
           <h2>Ticket Details</h2>
           <p>
             Please provide clear details about the issue or request so we can
@@ -56,11 +81,11 @@ export default function CreateTicketPage() {
                 required
               >
                 <option value="">Select a category...</option>
-                <option>Hardware</option>
-                <option>Software</option>
-                <option>Network / VPN</option>
-                <option>Access & Permissions</option>
-                <option>Security</option>
+                {categories.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {item.name}
+                  </option>
+                ))}
               </select>
             </label>
             <label>
@@ -100,8 +125,8 @@ export default function CreateTicketPage() {
             <button type="button" className="secondary-button">
               Save Draft
             </button>
-            <button className="primary-button" type="submit">
-              Submit Ticket <Icon>send</Icon>
+            <button className="primary-button" type="submit" disabled={loading}>
+              {loading ? "Submitting..." : "Submit Ticket"} <Icon>send</Icon>
             </button>
           </div>
         </form>

@@ -15,8 +15,8 @@ export default function TicketTable({ rows, onSelect }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map(([id, title, category, status, priority]) => (
-            <tr key={id} onClick={onSelect}>
+          {rows.map(([id, title, category, status, priority, ticketId]) => (
+            <tr key={id} onClick={() => onSelect(ticketId ?? id)}>
               <td>
                 <b className="ticket-id">{id}</b>
                 <strong>{title}</strong>

@@ -23,6 +23,12 @@ public class ExceptionsHandler {
         }
     }
 
+    public static class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
+
     @RestControllerAdvice
     public static class GlobalExceptionHandler {
 
@@ -46,6 +52,13 @@ public class ExceptionsHandler {
             ex.getBindingResult().getFieldErrors()
                 .forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
+
+        @ExceptionHandler(ResourceNotFoundException.class)
+        public ResponseEntity<Map<String, String>> handleNotFound(ResourceNotFoundException ex) {
+            Map<String, String> body = new HashMap<>();
+            body.put("error", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
         }
     }
 }

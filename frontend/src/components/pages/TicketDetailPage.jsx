@@ -1,20 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
+import { getTicket } from "../../services/ticketService";
 
 export default function TicketDetailPage() {
+  const { id } = useParams();
+  const [ticket, setTicket] = useState(null);
   const [reply, setReply] = useState("");
-  const [comments, setComments] = useState([
-    "Sarah Jenkins: We detected a Thunderbolt handshake issue after the macOS Sonoma update.",
-    "Alex Morgan: The HDMI port still flickers intermittently after the firmware update.",
-  ]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getTicket(id)
+      .then((response) => setTicket(response.data))
+      .catch(() => setError("Unable to load this ticket."));
+  }, [id]);
+
+  if (error) return <Shell><p className="form-error">{error}</p></Shell>;
+  if (!ticket) return <Shell><p>Loading ticket...</p></Shell>;
+
+  const status = ticket.status.replace("_", " ");
+  const priority = ticket.priority.toLowerCase();
+  const created = ticket.createdAt
+    ? new Date(ticket.createdAt).toLocaleString()
+    : "Date unavailable";
   return (
     <Shell>
       <PageHeader
-        eyebrow="TICKETS  /  #TICK-1094  /  DETAILS"
-        title="MacBook Pro secondary monitor flickering via Thunderbolt dock"
-        description="Created Oct 24, 2023, 09:15 AM"
+        eyebrow={`TICKETS  /  #TICK-${ticket.id}  /  DETAILS`}
+        title={ticket.title}
+        description={`Created ${created}`}
         action={
           <button className="secondary-button" onClick={() => window.print()}>
             <Icon>print</Icon>Print Summary
@@ -24,25 +40,24 @@ export default function TicketDetailPage() {
       <div className="content-grid detail-grid">
         <div>
           <section className="panel ticket-overview">
-            <span className="status">In Progress</span>
-            <span className="priority high">High Priority</span>
-            <span className="sla">SLA Due: In 1h 45m</span>
+            <span className="status">{status}</span>
+            <span className={`priority ${priority}`}>{ticket.priority} Priority</span>
             <div className="metadata">
               <span>
                 <small>Ticket ID</small>
-                <b>#TICK-1094</b>
+                  <b>#TICK-{ticket.id}</b>
               </span>
               <span>
                 <small>Requester</small>
-                <b>Alex Morgan</b>
+                  <b>{ticket.createdByName || "Unknown"}</b>
               </span>
               <span>
                 <small>Assignee</small>
-                <b>Sarah Jenkins</b>
+                  <b>{ticket.assignedAgentName || "Unassigned"}</b>
               </span>
               <span>
                 <small>Category</small>
-                <b>Displays & Docks</b>
+                  <b>{ticket.categoryName || "Uncategorized"}</b>
               </span>
             </div>
           </section>
@@ -50,10 +65,7 @@ export default function TicketDetailPage() {
             <h2>
               <Icon>auto_awesome</Icon>SmartDesk AI Copilot Analysis
             </h2>
-            <p>
-              Display signal drops triggered by a Thunderbolt handshake timeout
-              post-macOS Sonoma 14.1 update on CalDigit TS4 chipset v39.1.
-            </p>
+            <p>Review the ticket description and support history for recommended next steps.</p>
             <div className="progress">
               <span />
             </div>
@@ -62,26 +74,14 @@ export default function TicketDetailPage() {
           <section className="panel">
             <h2>Issue Description</h2>
             <p>
-              Since updating to macOS Sonoma 14.1, the external Dell 4K display
-              connected through the CalDigit TS4 dock flickers every 10-15
-              seconds and periodically drops signal completely.
-            </p>
-            <p>
-              I have tested swapping HDMI and DisplayPort cables with no
-              success. It disrupts client calls and makes dual-screen workflows
-              nearly unusable.
+              {ticket.description}
             </p>
           </section>
           <section className="panel">
             <div className="panel-heading">
               <h2>Activity & Discussion</h2>
-              <small>{comments.length} messages</small>
+              <small>No messages</small>
             </div>
-            {comments.map((comment) => (
-              <p className="comment" key={comment}>
-                {comment}
-              </p>
-            ))}
             <textarea
               value={reply}
               onChange={(event) => setReply(event.target.value)}
@@ -91,10 +91,7 @@ export default function TicketDetailPage() {
             <button
               className="primary-button"
               onClick={() => {
-                if (reply.trim()) {
-                  setComments([...comments, `Alex Morgan: ${reply}`]);
-                  setReply("");
-                }
+                setReply("");
               }}
             >
               Send Reply
@@ -113,17 +110,15 @@ export default function TicketDetailPage() {
           <label>
             Ticket Status
             <select>
-              <option>In Progress</option>
-              <option>Open</option>
-              <option>Resolved</option>
+              <option>{status}</option>
             </select>
           </label>
           <h2>Requester Profile</h2>
           <div className="profile large">
             <b>AM</b>
             <span>
-              <strong>Alex Morgan</strong>
-              <small>Senior Product Designer</small>
+                <strong>{ticket.createdByName || "Unknown"}</strong>
+                <small>Requester</small>
             </span>
           </div>
           <button className="secondary-button">Request Screen Share</button>

@@ -1,54 +1,67 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import TicketTable from "../TicketTable";
-
-const tickets = [
-  [
-    "#TICK-1094",
-    "MacBook Pro secondary monitor flickering via Thunderbolt dock",
-    "Hardware",
-    "In Progress",
-    "High",
-  ],
-  [
-    "#TICK-1091",
-    "Request VPN certificate renewal & access for EMEA staging",
-    "Network / VPN",
-    "Open",
-    "Medium",
-  ],
-  [
-    "#TICK-1088",
-    "Figma Enterprise license seat allocation for Design System team",
-    "Software",
-    "In Progress",
-    "Medium",
-  ],
-  [
-    "#TICK-1085",
-    "SSO login issue with Internal Jira & Confluence workspace",
-    "Access & Permissions",
-    "Open",
-    "Critical",
-  ],
-];
+import { useAuth } from "../../context/AuthContext";
+import { getTickets } from "../../services/ticketService";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [tickets, setTickets] = useState([]);
   const [search, setSearch] = useState("");
-  const shown = tickets.filter(
-    (ticket) =>
-      ticket[1].toLowerCase().includes(search.toLowerCase()) ||
-      ticket[0].toLowerCase().includes(search.toLowerCase()),
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+
+    getTickets()
+      .then((response) => {
+        if (active) setTickets(response.data);
+      })
+      .catch(() => {
+        if (active) setError("Unable to load your tickets. Please try again.");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const openTickets = tickets.filter((ticket) => ticket.status === "OPEN");
+  const inProgressTickets = tickets.filter(
+    (ticket) => ticket.status === "IN_PROGRESS",
   );
+  const resolvedTickets = tickets.filter((ticket) => ticket.status === "RESOLVED");
+  const shown = tickets
+    .filter((ticket) => {
+      const query = search.toLowerCase();
+      return (
+        ticket.title?.toLowerCase().includes(query) ||
+        String(ticket.id).includes(query)
+      );
+    })
+    .slice(0, 4)
+    .map((ticket) => [
+      `#TICK-${ticket.id}`,
+      ticket.title,
+      ticket.categoryName || "Uncategorized",
+      ticket.status.replace("_", " "),
+      ticket.priority,
+      ticket.id,
+    ]);
+
   return (
     <Shell>
       <PageHeader
         eyebrow="SELF-SERVICE PORTAL  •  IT SUPPORT DESK"
-        title="Welcome back, Alex"
+        title={`Welcome back, ${user?.name || "there"}`}
         description="Here is an overview of your IT service requests and real-time support status."
         action={
           <button
@@ -61,9 +74,9 @@ export default function DashboardPage() {
       />
       <div className="stats-grid">
         {[
-          ["My Open Tickets", "3", "tickets"],
-          ["In Progress", "2", "active"],
-          ["Resolved", "14", "this quarter"],
+          ["My Open Tickets", openTickets.length, "tickets"],
+          ["In Progress", inProgressTickets.length, "active"],
+          ["Resolved", resolvedTickets.length, "this quarter"],
         ].map(([label, value, suffix]) => (
           <section className="stat-card" key={label}>
             <span>{label}</span>
@@ -88,10 +101,15 @@ export default function DashboardPage() {
             placeholder="Search tickets..."
           />
         </div>
-        <TicketTable
-          rows={shown}
-          onSelect={() => navigate("/ticket/TICK-1094")}
-        />
+        {loading && <p>Loading your tickets...</p>}
+        {error && <p className="form-error">{error}</p>}
+        {!loading && !error && shown.length === 0 && <p>No tickets found.</p>}
+        {!loading && !error && shown.length > 0 && (
+          <TicketTable
+            rows={shown}
+            onSelect={(ticketId) => navigate(`/ticket/${ticketId}`)}
+          />
+        )}
       </section>
     </Shell>
   );

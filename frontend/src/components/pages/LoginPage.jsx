@@ -2,49 +2,69 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Icon from "../Icon";
 import { LOGO_SRC } from "../Shell";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+
+    const email = event.currentTarget.elements.email.value;
+    const password = event.currentTarget.elements.password.value;
+
+    setLoading(true);
+    try {
+      await login(email, password);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.response?.data?.error || "Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="login-page">
       <main className="login-card">
         <img src={LOGO_SRC} alt="SmartDesk logo" />
         <h1>SmartDesk</h1>
         <p>IT Service Management Platform</p>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            navigate("/dashboard");
-          }}
-        >
+
+        {error && <p className="form-error">{error}</p>}
+
+        <form onSubmit={handleSubmit}>
           <label>
             Email Address
-            <input type="email" placeholder="Enter your work email" required />
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your work email"
+              required
+            />
           </label>
           <label>
             Password
             <div className="password-input">
               <input
                 type={showPassword ? "text" : "password"}
+                name="password"
                 placeholder="••••••••"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label="Toggle password visibility"
-              >
-                <Icon>{showPassword ? "visibility" : "visibility_off"}</Icon>
-              </button>
             </div>
           </label>
           <label className="remember">
             <input type="checkbox" />
             Remember me for 30 days
           </label>
-          <button className="primary-button" type="submit">
-            Log in
+          <button className="primary-button" type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Log in"}
           </button>
         </form>
         <p>

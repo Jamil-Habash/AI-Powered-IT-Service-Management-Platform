@@ -1,10 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
+import { getTickets } from "../../services/ticketService";
 
 export default function AnalyticsPage() {
   const [metric, setMetric] = useState("volume");
   const [date, setDate] = useState("Last 30 Days");
+  const [tickets, setTickets] = useState([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getTickets()
+      .then((response) => setTickets(response.data))
+      .catch(() => setError("Unable to load analytics data."));
+  }, []);
+
+  const openTickets = tickets.filter((ticket) => ticket.status === "OPEN");
+  const priorityTickets = tickets.filter(
+    (ticket) => ticket.priority === "HIGH" || ticket.priority === "CRITICAL",
+  );
+  const inProgressTickets = tickets.filter(
+    (ticket) => ticket.status === "IN_PROGRESS",
+  );
+  const resolvedTickets = tickets.filter((ticket) => ticket.status === "RESOLVED");
+  const categoryCounts = Object.entries(
+    tickets.reduce((counts, ticket) => {
+      const name = ticket.categoryName || "Uncategorized";
+      counts[name] = (counts[name] || 0) + 1;
+      return counts;
+    }, {}),
+  );
+  const agentCounts = Object.entries(
+    tickets.reduce((counts, ticket) => {
+      if (ticket.assignedAgentName) {
+        counts[ticket.assignedAgentName] = (counts[ticket.assignedAgentName] || 0) + 1;
+      }
+      return counts;
+    }, {}),
+  );
   return (
     <Shell>
       <PageHeader
@@ -23,12 +56,13 @@ export default function AnalyticsPage() {
           </select>
         }
       />
+      {error && <p className="form-error">{error}</p>}
       <div className="stats-grid analytics-stats">
         {[
-          ["Open Tickets", "42", "+8%"],
-          ["High / Critical Priority", "9", "Needs Attention"],
-          ["In Progress", "28", "On Track"],
-          ["Resolved (Period)", "184", "96.2% SLA"],
+          ["Open Tickets", openTickets.length, "Current records"],
+          ["High / Critical Priority", priorityTickets.length, "Current records"],
+          ["In Progress", inProgressTickets.length, "Current records"],
+          ["Resolved (Period)", resolvedTickets.length, "Current records"],
         ].map(([label, value, note]) => (
           <section className="stat-card" key={label}>
             <span>{label}</span>
@@ -56,26 +90,20 @@ export default function AnalyticsPage() {
               </button>
             </div>
           </div>
-          {[
-            ["Network & VPN", 78],
-            ["Software & Applications", 64],
-            ["Hardware & Peripherals", 52],
-            ["Accounts & Access", 41],
-            ["Security & Compliance", 28],
-          ].map(([name, value]) => (
+          {categoryCounts.map(([name, value]) => (
             <div className="bar-row" key={name}>
               <span>
                 {name}
                 <b>
                   {metric === "volume"
                     ? `${value} tickets`
-                    : `${Math.round(value / 8)}% breach`}
+                    : "Unavailable"}
                 </b>
               </span>
               <i>
                 <em
                   style={{
-                    width: `${metric === "volume" ? value : value / 2}%`,
+                    width: `${metric === "volume" ? Math.min(value * 10, 100) : 0}%`,
                   }}
                 />
               </i>
@@ -84,20 +112,14 @@ export default function AnalyticsPage() {
         </section>
         <section className="panel">
           <h2>Agent Workload & Allocation</h2>
-          {[
-            ["Sarah Jenkins", 100],
-            ["Marcus Cole", 88],
-            ["David Chen", 63],
-            ["Emily Taylor", 63],
-            ["Jessica Lin", 38],
-          ].map(([name, value]) => (
+          {agentCounts.map(([name, value]) => (
             <div className="bar-row" key={name}>
               <span>
                 {name}
-                <b>{value}%</b>
+                <b>{value} tickets</b>
               </span>
               <i>
-                <em style={{ width: `${value}%` }} />
+                <em style={{ width: `${Math.min(value * 20, 100)}%` }} />
               </i>
             </div>
           ))}
@@ -114,17 +136,11 @@ export default function AnalyticsPage() {
           </div>
           <button className="primary-button">+ Add Service Category</button>
         </div>
-        {[
-          "Network & VPN",
-          "Software & Applications",
-          "Hardware & Peripherals",
-          "Accounts & Identity",
-          "Security & Compliance",
-        ].map((category) => (
+        {categoryCounts.map(([category, count]) => (
           <div className="category-row" key={category}>
             <strong>{category}</strong>
-            <span>Tier 1 Service Desk</span>
-            <span>Response &lt; 1h · Resolve &lt; 8h</span>
+            <span>{count} tickets</span>
+            <span>SLA data unavailable</span>
             <button className="secondary-button">Active</button>
           </div>
         ))}
