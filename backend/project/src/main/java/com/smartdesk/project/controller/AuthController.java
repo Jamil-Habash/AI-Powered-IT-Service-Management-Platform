@@ -1,6 +1,8 @@
 package com.smartdesk.project.controller;
 
+import com.smartdesk.project.dto.request.LoginRequest;
 import com.smartdesk.project.dto.request.RegisterRequest;
+import com.smartdesk.project.dto.response.AuthResponse;
 import com.smartdesk.project.dto.response.UserResponse;
 import com.smartdesk.project.service.AuthService;
 import jakarta.validation.Valid;
@@ -22,5 +24,11 @@ public class AuthController {
     public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
         UserResponse response = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        AuthResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 }

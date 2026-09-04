@@ -17,7 +17,6 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.util.Date;
 import java.util.List;
-import com.smartdesk.project.enums.*;
 
 @Entity
 @Table(name = "tickets")

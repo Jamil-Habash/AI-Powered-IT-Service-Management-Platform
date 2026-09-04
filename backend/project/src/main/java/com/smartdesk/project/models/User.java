@@ -14,7 +14,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import java.util.Date;
 import java.util.List;
-import com.smartdesk.project.enums.Role;
 
 import org.springframework.format.annotation.DateTimeFormat;
 

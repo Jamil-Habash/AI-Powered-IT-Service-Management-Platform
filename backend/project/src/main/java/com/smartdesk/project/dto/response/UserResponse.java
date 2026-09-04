@@ -1,6 +1,6 @@
 package com.smartdesk.project.dto.response;
 
-import com.smartdesk.project.enums.Role;
+import com.smartdesk.project.models.Role;
 
 public class UserResponse {
 

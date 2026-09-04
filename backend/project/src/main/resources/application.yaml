@@ -21,8 +21,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     open-in-view: false
 
-# JWT settings (used later when you build auth) — replace secret before committing
 app:
   jwt:
-    secret: change-this-to-a-long-random-secret-before-committing
-    expiration-ms: 86400000   # 24 hours
+    secret: 8f4a2c9e1d7b3f5a6c8e0d2b4f6a8c0e2d4f6b8a0c2e4d6f8b0a2c4e6d8f0b2a
+    expiration-ms: 86400000
