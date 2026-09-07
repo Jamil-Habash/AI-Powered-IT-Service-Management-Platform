@@ -3,13 +3,21 @@ import { useParams } from "react-router-dom";
 import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
-import { getTicket } from "../../services/ticketService";
+import { useAuth } from "../../context/AuthContext";
+import {
+  getTicket,
+  resolveTicket,
+  updateTicketPriority,
+  updateTicketStatus,
+} from "../../services/ticketService";
 
 export default function TicketDetailPage() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [ticket, setTicket] = useState(null);
   const [reply, setReply] = useState("");
   const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     getTicket(id)
@@ -17,11 +25,25 @@ export default function TicketDetailPage() {
       .catch(() => setError("Unable to load this ticket."));
   }, [id]);
 
+  const updateTicket = async (update) => {
+    setError("");
+    setSaving(true);
+    try {
+      const response = await update;
+      setTicket(response.data);
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to update this ticket.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (error) return <Shell><p className="form-error">{error}</p></Shell>;
   if (!ticket) return <Shell><p>Loading ticket...</p></Shell>;
 
-  const status = ticket.status.replace("_", " ");
-  const priority = ticket.priority.toLowerCase();
+  const status = ticket.status || "OPEN";
+  const priority = ticket.priority || "MEDIUM";
+  const statusLabel = status.replace("_", " ");
   const created = ticket.createdAt
     ? new Date(ticket.createdAt).toLocaleString()
     : "Date unavailable";
@@ -40,8 +62,10 @@ export default function TicketDetailPage() {
       <div className="content-grid detail-grid">
         <div>
           <section className="panel ticket-overview">
-            <span className="status">{status}</span>
-            <span className={`priority ${priority}`}>{ticket.priority} Priority</span>
+            <span className="status">{statusLabel}</span>
+            <span className={`priority ${priority.toLowerCase()}`}>
+              {priority} Priority
+            </span>
             <div className="metadata">
               <span>
                 <small>Ticket ID</small>
@@ -98,32 +122,62 @@ export default function TicketDetailPage() {
             </button>
           </section>
         </div>
-        <aside className="panel side-panel">
-          <h2>Agent Controls</h2>
-          <label>
-            Assignee
-            <select>
-              <option>Sarah Jenkins (Tier 2 Hardware)</option>
-              <option>Alex Morgan</option>
-            </select>
-          </label>
-          <label>
-            Ticket Status
-            <select>
-              <option>{status}</option>
-            </select>
-          </label>
-          <h2>Requester Profile</h2>
-          <div className="profile large">
-            <b>AM</b>
-            <span>
+        {user?.role !== "EMPLOYEE" && (
+          <aside className="panel side-panel">
+            <h2>Agent Controls</h2>
+            <label>
+              Assignee
+              <select>
+                <option>{ticket.assignedAgentName || "Unassigned"}</option>
+              </select>
+            </label>
+            <label>
+              Ticket Status
+              <select
+                value={status}
+                disabled={saving}
+                onChange={(event) =>
+                  updateTicket(updateTicketStatus(id, event.target.value))
+                }
+              >
+                <option value="OPEN">Open</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="RESOLVED">Resolved</option>
+              </select>
+            </label>
+            <label>
+              Ticket Priority
+              <select
+                value={priority}
+                disabled={saving}
+                onChange={(event) =>
+                  updateTicket(updateTicketPriority(id, event.target.value))
+                }
+              >
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+                <option value="CRITICAL">Critical</option>
+              </select>
+            </label>
+            <h2>Requester Profile</h2>
+            <div className="profile large">
+              <b></b>
+              <span>
                 <strong>{ticket.createdByName || "Unknown"}</strong>
                 <small>Requester</small>
-            </span>
-          </div>
-          <button className="secondary-button">Request Screen Share</button>
-          <button className="success-button">Resolve Ticket</button>
-        </aside>
+              </span>
+            </div>
+            <button className="secondary-button">Request Screen Share</button>
+            <button
+              className="success-button"
+              disabled={saving || status === "RESOLVED"}
+              onClick={() => updateTicket(resolveTicket(id))}
+            >
+              {saving ? "Saving..." : "Resolve Ticket"}
+            </button>
+          </aside>
+        )}
       </div>
     </Shell>
   );

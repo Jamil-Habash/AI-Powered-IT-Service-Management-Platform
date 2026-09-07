@@ -1,5 +1,6 @@
 package com.smartdesk.project.dto.request;
 
+import com.smartdesk.project.models.Priority;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,6 +14,8 @@ public class CreateTicketRequest {
 
     @NotNull(message = "Category is required")
     private Long categoryId;
+
+    private Priority priority = Priority.MEDIUM;
 
     public String getTitle() { 
         return title; 
@@ -33,5 +36,13 @@ public class CreateTicketRequest {
     }
     public void setCategoryId(Long categoryId) { 
         this.categoryId = categoryId; 
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 }

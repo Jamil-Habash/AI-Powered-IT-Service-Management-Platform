@@ -15,14 +15,13 @@ export default function TicketTable({ rows, onSelect }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map(([id, title, category, status, priority, ticketId]) => (
+          {rows.map(([id, title, category, status, priority, ticketId, description, createdAt]) => (
             <tr key={id} onClick={() => onSelect(ticketId ?? id)}>
               <td>
                 <b className="ticket-id">{id}</b>
                 <strong>{title}</strong>
                 <small>
-                  Connected to service infrastructure; support team is reviewing
-                  the request.
+                  {description || "No description provided."}
                 </small>
               </td>
               <td>
@@ -37,8 +36,11 @@ export default function TicketTable({ rows, onSelect }) {
                 </span>
               </td>
               <td>
-                <small>Today, 10:15 AM</small>
-                <small>2 hours ago</small>
+                <small>
+                  {createdAt
+                    ? new Date(createdAt).toLocaleString()
+                    : "Date unavailable"}
+                </small>
               </td>
               <td>
                 <Icon>chevron_right</Icon>

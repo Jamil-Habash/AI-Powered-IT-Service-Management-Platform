@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import com.smartdesk.project.dto.request.UpdateTicketRequest;
+import com.smartdesk.project.dto.request.UpdateTicketStatusRequest;
+import com.smartdesk.project.dto.request.UpdateTicketPriorityRequest;
 import java.util.List;
 
 @RestController
@@ -45,12 +46,12 @@ public class TicketController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<TicketResponse> updateStatus(@PathVariable Long id,@Valid @RequestBody UpdateTicketRequest request, @AuthenticationPrincipal UserPrincipal currentUser) {
+    public ResponseEntity<TicketResponse> updateStatus(@PathVariable Long id,@Valid @RequestBody UpdateTicketStatusRequest request, @AuthenticationPrincipal UserPrincipal currentUser) {
         return ResponseEntity.ok(ticketService.updateStatus(id, request, currentUser));
     }
 
     @PatchMapping("/{id}/priority")
-    public ResponseEntity<TicketResponse> updatePriority(@PathVariable Long id,  @Valid @RequestBody UpdateTicketRequest request, @AuthenticationPrincipal UserPrincipal currentUser) {
+    public ResponseEntity<TicketResponse> updatePriority(@PathVariable Long id,  @Valid @RequestBody UpdateTicketPriorityRequest request, @AuthenticationPrincipal UserPrincipal currentUser) {
         return ResponseEntity.ok(ticketService.updatePriority(id, request, currentUser));
     }
 

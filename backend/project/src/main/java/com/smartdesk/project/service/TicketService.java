@@ -35,7 +35,8 @@ public class TicketService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + request.getCategoryId()));
 
-        Ticket ticket = new Ticket(request.getTitle(), request.getDescription(), TicketStatus.OPEN, Priority.MEDIUM);
+        Priority priority = request.getPriority() == null ? Priority.MEDIUM : request.getPriority();
+        Ticket ticket = new Ticket(request.getTitle(), request.getDescription(), TicketStatus.OPEN, priority);
         ticket.setCategory(category);
         ticket.setCreatedBy(currentUser.getUser());
 

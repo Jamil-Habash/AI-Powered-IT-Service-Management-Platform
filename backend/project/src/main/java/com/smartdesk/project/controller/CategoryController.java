@@ -1,11 +1,8 @@
 package com.smartdesk.project.controller;
 
-import com.smartdesk.project.dto.response.CategoryResponse;
+import com.smartdesk.project.models.Category;
 import com.smartdesk.project.repository.CategoryRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,16 +10,14 @@ import java.util.List;
 @RequestMapping("/api/categories")
 public class CategoryController {
 
-	private final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-	public CategoryController(CategoryRepository categoryRepository) {
-		this.categoryRepository = categoryRepository;
-	}
+    public CategoryController(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
-	@GetMapping
-	public ResponseEntity<List<CategoryResponse>> list() {
-		return ResponseEntity.ok(categoryRepository.findAll().stream()
-				.map(CategoryResponse::fromEntity)
-				.toList());
-	}
+    @GetMapping
+    public List<Category> getAll() {
+        return categoryRepository.findAll();
+    }
 }

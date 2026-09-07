@@ -4,10 +4,12 @@ import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import TicketTable from "../TicketTable";
+import { useAuth } from "../../context/AuthContext";
 import { getTickets } from "../../services/ticketService";
 
 export default function TicketsPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [filter, setFilter] = useState("");
   const [search, setSearch] = useState("");
   const [tickets, setTickets] = useState([]);
@@ -19,8 +21,12 @@ export default function TicketsPage() {
       .catch(() => setError("Unable to load tickets. Please try again."));
   }, []);
 
+  const unassignedCount = tickets.filter((t) => !t.assignedAgentName).length;
+  const highCriticalCount = tickets.filter((t) => t.priority === "HIGH" || t.priority === "CRITICAL").length;
+  const myAssignedCount = tickets.filter((t) => t.assignedAgentName === user?.name).length;
+
   const rows = tickets
-    .filter((ticket) => !filter || ticket.status.replace("_", " ") === filter)
+    .filter((ticket) => !filter || ticket.status === filter.toUpperCase().replace(" ", "_"))
     .filter((ticket) => {
       const query = search.toLowerCase();
       return (
@@ -36,6 +42,8 @@ export default function TicketsPage() {
       ticket.status.replace("_", " "),
       ticket.priority,
       ticket.id,
+      ticket.description,
+      ticket.createdAt,
     ]);
   return (
     <Shell>
@@ -54,10 +62,9 @@ export default function TicketsPage() {
       />
       <div className="stats-grid queue-stats">
         {[
-          ["Unassigned Tickets", "6", "Action Required"],
-          ["High / Critical Queue", "8", "Needs Attention"],
-          ["My Assigned Queue", "5", "3 In Progress"],
-          ["SLA At Risk (< 2h)", "3", "91.4% Target"],
+          ["Unassigned Tickets", unassignedCount, "Action Required"],
+          ["High / Critical Queue", highCriticalCount, "Needs Attention"],
+          ["My Assigned Queue", myAssignedCount, "Active"],
         ].map(([label, value, note]) => (
           <section className="stat-card" key={label}>
             <span>{label}</span>

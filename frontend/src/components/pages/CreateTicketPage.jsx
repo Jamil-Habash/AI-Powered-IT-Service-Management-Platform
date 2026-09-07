@@ -10,16 +10,24 @@ export default function CreateTicketPage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [priority, setPriority] = useState("MEDIUM");
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
     getCategories()
-      .then((response) => setCategories(response.data))
-      .catch(() => setError("Unable to load ticket categories."));
+      .then((response) => {
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.content || [];
+        setCategories(data);
+      })
+      .catch(() => setError("Unable to load ticket categories."))
+      .finally(() => setCategoriesLoading(false));
   }, []);
 
   const submit = async (event) => {
@@ -32,6 +40,7 @@ export default function CreateTicketPage() {
         title,
         description,
         categoryId: Number(category),
+        priority,
       });
       navigate(`/ticket/${response.data.id}`);
     } catch (err) {
@@ -80,21 +89,29 @@ export default function CreateTicketPage() {
                 onChange={(event) => setCategory(event.target.value)}
                 required
               >
-                <option value="">Select a category...</option>
+                <option value="">
+                  {categoriesLoading ? "Loading categories..." : "Select a category..."}
+                </option>
                 {categories.map((item) => (
                   <option value={item.id} key={item.id}>
                     {item.name}
                   </option>
                 ))}
               </select>
+              {!categoriesLoading && !categories.length && !error && (
+                <small>No categories are available yet.</small>
+              )}
             </label>
             <label>
               Urgency & Impact
-              <select>
-                <option>Medium</option>
-                <option>Low</option>
-                <option>High</option>
-                <option>Critical</option>
+              <select
+                value={priority}
+                onChange={(event) => setPriority(event.target.value)}
+              >
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+                <option value="HIGH">High</option>
+                <option value="CRITICAL">Critical</option>
               </select>
             </label>
           </div>

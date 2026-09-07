@@ -4,12 +4,23 @@ import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import TicketTable from "../TicketTable";
+import TicketsPage from "./TicketsPage";
 import { useAuth } from "../../context/AuthContext";
 import { getTickets } from "../../services/ticketService";
 
 export default function DashboardPage() {
-  const navigate = useNavigate();
   const { user } = useAuth();
+
+  if (user?.role !== "EMPLOYEE") {
+    return <TicketsPage />;
+  }
+
+  return <EmployeeDashboard user={user} />;
+}
+
+function EmployeeDashboard({ user }) {
+  const navigate = useNavigate();
+
   const [tickets, setTickets] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -20,7 +31,10 @@ export default function DashboardPage() {
 
     getTickets()
       .then((response) => {
-        if (active) setTickets(response.data);
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.content || [];
+        if (active) setTickets(data);
       })
       .catch(() => {
         if (active) setError("Unable to load your tickets. Please try again.");
@@ -52,9 +66,11 @@ export default function DashboardPage() {
       `#TICK-${ticket.id}`,
       ticket.title,
       ticket.categoryName || "Uncategorized",
-      ticket.status.replace("_", " "),
+      (ticket.status || "OPEN").replace("_", " "),
       ticket.priority,
       ticket.id,
+      ticket.description,
+      ticket.createdAt,
     ]);
 
   return (

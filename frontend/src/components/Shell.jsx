@@ -18,6 +18,7 @@ export default function Shell({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const isEmployee = user?.role === "EMPLOYEE";
   const initials = (user?.name || "User")
     .split(" ")
     .map((part) => part[0])
@@ -37,7 +38,9 @@ export default function Shell({ children }) {
         </Link>
         <p className="nav-label">Workspace</p>
         <nav>
-          {navigation.map(([path, icon, label]) => (
+          {navigation
+            .filter(([path]) => isEmployee || path !== "/create-ticket")
+            .map(([path, icon, label]) => (
             <Link
               className={location.pathname === path ? "active" : ""}
               key={path}
@@ -46,20 +49,12 @@ export default function Shell({ children }) {
               <Icon>{icon}</Icon>
               {label}
             </Link>
-          ))}
+            ))}
         </nav>
         <div className="sidebar-bottom">
           <button onClick={() => { logout(); navigate("/login"); }}>
             <Icon>logout</Icon>Logout
           </button>
-          <div className="profile">
-            <b>{initials}</b>
-            <span>
-              <strong>{user?.name || "User"}</strong>
-              <small>{user?.email || ""}</small>
-            </span>
-            <em>{user?.role || "User"}</em>
-          </div>
         </div>
       </aside>
       <div className="app-main">
