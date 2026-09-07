@@ -77,6 +77,15 @@ public class Comment {
         this.ticket = ticket;
     }
 
+    public Date getCreatedAt(){
+        return createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = new Date();

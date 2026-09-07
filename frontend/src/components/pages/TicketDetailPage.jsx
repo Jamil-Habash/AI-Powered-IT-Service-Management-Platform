@@ -10,6 +10,7 @@ import {
   updateTicketPriority,
   updateTicketStatus,
 } from "../../services/ticketService";
+import { getComments, addComment } from "../../services/commentService";
 
 export default function TicketDetailPage() {
   const { id } = useParams();
@@ -18,7 +19,10 @@ export default function TicketDetailPage() {
   const [reply, setReply] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-  const initials = (ticket.createdByName || "User")
+  const [comments, setComments] = useState([]);
+  const [sendingReply, setSendingReply] = useState(false);
+
+  const initials = (ticket?.createdByName || "User")
     .split(" ")
     .map((part) => part[0])
     .join("")
@@ -31,6 +35,19 @@ export default function TicketDetailPage() {
       .catch(() => setError("Unable to load this ticket."));
   }, [id]);
 
+  const loadComments = () => {
+    getComments(id)
+      .then((res) => setComments(res.data))
+      .catch(() => {});
+  };
+
+  useEffect(() => {
+    getTicket(id)
+      .then((response) => setTicket(response.data))
+      .catch(() => setError("Unable to load this ticket."));
+    loadComments();
+  }, [id]);
+
   const updateTicket = async (update) => {
     setError("");
     setSaving(true);
@@ -41,6 +58,20 @@ export default function TicketDetailPage() {
       setError(err.response?.data?.error || "Unable to update this ticket.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSendReply = async () => {
+    if (!reply.trim()) return;
+    setSendingReply(true);
+    try {
+      await addComment(id, reply);
+      setReply("");
+      loadComments();
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to post comment.");
+    } finally {
+      setSendingReply(false);
     }
   };
 
@@ -110,21 +141,25 @@ export default function TicketDetailPage() {
           <section className="panel">
             <div className="panel-heading">
               <h2>Activity & Discussion</h2>
-              <small>No messages</small>
+              <small>{comments.length === 0 ? "No messages" : `${comments.length} message${comments.length > 1 ? "s" : ""}`}</small>
             </div>
+
+            {comments.map((c) => (
+              <div key={c.id} className="comment">
+                <strong>{c.authorName}</strong>
+                <small>{new Date(c.createdAt).toLocaleString()}</small>
+                <p>{c.content}</p>
+              </div>
+            ))}
+
             <textarea
               value={reply}
               onChange={(event) => setReply(event.target.value)}
               placeholder="Type your response to the employee..."
               rows="3"
             />
-            <button
-              className="primary-button"
-              onClick={() => {
-                setReply("");
-              }}
-            >
-              Send Reply
+            <button className="primary-button" onClick={handleSendReply} disabled={sendingReply}>
+              {sendingReply ? "Sending..." : "Send Reply"}
             </button>
           </section>
         </div>
