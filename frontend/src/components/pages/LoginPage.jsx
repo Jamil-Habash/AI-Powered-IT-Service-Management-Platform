@@ -8,6 +8,9 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(
+    () => localStorage.getItem("smartdesk_remember_me") === "true",
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +23,7 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      await login(email, password);
+      await login(email, password, rememberMe);
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || "Invalid email or password");
@@ -60,7 +63,11 @@ export default function LoginPage() {
             </div>
           </label>
           <label className="remember">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(event) => setRememberMe(event.target.checked)}
+            />
             Remember me for 30 days
           </label>
           <button className="primary-button" type="submit" disabled={loading}>

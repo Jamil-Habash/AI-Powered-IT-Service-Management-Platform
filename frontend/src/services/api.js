@@ -6,7 +6,9 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("smartdesk_token");
+  const token =
+    localStorage.getItem("smartdesk_token") ||
+    sessionStorage.getItem("smartdesk_token");
   const isAuthRequest = config.url?.startsWith("/auth/");
 
   if (token && !isAuthRequest) {
@@ -21,6 +23,8 @@ api.interceptors.response.use(
     if ([401, 403].includes(error.response?.status)) {
       localStorage.removeItem("smartdesk_token");
       localStorage.removeItem("smartdesk_user");
+      sessionStorage.removeItem("smartdesk_token");
+      sessionStorage.removeItem("smartdesk_user");
 
       if (window.location.pathname !== "/login") {
         window.location.assign("/login");

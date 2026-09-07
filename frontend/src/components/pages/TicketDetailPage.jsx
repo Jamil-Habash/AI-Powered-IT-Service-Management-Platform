@@ -18,6 +18,12 @@ export default function TicketDetailPage() {
   const [reply, setReply] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const initials = (ticket.createdByName || "User")
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   useEffect(() => {
     getTicket(id)
@@ -162,7 +168,7 @@ export default function TicketDetailPage() {
             </label>
             <h2>Requester Profile</h2>
             <div className="profile large">
-              <b></b>
+              <b>{initials}</b>
               <span>
                 <strong>{ticket.createdByName || "Unknown"}</strong>
                 <small>Requester</small>
