@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.smartdesk.project.dto.request.UpdateTicketRequest;
+import com.smartdesk.project.dto.request.UpdateTicketStatusRequest;
+import com.smartdesk.project.dto.request.UpdateTicketPriorityRequest;
 
 @Service
 public class TicketService {
@@ -99,19 +100,30 @@ public class TicketService {
     }
 
     @Transactional
-    public TicketResponse updateTicket(Long ticketId, UpdateTicketRequest request, UserPrincipal currentUser) {
+    public TicketResponse updateStatus(Long ticketId, UpdateTicketStatusRequest request, UserPrincipal currentUser) {
         requireStaff(currentUser);
 
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found: " + ticketId));
 
         ticket.setStatus(request.getStatus());
-        ticket.setPriority(request.getPriority());
 
         if (request.getStatus() == TicketStatus.RESOLVED) {
             ticket.setResolvedAt(new java.util.Date());
         }
 
+        Ticket saved = ticketRepository.save(ticket);
+        return TicketResponse.fromEntity(saved);
+    }
+
+    @Transactional
+    public TicketResponse updatePriority(Long ticketId, UpdateTicketPriorityRequest request, UserPrincipal currentUser) {
+        requireStaff(currentUser);
+
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found: " + ticketId));
+
+        ticket.setPriority(request.getPriority());
         Ticket saved = ticketRepository.save(ticket);
         return TicketResponse.fromEntity(saved);
     }

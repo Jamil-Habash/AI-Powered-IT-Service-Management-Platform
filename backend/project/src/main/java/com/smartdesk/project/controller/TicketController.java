@@ -46,12 +46,12 @@ public class TicketController {
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<TicketResponse> updateStatus(@PathVariable Long id,@Valid @RequestBody UpdateTicketRequest request, @AuthenticationPrincipal UserPrincipal currentUser) {
-        return ResponseEntity.ok(ticketService.updateTicket(id, request, currentUser));
+        return ResponseEntity.ok(ticketService.updateStatus(id, request, currentUser));
     }
 
     @PatchMapping("/{id}/priority")
-    public ResponseEntity<TicketResponse> updatePriority(@PathVariable Long id, @Valid @RequestBody UpdateTicketRequest request, @AuthenticationPrincipal UserPrincipal currentUser) {
-        return ResponseEntity.ok(ticketService.updateTicket(id, request, currentUser));
+    public ResponseEntity<TicketResponse> updatePriority(@PathVariable Long id,  @Valid @RequestBody UpdateTicketRequest request, @AuthenticationPrincipal UserPrincipal currentUser) {
+        return ResponseEntity.ok(ticketService.updatePriority(id, request, currentUser));
     }
 
     @PatchMapping("/{id}/resolve")
