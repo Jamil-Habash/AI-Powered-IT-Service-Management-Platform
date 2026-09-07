@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class ExceptionsHandler {
     public ResourceNotFoundException(String message) {
         super(message);
     }
+
 }
 
     @RestControllerAdvice
@@ -59,6 +61,13 @@ public class ExceptionsHandler {
             Map<String, String> body = new HashMap<>();
             body.put("error", ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+        }
+
+        @ExceptionHandler(AccessDeniedException.class)
+        public ResponseEntity<Map<String, String>> handleDenied(AccessDeniedException ex) {
+            Map<String, String> body = new HashMap<>();
+            body.put("error", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
         }
     }
 }

@@ -1,27 +1,32 @@
 package com.smartdesk.project.service;
 
+import com.smartdesk.project.dto.request.AssignTicketRequest;
 import com.smartdesk.project.dto.request.CreateTicketRequest;
 import com.smartdesk.project.dto.response.TicketResponse;
 import com.smartdesk.project.exception.ExceptionsHandler.ResourceNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import com.smartdesk.project.models.*;
 import com.smartdesk.project.repository.CategoryRepository;
 import com.smartdesk.project.repository.TicketRepository;
+import com.smartdesk.project.repository.UserRepository;
 import com.smartdesk.project.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import com.smartdesk.project.dto.request.UpdateTicketRequest;
 
 @Service
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
-    public TicketService(TicketRepository ticketRepository, CategoryRepository categoryRepository) {
+    public TicketService(TicketRepository ticketRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -66,5 +71,62 @@ public class TicketService {
         }
 
         return TicketResponse.fromEntity(ticket);
+    }
+
+    private void requireStaff(UserPrincipal currentUser) {
+        if (currentUser.getUser().getRole() == Role.EMPLOYEE) {
+            throw new AccessDeniedException("Only IT agents or admins can perform this action");
+        }
+    }
+
+    @Transactional
+    public TicketResponse assign(Long ticketId, AssignTicketRequest request, UserPrincipal currentUser) {
+        requireStaff(currentUser);
+
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found: " + ticketId));
+
+        User agent = userRepository.findById(request.getAgentId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + request.getAgentId()));
+
+        if (agent.getRole() == Role.EMPLOYEE) {
+            throw new IllegalArgumentException("Cannot assign a ticket to an employee");
+        }
+
+        ticket.setAssignedAgent(agent);
+        Ticket saved = ticketRepository.save(ticket);
+        return TicketResponse.fromEntity(saved);
+    }
+
+    @Transactional
+    public TicketResponse updateTicket(Long ticketId, UpdateTicketRequest request, UserPrincipal currentUser) {
+        requireStaff(currentUser);
+
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found: " + ticketId));
+
+        ticket.setStatus(request.getStatus());
+        ticket.setPriority(request.getPriority());
+
+        if (request.getStatus() == TicketStatus.RESOLVED) {
+            ticket.setResolvedAt(new java.util.Date());
+        }
+
+        Ticket saved = ticketRepository.save(ticket);
+        return TicketResponse.fromEntity(saved);
+    }
+
+    @Transactional
+    public TicketResponse resolve(Long ticketId, UserPrincipal currentUser) {
+        requireStaff(currentUser);
+
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found: " + ticketId));
+
+        ticket.setStatus(TicketStatus.RESOLVED);
+        ticket.setResolvedAt(new java.util.Date());
+
+        Ticket saved = ticketRepository.save(ticket);
+        return TicketResponse.fromEntity(saved);
     }
 }
