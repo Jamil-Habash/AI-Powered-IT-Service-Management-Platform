@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
@@ -14,6 +14,7 @@ import { getComments, addComment } from "../../services/commentService";
 
 export default function TicketDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [ticket, setTicket] = useState(null);
   const [reply, setReply] = useState("");
@@ -33,6 +34,9 @@ export default function TicketDetailPage() {
     getTicket(id)
       .then((response) => setTicket(response.data))
       .catch(() => setError("Unable to load this ticket."));
+    getComments(id)
+      .then((response) => setComments(Array.isArray(response.data) ? response.data : []))
+      .catch(() => {});
   }, [id]);
 
   const loadComments = () => {
@@ -40,13 +44,6 @@ export default function TicketDetailPage() {
       .then((res) => setComments(res.data))
       .catch(() => {});
   };
-
-  useEffect(() => {
-    getTicket(id)
-      .then((response) => setTicket(response.data))
-      .catch(() => setError("Unable to load this ticket."));
-    loadComments();
-  }, [id]);
 
   const updateTicket = async (update) => {
     setError("");
@@ -91,9 +88,17 @@ export default function TicketDetailPage() {
         title={ticket.title}
         description={`Created ${created}`}
         action={
-          <button className="secondary-button" onClick={() => window.print()}>
-            <Icon>print</Icon>Print Summary
-          </button>
+          <div className="detail-actions">
+            <button className="secondary-button" onClick={() => navigate("/tickets")}>
+              <Icon>arrow_back</Icon>Back to Tickets
+            </button>
+            <button className="secondary-button" onClick={() => window.print()}>
+              <Icon>print</Icon>Print Summary
+            </button>
+            <button className="secondary-button" onClick={() => navigator.clipboard?.writeText(window.location.href)}>
+              <Icon>share</Icon>Share
+            </button>
+          </div>
         }
       />
       <div className="content-grid detail-grid">
@@ -205,11 +210,10 @@ export default function TicketDetailPage() {
             <div className="profile large">
               <b>{initials}</b>
               <span>
-                <strong>{ticket.createdByName || "Unknown"}</strong>
+                <strong>{ticket.createdByName || "Unknown"}</strong><br></br>
                 <small>Requester</small>
               </span>
             </div>
-            <button className="secondary-button">Request Screen Share</button>
             <button
               className="success-button"
               disabled={saving || status === "RESOLVED"}

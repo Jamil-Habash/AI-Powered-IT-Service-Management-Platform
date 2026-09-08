@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
@@ -10,14 +10,24 @@ import { getTickets } from "../../services/ticketService";
 export default function TicketsPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
   const [filter, setFilter] = useState("");
-  const [search, setSearch] = useState("");
+  const [quickFilter, setQuickFilter] = useState("all");
+  const [search, setSearch] = useState(() => searchParams.get("search") || "");
+  const [priorityFilter, setPriorityFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [assigneeFilter, setAssigneeFilter] = useState("");
   const [tickets, setTickets] = useState([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
     getTickets()
-      .then((response) => setTickets(response.data))
+      .then((response) => {
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.content || [];
+        setTickets(data);
+      })
       .catch(() => setError("Unable to load tickets. Please try again."));
   }, []);
 
@@ -27,6 +37,20 @@ export default function TicketsPage() {
 
   const rows = tickets
     .filter((ticket) => !filter || ticket.status === filter.toUpperCase().replace(" ", "_"))
+    .filter((ticket) => !priorityFilter || ticket.priority === priorityFilter)
+    .filter((ticket) => !categoryFilter || ticket.categoryName === categoryFilter)
+    .filter((ticket) => {
+      if (quickFilter === "unassigned") return !ticket.assignedAgentName;
+      if (quickFilter === "mine") return ticket.assignedAgentName === user?.name;
+      if (quickFilter === "high") return ticket.priority === "HIGH" || ticket.priority === "CRITICAL";
+      if (quickFilter === "sla") return ticket.priority === "CRITICAL";
+      return true;
+    })
+    .filter((ticket) => {
+      if (assigneeFilter === "unassigned") return !ticket.assignedAgentName;
+      if (assigneeFilter === "mine") return ticket.assignedAgentName === user?.name;
+      return true;
+    })
     .filter((ticket) => {
       const query = search.toLowerCase();
       return (
@@ -44,14 +68,17 @@ export default function TicketsPage() {
       ticket.id,
       ticket.description,
       ticket.createdAt,
+      ticket.createdByName,
     ]);
   return (
     <Shell>
+      {user?.role == "EMPLOYEE" && (
       <PageHeader
         eyebrow="INCIDENT & SERVICE MANAGEMENT  •  QUEUE LIVE STATUS"
         title="IT Incident & Service Queue"
         description="Manage, triage, and reassign incoming service requests and incident tickets across IT tiers."
         action={
+          
           <button
             className="primary-button"
             onClick={() => navigate("/create-ticket")}
@@ -60,7 +87,15 @@ export default function TicketsPage() {
           </button>
         }
       />
-      <div className="stats-grid queue-stats">
+      )}
+      {user?.role !== "EMPLOYEE" && (
+      <PageHeader
+        eyebrow="INCIDENT & SERVICE MANAGEMENT  •  QUEUE LIVE STATUS"
+        title="IT Incident & Service Queue"
+        description="Manage, triage, and reassign incoming service requests and incident tickets across IT tiers."
+      />
+      )}
+      <div className="stats-grid">
         {[
           ["Unassigned Tickets", unassignedCount, "Action Required"],
           ["High / Critical Queue", highCriticalCount, "Needs Attention"],
@@ -75,11 +110,16 @@ export default function TicketsPage() {
       </div>
       <section className="panel">
         <div className="filter-row">
-          <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search ticket ID, title, requester..."
-          />
+          <label className="queue-search">
+            <Icon>search</Icon>
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search ticket ID, title, requester..."
+              aria-label="Search tickets"
+            />
+            <kbd>⌘K</kbd>
+          </label>
           <select
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
@@ -89,25 +129,60 @@ export default function TicketsPage() {
             <option>In Progress</option>
             <option>Resolved</option>
           </select>
-          <button className="secondary-button" onClick={() => setFilter("")}>
-            Reset Filters
-          </button>
+          <select value={priorityFilter} onChange={(event) => setPriorityFilter(event.target.value)}>
+            <option value="">All Priorities</option>
+            <option value="CRITICAL">Critical</option>
+            <option value="HIGH">High</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LOW">Low</option>
+          </select>
+          <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+            <option value="">All Categories</option>
+            {[...new Set(tickets.map((ticket) => ticket.categoryName).filter(Boolean))].map((category) => (
+              <option value={category} key={category}>{category}</option>
+            ))}
+          </select>
+          <select value={assigneeFilter} onChange={(event) => setAssigneeFilter(event.target.value)}>
+            <option value="">All Agents</option>
+            <option value="unassigned">Unassigned</option>
+            <option value="mine">Assigned to Me</option>
+          </select>
         </div>
         <div className="tabs">
-          {["", "Open", "In Progress", "Resolved"].map((value) => (
+          {[
+            ["all", "All Tickets", tickets.length],
+            ["unassigned", "Unassigned", unassignedCount],
+            ["mine", "Assigned to Me", myAssignedCount],
+            ["high", "High Priority", highCriticalCount],
+            ["sla", "SLA Breaching", tickets.filter((ticket) => ticket.priority === "CRITICAL").length],
+          ].map(([value, label, count]) => (
             <button
-              className={filter === value ? "selected" : ""}
-              onClick={() => setFilter(value)}
+              className={quickFilter === value ? "selected" : ""}
+              onClick={() => {
+                setQuickFilter(value);
+                setFilter("");
+              }}
               key={value}
             >
-              {value || "All Tickets"}
+              {label} <span className="tab-count">{count}</span>
             </button>
           ))}
+          <button className="secondary-button" onClick={() => {
+            setFilter("");
+            setQuickFilter("all");
+            setPriorityFilter("");
+            setCategoryFilter("");
+            setAssigneeFilter("");
+            setSearch("");
+          }}>
+            Reset Filters
+          </button>
         </div>
         {error && <p className="form-error">{error}</p>}
         {!error && rows.length > 0 && (
           <TicketTable
             rows={rows}
+            variant="queue"
             onSelect={(ticketId) => navigate(`/ticket/${ticketId}`)}
           />
         )}

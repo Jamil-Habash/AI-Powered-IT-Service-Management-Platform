@@ -19,6 +19,43 @@ export default function CreateTicketPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const draft = localStorage.getItem("smartdesk_ticket_draft");
+    if (!draft) return;
+    try {
+      const saved = JSON.parse(draft);
+      setTitle(saved.title || "");
+      setCategory(saved.category || "");
+      setPriority(saved.priority || "MEDIUM");
+      setDescription(saved.description || "");
+    } catch {
+      localStorage.removeItem("smartdesk_ticket_draft");
+    }
+  }, []);
+
+  const updateTitle = (value) => {
+    setTitle(value);
+    if (category) return;
+    const lower = value.toLowerCase();
+    const match = categories.find((item) => {
+      const name = item.name.toLowerCase();
+      return (
+        (/(vpn|wifi|network|dns)/.test(lower) && /network|vpn/.test(name)) ||
+        (/(monitor|dock|laptop|keyboard)/.test(lower) && /hardware|peripheral|display/.test(name)) ||
+        (/(password|login|sso|account)/.test(lower) && /account|access|identity/.test(name))
+      );
+    });
+    if (match) setCategory(String(match.id));
+  };
+
+  const saveDraft = () => {
+    localStorage.setItem(
+      "smartdesk_ticket_draft",
+      JSON.stringify({ title, category, priority, description }),
+    );
+    setError("Draft saved locally on this device.");
+  };
+
+  useEffect(() => {
     getCategories()
       .then((response) => {
         const data = Array.isArray(response.data)
@@ -42,6 +79,7 @@ export default function CreateTicketPage() {
         categoryId: Number(category),
         priority,
       });
+      localStorage.removeItem("smartdesk_ticket_draft");
       navigate(`/ticket/${response.data.id}`);
     } catch (err) {
       setError(err.response?.data?.error || "Unable to submit ticket.");
@@ -76,7 +114,7 @@ export default function CreateTicketPage() {
             Ticket Title
             <input
               value={title}
-              onChange={(event) => setTitle(event.target.value)}
+              onChange={(event) => updateTitle(event.target.value)}
               placeholder="Unable to connect to corporate VPN"
               required
             />
@@ -117,6 +155,12 @@ export default function CreateTicketPage() {
           </div>
           <label>
             Description
+            <div className="editor-toolbar" aria-label="Formatting tools">
+              <button type="button" title="Bold" onClick={() => setDescription((value) => `${value}**bold text**`)}><Icon>format_bold</Icon></button>
+              <button type="button" title="Italic" onClick={() => setDescription((value) => `${value}*italic text*`)}><Icon>format_italic</Icon></button>
+              <button type="button" title="Bullet list" onClick={() => setDescription((value) => `${value}\n- `)}><Icon>format_list_bulleted</Icon></button>
+              <button type="button" title="Code block" onClick={() => setDescription((value) => `${value}\n\`\`\`\n\`\`\``)}><Icon>code</Icon></button>
+            </div>
             <textarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
@@ -138,8 +182,15 @@ export default function CreateTicketPage() {
                 : "PNG, JPG, PDF, LOG up to 25MB"}
             </small>
           </label>
+          <section className="triage-callout">
+            <Icon>auto_awesome</Icon>
+            <div>
+              <strong>Smart Triage Active</strong>
+              <p>We analyze the subject and description to route this request to the right support queue.</p>
+            </div>
+          </section>
           <div className="form-actions">
-            <button type="button" className="secondary-button">
+            <button type="button" className="secondary-button" onClick={saveDraft}>
               Save Draft
             </button>
             <button className="primary-button" type="submit" disabled={loading}>

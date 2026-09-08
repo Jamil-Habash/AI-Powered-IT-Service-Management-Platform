@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/smartdesk_logo.png";
 import Icon from "./Icon";
@@ -18,6 +19,8 @@ export default function Shell({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [collapsed, setCollapsed] = useState(false); // ← new
   const isEmployee = user?.role === "EMPLOYEE";
   const initials = (user?.name || "User")
     .split(" ")
@@ -28,15 +31,19 @@ export default function Shell({ children }) {
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
-        <Link to="/dashboard" className="brand">
-          <img src={LOGO_SRC} alt="SmartDesk logo" />
-          <span>
-            <strong>SmartDesk</strong>
-            <small>ITSM PLATFORM</small>
-          </span>
-        </Link>
-        <p className="nav-label">Workspace</p>
+      <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+        <div className="sidebar-top">
+          <Link to="/dashboard" className="brand">
+            <img src={LOGO_SRC} alt="SmartDesk logo" />
+            <span className="brand-text">
+              <strong>SmartDesk</strong>
+              <small>ITSM PLATFORM</small>
+            </span>
+          </Link>
+          
+        </div>
+
+        <p className="nav-label">{!collapsed && "Workspace"}</p>
         <nav>
           {navigation
             .filter(([path]) => isEmployee || path !== "/create-ticket")
@@ -45,32 +52,45 @@ export default function Shell({ children }) {
               className={location.pathname === path ? "active" : ""}
               key={path}
               to={path}
+              title={collapsed ? label : undefined}
             >
               <Icon>{icon}</Icon>
-              {label}
+              <span className="nav-text">{label}</span>
             </Link>
             ))}
         </nav>
         <div className="sidebar-bottom">
           <button onClick={() => { logout(); navigate("/login"); }}>
-            <Icon>logout</Icon>Logout
+            <Icon>logout</Icon>
+            <span className="nav-text">Logout</span>
           </button>
         </div>
       </aside>
       <div className="app-main">
         <header className="topbar">
-          <input placeholder="Search tickets, articles, incident logs" />
           <div className="top-actions">
-            <button aria-label="Help">
+            <button aria-label="Help and documentation" onClick={() => navigate("/knowledge-base")}>
               <Icon>help</Icon>
             </button>
-            <button aria-label="Notifications">
-              <Icon>notifications</Icon>
-            </button>
+            <div className="notification-wrap">
+              <button
+                aria-label="Notifications"
+                onClick={() => setShowNotifications((visible) => !visible)}
+              >
+                <Icon>notifications</Icon>
+                <span className="notification-dot" />
+              </button>
+              {showNotifications && (
+                <div className="notification-popover">
+                  <strong>Notifications</strong>
+                  <p>No new ticket updates.</p>
+                </div>
+              )}
+            </div>
             <span className="avatar">{initials}</span>
-            <span className="user-name">
+            <button className="user-name user-menu-button" onClick={() => navigate("/settings")}>
               {user?.name || "User"}<small>{user?.role || ""}</small>
-            </span>
+            </button>
           </div>
         </header>
         <main className="page-content">{children}</main>

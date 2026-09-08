@@ -8,10 +8,18 @@ export default function AnalyticsPage() {
   const [date, setDate] = useState("Last 30 Days");
   const [tickets, setTickets] = useState([]);
   const [error, setError] = useState("");
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
+  const [customCategories, setCustomCategories] = useState([]);
 
   useEffect(() => {
     getTickets()
-      .then((response) => setTickets(response.data))
+      .then((response) => {
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.content || [];
+        setTickets(data);
+      })
       .catch(() => setError("Unable to load analytics data."));
   }, []);
 
@@ -29,7 +37,7 @@ export default function AnalyticsPage() {
       counts[name] = (counts[name] || 0) + 1;
       return counts;
     }, {}),
-  );
+  ).concat(customCategories.map((category) => [category, 0]));
   const agentCounts = Object.entries(
     tickets.reduce((counts, ticket) => {
       if (ticket.assignedAgentName) {
@@ -134,7 +142,7 @@ export default function AnalyticsPage() {
               statuses.
             </p>
           </div>
-          <button className="primary-button">+ Add Service Category</button>
+          <button className="primary-button" onClick={() => setShowCategoryForm(true)}>+ Add Service Category</button>
         </div>
         {categoryCounts.map(([category, count]) => (
           <div className="category-row" key={category}>
@@ -145,6 +153,36 @@ export default function AnalyticsPage() {
           </div>
         ))}
       </section>
+      {showCategoryForm && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setShowCategoryForm(false)}>
+          <form
+            className="modal"
+            role="dialog"
+            aria-modal="true"
+            onClick={(event) => event.stopPropagation()}
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (!newCategory.trim()) return;
+              setCustomCategories((current) => [...current, newCategory.trim()]);
+              setNewCategory("");
+              setShowCategoryForm(false);
+            }}
+          >
+            <div className="panel-heading">
+              <h2>New Service Category</h2>
+              <button type="button" className="icon-button" aria-label="Close category form" onClick={() => setShowCategoryForm(false)}><span>×</span></button>
+            </div>
+            <label>
+              Category Name
+              <input value={newCategory} onChange={(event) => setNewCategory(event.target.value)} placeholder="Cloud Infrastructure & DevOps" required autoFocus />
+            </label>
+            <div className="form-actions">
+              <button type="button" className="secondary-button" onClick={() => setShowCategoryForm(false)}>Cancel</button>
+              <button type="submit" className="primary-button">Save Category</button>
+            </div>
+          </form>
+        </div>
+      )}
     </Shell>
   );
 }

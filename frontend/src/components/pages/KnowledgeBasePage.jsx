@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
@@ -11,6 +12,8 @@ const articles = [
   "Office 365 Outlook duplicate notifications reset",
 ];
 export default function KnowledgeBasePage() {
+  const [selectedArticle, setSelectedArticle] = useState(null);
+
   return (
     <Shell>
       <PageHeader
@@ -46,12 +49,29 @@ export default function KnowledgeBasePage() {
               }
             </small>
             <h2>{article}</h2>
-            <button className="text-button">
+            <button className="text-button" onClick={() => setSelectedArticle(article)}>
               Read Guide <Icon>arrow_forward</Icon>
             </button>
           </article>
         ))}
       </div>
+      {selectedArticle && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setSelectedArticle(null)}>
+          <article className="modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
+            <div className="panel-heading">
+              <div>
+                <small>Verified self-service guide</small>
+                <h2>{selectedArticle}</h2>
+              </div>
+              <button className="icon-button" aria-label="Close guide" onClick={() => setSelectedArticle(null)}>
+                <Icon>close</Icon>
+              </button>
+            </div>
+            <p>Follow the documented troubleshooting steps for this service. If the issue remains after the recommended checks, create a support ticket with the steps you completed and any error details.</p>
+            <button className="primary-button" onClick={() => setSelectedArticle(null)}>Done</button>
+          </article>
+        </div>
+      )}
     </Shell>
   );
 }

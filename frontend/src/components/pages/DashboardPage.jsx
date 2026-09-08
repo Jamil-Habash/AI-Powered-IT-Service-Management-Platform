@@ -201,12 +201,14 @@ function EmployeeDashboard({ user }) {
         title={`Welcome back, ${user?.name || "there"}`}
         description="Here is an overview of your IT service requests and real-time support status."
         action={
-          <button
-            className="primary-button"
-            onClick={() => navigate("/create-ticket")}
-          >
-            <Icon>add</Icon>New Ticket
-          </button>
+          <div className="page-actions">
+            <button className="secondary-button" onClick={() => navigate("/knowledge-base")}>
+              <Icon>menu_book</Icon>Browse Knowledge Base
+            </button>
+            <button className="primary-button" onClick={() => navigate("/create-ticket")}>
+              <Icon>add</Icon>New Ticket
+            </button>
+          </div>
         }
       />
       <div className="stats-grid">
