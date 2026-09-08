@@ -53,6 +53,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/api/agents")
+                .hasAnyRole("IT_AGENT", "ADMIN")
                 .requestMatchers("/api/tickets/**")
                 .hasAnyRole("EMPLOYEE", "IT_AGENT", "ADMIN")
                 .anyRequest().authenticated()

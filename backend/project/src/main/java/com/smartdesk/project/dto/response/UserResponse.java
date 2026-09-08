@@ -1,5 +1,5 @@
 package com.smartdesk.project.dto.response;
-
+import com.smartdesk.project.models.User;
 import com.smartdesk.project.models.Role;
 
 public class UserResponse {
@@ -9,11 +9,13 @@ public class UserResponse {
     private String email;
     private Role role;
 
-    public UserResponse(Long id, String name, String email, Role role) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.role = role;
+    public static UserResponse fromEntity(User user){
+        UserResponse dto = new UserResponse();
+        dto.id = user.getId();
+        dto.name = user.getName();
+        dto.email = user.getEmail();
+        dto.role = user.getRole();
+        return dto;
     }
 
     public Long getId() { 

@@ -544,7 +544,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 15px;
   margin-bottom: 16px;
 }
 .panel h2 {
@@ -1108,10 +1108,17 @@ td strong {
   border-radius: 99px;
 }
 .comment {
+  justify-content:start;
+  display: flex;
   padding: 12px;
   background: #eff4ff;
   border-radius: 7px;
+  margin-bottom: 7px;
 }
+.av-com{
+  margin-right: 10px;
+}
+
 .panel textarea {
   width: 100%;
   padding: 12px;

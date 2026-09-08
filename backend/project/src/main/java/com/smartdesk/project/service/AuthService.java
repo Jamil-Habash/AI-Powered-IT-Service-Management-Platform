@@ -39,7 +39,7 @@ public class AuthService {
 
         User saved = userRepository.save(user);
 
-        return new UserResponse(saved.getId(), saved.getName(), saved.getEmail(), saved.getRole());
+        return UserResponse.fromEntity(saved);
     }
 
     public AuthResponse login(LoginRequest request) {

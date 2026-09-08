@@ -20,7 +20,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if ([401, 403].includes(error.response?.status)) {
+    if (error.response?.status === 401) {
       localStorage.removeItem("smartdesk_token");
       localStorage.removeItem("smartdesk_user");
       sessionStorage.removeItem("smartdesk_token");

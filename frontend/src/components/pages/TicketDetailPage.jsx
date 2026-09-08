@@ -5,7 +5,9 @@ import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import { useAuth } from "../../context/AuthContext";
 import {
+  getAgents,
   getTicket,
+  assignTicket,
   resolveTicket,
   updateTicketPriority,
   updateTicketStatus,
@@ -22,6 +24,7 @@ export default function TicketDetailPage() {
   const [saving, setSaving] = useState(false);
   const [comments, setComments] = useState([]);
   const [sendingReply, setSendingReply] = useState(false);
+  const [agents, setAgents] = useState([]);
 
   const initials = (ticket?.createdByName || "User")
     .split(" ")
@@ -37,13 +40,18 @@ export default function TicketDetailPage() {
     getComments(id)
       .then((response) => setComments(Array.isArray(response.data) ? response.data : []))
       .catch(() => {});
-  }, [id]);
+  }, [id, user?.role]);
 
-  const loadComments = () => {
-    getComments(id)
-      .then((res) => setComments(res.data))
-      .catch(() => {});
-  };
+  useEffect(() => {
+      getAgents()
+        .then((response) => {
+          const data = Array.isArray(response.data)
+            ? response.data
+            : response.data?.content || [];
+          setAgents(data);
+        })
+        .catch(() => setError("Unable to load Agents. Please try again."));
+    }, []);
 
   const updateTicket = async (update) => {
     setError("");
@@ -56,6 +64,12 @@ export default function TicketDetailPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleAssign = (event) => {
+    const agentId = event.target.value;
+    if (!agentId) return;
+    updateTicket(assignTicket(id, Number(agentId)));
   };
 
   const handleSendReply = async () => {
@@ -148,12 +162,18 @@ export default function TicketDetailPage() {
               <h2>Activity & Discussion</h2>
               <small>{comments.length === 0 ? "No messages" : `${comments.length} message${comments.length > 1 ? "s" : ""}`}</small>
             </div>
-
             {comments.map((c) => (
               <div key={c.id} className="comment">
-                <strong>{c.authorName}</strong>
-                <small>{new Date(c.createdAt).toLocaleString()}</small>
-                <p>{c.content}</p>
+                <div className="av-com">
+                  <span className="avatar">{initials}</span>
+                </div>
+                <div>
+                  <strong>{c.authorName}</strong>
+                  <div>
+                    <small>{new Date(c.createdAt).toLocaleString()}</small>
+                  </div>
+                  <p>{c.content}</p>
+                </div>
               </div>
             ))}
 
@@ -173,9 +193,19 @@ export default function TicketDetailPage() {
             <h2>Agent Controls</h2>
             <label>
               Assignee
-              <select>
-                <option>{ticket.assignedAgentName || "Unassigned"}</option>
+              <select
+                value={ticket.assignedAgentId || ""}
+                disabled={saving || agents.length === 0}
+                onChange={handleAssign}
+              >
+                <option value="">Unassigned</option>
+                {agents.map((agent) => (
+                  <option value={agent.id} key={agent.id}>
+                    {agent.name} {agent.role ? `(${agent.role.replace("_", " ")})` : ""}
+                  </option>
+                ))}
               </select>
+              {!agents.length && <small>Loading available agents...</small>}
             </label>
             <label>
               Ticket Status

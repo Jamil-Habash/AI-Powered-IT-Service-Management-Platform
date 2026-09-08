@@ -26,7 +26,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal UserPrincipal currentUser) {
         User user = currentUser.getUser();
-        return ResponseEntity.ok(new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getRole()));
+        return ResponseEntity.ok(UserResponse.fromEntity(user));
     }
 
     @PostMapping("/register")
