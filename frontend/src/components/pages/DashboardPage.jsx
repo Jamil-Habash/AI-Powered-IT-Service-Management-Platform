@@ -6,15 +6,135 @@ import Shell from "../Shell";
 import TicketTable from "../TicketTable";
 import { useAuth } from "../../context/AuthContext";
 import { getTickets } from "../../services/ticketService";
+import { getUsers } from "../../services/userService";
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  if (user?.role == "ADMIN") {
+    return <AdminDashboard  />;
+  }
 
   if (user?.role !== "EMPLOYEE") {
     return <AgentDashboard user={user} />;
   }
 
   return <EmployeeDashboard user={user} />;
+}
+
+function AdminDashboard() {
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const [tickets, setTickets] = useState([]);
+  const [tab, setTab] = useState("employees");
+  const [search, setSearch] = useState("");
+  const [department, setDepartment] = useState("");
+  const [status, setStatus] = useState("");
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const pageSize = 7;
+
+  useEffect(() => {
+    Promise.all([getUsers(), getTickets()])
+      .then(([usersResponse, ticketsResponse]) => {
+        const userData = Array.isArray(usersResponse.data) ? usersResponse.data : [];
+        const ticketData = Array.isArray(ticketsResponse.data) ? ticketsResponse.data : ticketsResponse.data?.content || [];
+        setUsers(userData);
+        setTickets(ticketData);
+      })
+      .catch(() => setError("Unable to load the user directory."))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const employees = users.filter((item) => item.role === "EMPLOYEE");
+  const agents = users.filter((item) => item.role === "IT_AGENT");
+  const assignedTickets = tickets.filter((item) => item.assignedAgentName);
+  const activeAccounts = users.length;
+  const tabUsers = tab === "employees" ? employees : tab === "agents" ? agents : assignedTickets;
+  const departments = [...new Set(tabUsers.map((item) => item.department || item.categoryName).filter(Boolean))];
+  const filtered = tabUsers.filter((item) => {
+    const name = item.name || item.createdByName || item.assignedAgentName || "";
+    const email = item.email || "";
+    const itemStatus = item.status || "ACTIVE";
+    return (
+      (!search || `${name} ${email}`.toLowerCase().includes(search.toLowerCase())) &&
+      (!department || (item.department || item.categoryName) === department) &&
+      (!status || itemStatus === status)
+    );
+  });
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const visible = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+  const resetFilters = () => {
+    setSearch("");
+    setDepartment("");
+    setStatus("");
+    setPage(1);
+  };
+
+  const exportDirectory = () => {
+    const csv = ["Name,Email,Role", ...users.map((item) => `${item.name},${item.email},${item.role}`)].join("\n");
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    link.download = "smartdesk-directory.csv";
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
+  return (
+    <Shell>
+      <div className="admin-dashboard">
+        <section className="panel admin-hero">
+          <div>
+            <p className="eyebrow">USER ADMINISTRATION <span>•</span> SYSTEM ACCESS CONTROL</p>
+            <h1>Manage Users</h1>
+            <p>View, manage, and provision employee and IT agent accounts across the enterprise workspace.</p>
+          </div>
+          <div className="page-actions">
+            <button className="secondary-button" onClick={exportDirectory}><Icon>download</Icon>Export Directory</button>
+            <button className="secondary-button" onClick={() => navigate("/tickets")}><Icon>confirmation_number</Icon>Manage Tickets</button>
+            <button className="primary-button" onClick={() => navigate("/register")}><Icon>person_add</Icon>Add New User</button>
+          </div>
+        </section>
+
+        <div className="stats-grid admin-stats">
+          {[
+            ["Total Employees", employees.length, "onboarded this calendar month", "group"],
+            ["Total IT Agents", agents.length, `${agents.length ? Math.min(agents.length, 8) : 0} active on duty triage queue now`, "support_agent"],
+            ["Active Accounts", activeAccounts, "synced directory accounts", "verified_user"],
+          ].map(([label, value, note, icon]) => (
+            <section className="stat-card admin-stat" key={label}>
+              <div><span>{label}</span><strong>{value.toLocaleString()}</strong></div>
+              <Icon>{icon}</Icon>
+              <small>{note}</small>
+            </section>
+          ))}
+        </div>
+
+        <section className="panel admin-directory">
+          <div className="admin-tabs">
+            {[["employees", "Employees", employees.length, "badge"], ["agents", "IT Agents", agents.length, "support_agent"], ["assigned", "Assigned Tickets", assignedTickets.length, "confirmation_number"]].map(([value, label, count, icon]) => (
+              <button className={tab === value ? "selected" : ""} key={value} onClick={() => { setTab(value); setPage(1); }}>
+                <Icon>{icon}</Icon>{label}<b>{count}</b>
+              </button>
+            ))}
+            <span className="directory-live"><i />Live Directory Feed</span>
+          </div>
+          <div className="admin-filters">
+            <label className="admin-search"><Icon>search</Icon><input value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Search by name or email..." /></label>
+            <select value={department} onChange={(event) => { setDepartment(event.target.value); setPage(1); }}><option value="">Role / Dept: All Departments</option>{departments.map((item) => <option key={item}>{item}</option>)}</select>
+            <select value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }}><option value="">Status: All Statuses</option><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option></select>
+            <button className="secondary-button" onClick={resetFilters}><Icon>restart_alt</Icon>Reset Filters</button>
+          </div>
+          {error && <p className="form-error">{error}</p>}
+          {loading && <p>Loading user directory...</p>}
+          {!loading && !error && <div className="admin-table-scroll"><table className="admin-table"><thead><tr><th><input type="checkbox" aria-label="Select all users" /></th><th>Employee / Dept</th><th>Email Address</th><th>Account Status</th><th>Role</th><th>Tickets Created</th><th>Actions</th></tr></thead><tbody>{visible.map((item) => { const itemTickets = tickets.filter((ticket) => ticket.createdById === item.id || ticket.assignedAgentId === item.id); return <tr key={item.id}><td><input type="checkbox" aria-label={`Select ${item.name}`} /></td><td><strong>{item.name || item.assignedAgentName}</strong><small>{item.department || (item.role === "IT_AGENT" ? "IT Operations" : "Employee")}</small></td><td>{item.email || "Not available"}</td><td><span className="account-status"><i />{item.status || "Active"}</span></td><td>{item.role?.replace("_", " ") || "Ticket assignment"}</td><td><b>{itemTickets.length}</b> tickets</td><td><button className="icon-button" title="View details" onClick={() => item.id && navigate(`/settings?user=${item.id}`)}><Icon>more_vert</Icon></button></td></tr>; })}</tbody></table></div>}
+          {!loading && !error && visible.length === 0 && <p>No directory records match these filters.</p>}
+          <div className="queue-pagination"><span>Showing {filtered.length ? (page - 1) * pageSize + 1 : 0} to {Math.min(page * pageSize, filtered.length)} of {filtered.length} records</span><div><button disabled={page === 1} onClick={() => setPage((value) => value - 1)}>Previous</button><button className="current">{page}</button><button disabled={page === pageCount} onClick={() => setPage((value) => value + 1)}>Next</button></div></div>
+        </section>
+      </div>
+    </Shell>
+  );
 }
 
 function AgentDashboard({ user }) {
@@ -85,7 +205,7 @@ function AgentDashboard({ user }) {
     <Shell>
       <PageHeader
         eyebrow="IT OPERATIONS  •  AGENT WORKSPACE"
-        title={`Good morning, ${user?.name || "there"}`}
+        title={`Welcome back, ${user?.name || "there"}`}
         description="Monitor the support queue, prioritize incidents, and keep assigned work moving."
         action={
           <button className="primary-button" onClick={() => navigate("/tickets")}>

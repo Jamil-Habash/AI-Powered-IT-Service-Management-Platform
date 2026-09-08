@@ -5,13 +5,13 @@ import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import { useAuth } from "../../context/AuthContext";
 import {
-  getAgents,
   getTicket,
   assignTicket,
   resolveTicket,
   updateTicketPriority,
   updateTicketStatus,
 } from "../../services/ticketService";
+import {getAgents} from "../../services/userService";
 import { getComments, addComment } from "../../services/commentService";
 
 export default function TicketDetailPage() {
@@ -50,7 +50,7 @@ export default function TicketDetailPage() {
             : response.data?.content || [];
           setAgents(data);
         })
-        .catch(() => setError("Unable to load Agents. Please try again."));
+        .catch(() => {});
     }, []);
 
   const updateTicket = async (update) => {

@@ -3,7 +3,6 @@ import api from "./api";
 export const getTickets = () => api.get("/tickets");
 export const getTicket = (id) => api.get(`/tickets/${id}`);
 export const createTicket = (ticket) => api.post("/tickets", ticket);
-export const getAgents = () => api.get("/agents");
 export const assignTicket = (id, agentId) =>
   api.patch(`/tickets/${id}/assign`, { agentId });
 

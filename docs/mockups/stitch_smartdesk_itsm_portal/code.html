@@ -1,0 +1,741 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><title>SmartDesk ITSM Platform</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container": "#e5eeff", "surface": "#f8f9ff", "background": "#f8f9ff", "on-tertiary": "#ffffff", "on-surface": "#0b1c30", "on-primary-fixed-variant": "#2e4673", "primary": "#03224d", "secondary-fixed-dim": "#adc6ff", "secondary-container": "#2170e4", "on-tertiary-container": "#9ea2a6", "tertiary-container": "#34393c", "surface-dim": "#cbdbf5", "on-tertiary-fixed": "#171c1f", "outline-variant": "#c4c6d0", "tertiary-fixed-dim": "#c3c7cb", "on-surface-variant": "#44474f", "on-error-container": "#93000a", "surface-tint": "#475e8c", "on-tertiary-fixed-variant": "#43474b", "error-container": "#ffdad6", "outline": "#747780", "surface-container-lowest": "#ffffff", "on-secondary-container": "#fefcff", "inverse-on-surface": "#eaf1ff", "surface-variant": "#d3e4fe", "secondary-fixed": "#d8e2ff", "on-secondary-fixed": "#001a42", "error": "#ba1a1a", "on-primary": "#ffffff", "on-background": "#0b1c30", "inverse-surface": "#213145", "on-secondary": "#ffffff", "primary-container": "#1f3864", "on-error": "#ffffff", "surface-bright": "#f8f9ff", "surface-container-high": "#dce9ff", "secondary": "#0058be", "inverse-primary": "#afc6fb", "on-primary-fixed": "#001a41", "tertiary": "#1f2427", "tertiary-fixed": "#dfe3e7", "primary-fixed-dim": "#afc6fb", "surface-container-highest": "#d3e4fe", "surface-container-low": "#eff4ff", "primary-fixed": "#d8e2ff", "on-primary-container": "#8ba2d5", "on-secondary-fixed-variant": "#004395" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "unit-md": "1rem", "gutter": "1.5rem", "unit-lg": "1.5rem", "unit-xs": "0.25rem", "unit-xl": "2rem", "container-padding": "2rem", "sidebar-width": "260px", "unit-sm": "0.5rem" }, "fontFamily": { "body-md": [ "Inter" ], "headline-sm": [ "Inter" ], "label-sm": [ "Inter" ], "headline-md": [ "Inter" ], "headline-lg": [ "Inter" ], "body-lg": [ "Inter" ], "label-md": [ "Inter" ] }, "fontSize": { "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "label-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "headline-lg": [ "30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "24px", "fontWeight": "400" } ], "label-md": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.03em", "fontWeight": "500" } ] } } } };</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-[260px] bg-primary-container z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)] text-on-primary"><div class="flex flex-col"><div class="h-16 px-unit-md flex items-center gap-unit-sm bg-primary/20"><img alt="SmartDesk IT Service Management Logo. Design context: - Primary color: #1f3864
+- Font: inter
+- Mode: light
+- Roundness: rounded-md
+. The logo should be visually consistent with these brand tokens." class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WbhStFHhcd4sdd7eGx0wo6vx-dcxxg9jOlL4QhYHhDs76ReCcpIJQtAxGkWNIpluppPL8fEOKBC_A0f-IdfICntCOBqh-1emEyaJrXFc2u3uivqlmr2Q-pbGVroWDAKZEKLCiE8shk4imaZzcE4Skip5GEyDmQXdpnIqEJTHW2N6_eBWCro2qCo1J1wbvG1wdU3Xvf_YG0kMAQfsTXNqi4bmiDWhbVsGFR4Ayqo1pA9FTVSLURzxhUtjM"><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-primary font-bold leading-none">SmartDesk</span><span class="font-label-sm text-label-sm text-on-primary-container tracking-wider uppercase leading-none mt-1">ITSM Platform</span></div></div><div class="px-unit-md pt-unit-lg pb-unit-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-primary-container">Workspace</span></div><nav class="flex flex-col gap-1 px-unit-xs" data-active-classes="bg-surface/10 text-on-primary font-semibold border-l-4 border-secondary-container"><a aria-current="page" class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg transition-colors bg-surface/10 text-on-primary font-semibold border-l-4 border-secondary-container" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-body-md text-body-md">Dashboard</span></a><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="tickets" href="#"><span class="material-symbols-outlined text-[20px]">confirmation_number</span><span class="font-body-md text-body-md">Tickets</span></a><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="create-ticket" href="#"><span class="material-symbols-outlined text-[20px]">add_circle</span><span class="font-body-md text-body-md">Create Ticket</span></a><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="knowledge-base" href="#"><span class="material-symbols-outlined text-[20px]">menu_book</span><span class="font-body-md text-body-md">Knowledge Base</span></a><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md text-body-md">Settings</span></a></nav></div><div class="flex flex-col p-unit-md gap-unit-md"><a class="flex items-center gap-unit-sm px-unit-md py-unit-sm rounded-lg text-on-primary-container hover:bg-surface/10 hover:text-on-primary transition-colors" data-path="logout" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span class="font-body-md text-body-md">Logout</span></a><div class="flex items-center gap-unit-sm p-unit-sm bg-surface/5 rounded-xl"><div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary font-headline-sm text-headline-sm flex-shrink-0">AM</div><div class="flex flex-col flex-1 min-w-0"><span class="font-body-md text-body-md font-semibold text-on-primary truncate leading-snug">Alex Morgan</span><span class="font-label-sm text-label-sm text-on-primary-container leading-snug">alex.m@company.org</span></div><span class="px-unit-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase tracking-wide">Employee</span></div></div></aside><div class="pl-[260px] min-h-screen flex flex-col"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-unit-xl"><div class="flex items-center gap-unit-md flex-1 max-w-lg"><div class="relative w-full flex items-center"><span class="material-symbols-outlined absolute left-unit-md text-on-surface-variant text-[20px]">search</span><input class="w-full pl-10 pr-unit-md py-unit-xs rounded-lg bg-surface-container-low text-on-surface placeholder-on-surface-variant font-body-md text-body-md border-none focus:outline-none focus:ring-2 focus:ring-secondary-container" placeholder="Search tickets, articles, incident logs (Ctrl + /)" type="text"></div></div><div class="flex items-center gap-unit-md"><button aria-label="Help and Documentation" class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">help</span></button><button aria-label="Notifications" class="relative w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="h-6 w-px bg-outline-variant mx-unit-xs"></div><div class="flex items-center gap-unit-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col text-left hidden sm:flex"><span class="font-label-md text-label-md font-semibold text-on-surface leading-tight">Alex Morgan</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">IT Operations</span></div></div></div></header><main class="w-full pt-16 bg-background flex-1 px-unit-xl py-unit-xl"><div class="flex flex-col w-full gap-unit-lg">
+<!-- Header Section -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-unit-md bg-surface-container-lowest p-unit-lg rounded-xl shadow-sm">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-secondary font-bold">User Administration</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-on-surface-variant font-semibold">System Access Control</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">Manage Users</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">View, manage, and provision employee and IT agent accounts across the enterprise workspace.</p>
+</div>
+<div class="flex items-center gap-unit-sm flex-wrap">
+<button class="flex items-center gap-2 px-unit-md h-10 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span class="">Export Directory</span>
+</button>
+<button class="flex items-center gap-2 px-unit-md h-10 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+<span class="">Import CSV</span>
+</button>
+<button class="flex items-center gap-2 px-unit-md h-10 rounded-lg bg-secondary-fixed hover:bg-secondary-fixed-dim text-on-secondary-fixed font-label-md text-label-md transition-colors shadow-sm" type="button"><span class="material-symbols-outlined text-[18px]">confirmation_number</span><span class="">Manage Tickets</span></button><button class="flex items-center gap-2 px-unit-lg h-10 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md transition-all shadow-md active:scale-95" type="button">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span class="">Add New User</span>
+</button>
+</div>
+</div>
+<!-- Stat Cards Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-unit-md">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-unit-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Total Employees</span>
+<span class="font-headline-lg text-[32px] font-bold text-primary mt-1 leading-none tracking-tight">1,420</span>
+</div>
+<div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">group</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-4 pt-3 bg-surface-container-low -mx-unit-lg -mb-unit-lg px-unit-lg py-2.5">
+<span class="inline-flex items-center justify-center text-secondary font-label-sm text-label-sm font-bold gap-0.5">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +18
+        </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">onboarded this calendar month</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-unit-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Total IT Agents</span>
+<span class="font-headline-lg text-[32px] font-bold text-secondary-container mt-1 leading-none tracking-tight">38</span>
+</div>
+<div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center text-secondary-container group-hover:bg-secondary-container group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">support_agent</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-4 pt-3 bg-surface-container-low -mx-unit-lg -mb-unit-lg px-unit-lg py-2.5">
+<span class="inline-flex items-center gap-1 text-on-surface font-label-sm text-label-sm font-bold">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-ping"></span>
+          8 active
+        </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">on duty triage queue now</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-unit-lg rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Active Accounts</span>
+<span class="font-headline-lg text-[32px] font-bold text-primary mt-1 leading-none tracking-tight">1,442</span>
+</div>
+<div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-4 pt-3 bg-surface-container-low -mx-unit-lg -mb-unit-lg px-unit-lg py-2.5">
+<span class="inline-flex items-center justify-center text-secondary-container font-label-sm text-label-sm font-bold gap-0.5">
+<span class="material-symbols-outlined text-[16px]">sync</span> 98.9%
+        </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">synced with Azure Active Directory</span>
+</div>
+</div>
+</div>
+<!-- Primary User Directory Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Tabs Header -->
+<div class="flex items-center justify-between px-unit-lg pt-unit-md bg-surface-container-lowest">
+<div class="flex items-center gap-2">
+<button class="relative px-unit-md py-3 font-label-md text-label-md font-bold text-primary transition-colors flex items-center gap-2 border-b-2 border-primary" id="tab-btn-employees" onclick="switchUserTab('employees')" type="button">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+<span class="">Employees</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface text-[11px] font-semibold">1,420</span>
+</button>
+<button class="relative px-unit-md py-3 font-label-md text-label-md font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 border-b-2 border-transparent" id="tab-btn-agents" onclick="switchUserTab('agents')" type="button">
+<span class="material-symbols-outlined text-[18px]">headset_mic</span>
+<span class="">IT Agents</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-semibold">38</span>
+</button><button class="relative px-unit-md py-3 font-label-md text-label-md font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 border-b-2 border-transparent" id="tab-btn-tickets" onclick="window.location.href='#tickets'" type="button"><span class="material-symbols-outlined text-[18px]">confirmation_number</span><span class="">Assigned Tickets</span><span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface text-[11px] font-semibold">184</span></button>
+</div>
+<div class="hidden sm:flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary-container"></span>
+<span class="">Live LDAP Directory Feed</span>
+</div>
+</div>
+<!-- Filters Row -->
+<div class="p-unit-lg bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-unit-md">
+<div class="flex flex-1 flex-wrap items-center gap-unit-sm">
+<!-- Search bar -->
+<div class="relative min-w-[240px] max-w-sm flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full pl-9 pr-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface placeholder-on-surface-variant text-body-md font-body-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-container" id="user-search-input" placeholder="Search by name or email..." type="text">
+</div>
+<!-- Role / Dept Filter -->
+<div class="relative">
+<select class="appearance-none pl-3 pr-8 py-2 rounded-lg bg-surface-container-lowest text-on-surface text-label-md font-label-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-container cursor-pointer">
+<option value="">Role / Dept: All Departments</option>
+<option value="eng">Engineering</option>
+<option value="prod">Product &amp; Design</option>
+<option value="sales">Corporate Sales</option>
+<option value="facilities">Facilities &amp; People</option>
+<option value="devops">DevOps &amp; Cloud</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
+</div>
+<!-- Status Filter -->
+<div class="relative">
+<select class="appearance-none pl-3 pr-8 py-2 rounded-lg bg-surface-container-lowest text-on-surface text-label-md font-label-md shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-container cursor-pointer">
+<option value="">Status: All Statuses</option>
+<option value="active">Active</option>
+<option value="inactive">Inactive</option>
+<option value="suspended">Suspended</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
+</div>
+<!-- Reset Filters -->
+<button class="flex items-center gap-1 px-3 py-2 text-on-surface-variant hover:text-primary rounded-lg text-label-md font-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span class="">Reset Filters</span>
+</button>
+</div>
+<div class="flex items-center gap-unit-xs">
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface text-label-md font-label-md shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">checklist</span>
+<span class="">Bulk Actions</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant text-label-md shadow-sm transition-colors" title="Customize Columns" type="button">
+<span class="material-symbols-outlined text-[18px]">view_column</span>
+</button>
+</div>
+</div>
+<!-- Tab 1: Employees Table Content -->
+<div class="block w-full overflow-x-auto" id="view-employees-tab">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/60 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-unit-lg w-10">
+<input aria-label="Select all employees" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</th>
+<th class="py-3 px-unit-md">Employee / Dept</th>
+<th class="py-3 px-unit-md">Email Address</th>
+<th class="py-3 px-unit-md">Account Status</th>
+<th class="py-3 px-unit-md">Joined Date</th>
+<th class="py-3 px-unit-md">Tickets Created</th>
+<th class="py-3 px-unit-lg text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-md text-body-md">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select David Chen" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  DC
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-primary truncate leading-snug">David Chen</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Engineering • L5 Staff</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-on-surface-variant">
+<a class="hover:text-secondary hover:underline" href="mailto:david.c@company.org">david.c@company.org</a>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> Active
+              </span>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md text-on-surface-variant">
+              Mar 14, 2022
+            </td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-1.5">
+<span class="font-semibold text-on-surface">14 tickets</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-primary text-[11px] font-bold">1 open</span>
+</div>
+</td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Ticket History" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="Deactivate Account" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="More Options" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select Emily Taylor" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  ET
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-primary truncate leading-snug">Emily Taylor</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DevOps EMEA</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-on-surface-variant">
+<a class="hover:text-secondary hover:underline" href="mailto:emily.t@company.org">emily.t@company.org</a>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> Active
+              </span>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md text-on-surface-variant">
+              Nov 08, 2022
+            </td>
+<td class="py-3.5 px-unit-md">
+<span class="font-semibold text-on-surface">9 tickets</span>
+</td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Ticket History" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="Deactivate Account" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="More Options" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select Siddharth Kumar" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-on-primary font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  SK
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-primary truncate leading-snug">Siddharth Kumar</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Design Systems</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-on-surface-variant">
+<a class="hover:text-secondary hover:underline" href="mailto:s.kumar@company.org">s.kumar@company.org</a>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> Active
+              </span>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md text-on-surface-variant">
+              Jan 19, 2023
+            </td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-1.5">
+<span class="font-semibold text-on-surface">18 tickets</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-primary text-[11px] font-bold">2 open</span>
+</div>
+</td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Ticket History" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="Deactivate Account" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="More Options" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select Rachel Hayes" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  RH
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-primary truncate leading-snug">Rachel Hayes</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Engineering Core</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-on-surface-variant">
+<a class="hover:text-secondary hover:underline" href="mailto:rachel.h@company.org">rachel.h@company.org</a>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> Active
+              </span>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md text-on-surface-variant">
+              Jun 02, 2023
+            </td>
+<td class="py-3.5 px-unit-md">
+<span class="font-semibold text-on-surface">5 tickets</span>
+</td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Ticket History" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="Deactivate Account" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="More Options" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select Tanya Kapoor" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-secondary-fixed-dim flex items-center justify-center text-primary font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  TK
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-primary truncate leading-snug">Tanya Kapoor</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Facilities &amp; People</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-on-surface-variant">
+<a class="hover:text-secondary hover:underline" href="mailto:t.kapoor@company.org">t.kapoor@company.org</a>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> Active
+              </span>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md text-on-surface-variant">
+              Aug 21, 2021
+            </td>
+<td class="py-3.5 px-unit-md">
+<span class="font-semibold text-on-surface">31 tickets</span>
+</td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Ticket History" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="Deactivate Account" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="More Options" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Inactive -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/70 transition-colors group opacity-75">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select Peter Bailey" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  PB
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-on-surface-variant truncate leading-snug line-through">Peter Bailey</span>
+<span class="font-label-sm text-label-sm text-outline">Corporate Sales</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-outline">
+<span class="line-through">peter.b@company.org</span>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-tertiary-fixed text-tertiary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Inactive
+              </span>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md text-outline">
+              Feb 11, 2023
+            </td>
+<td class="py-3.5 px-unit-md text-outline">
+<span class="">12 tickets</span>
+</td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Ticket History" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-secondary hover:text-primary transition-colors" title="Reactivate Account" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="More Options" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select Marcus Cole" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  MC
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-primary truncate leading-snug">Marcus Cole</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Product Operations</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-on-surface-variant">
+<a class="hover:text-secondary hover:underline" href="mailto:m.cole@company.org">m.cole@company.org</a>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> Active
+              </span>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md text-on-surface-variant">
+              Sep 04, 2022
+            </td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-1.5">
+<span class="font-semibold text-on-surface">22 tickets</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-primary text-[11px] font-bold">3 open</span>
+</div>
+</td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Ticket History" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="Deactivate Account" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="More Options" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Tab 2: IT Agents Table Content -->
+<div class="hidden w-full overflow-x-auto" id="view-agents-tab">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/60 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-unit-lg w-10">
+<input aria-label="Select all IT agents" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</th>
+<th class="py-3 px-unit-md">IT Support Agent</th>
+<th class="py-3 px-unit-md">Email Address</th>
+<th class="py-3 px-unit-md">Duty Status</th>
+<th class="py-3 px-unit-md">Assigned Tickets</th>
+<th class="py-3 px-unit-md">Resolved This Month</th>
+<th class="py-3 px-unit-lg text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-md text-body-md">
+<!-- Agent 1 -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select Jordan Bell" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  JB
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-primary truncate leading-snug">Jordan Bell</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tier 2 Senior Specialist</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-on-surface-variant">
+<a class="hover:text-secondary hover:underline" href="mailto:jordan.b@company.org">jordan.b@company.org</a>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> On Duty
+              </span>
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-2">
+<span class="font-semibold text-primary">8 active</span>
+<span class="px-1.5 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-[11px] font-bold">Near Cap</span>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md font-bold text-secondary">
+              46 resolved
+            </td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="Reassign Tickets" type="button">
+<span class="material-symbols-outlined text-[18px]">forward</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="Deactivate Agent" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="Manage Permissions" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Agent 2 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select Sarah Morales" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  SM
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-primary truncate leading-snug">Sarah Morales</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Hardware &amp; Provisioning</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-on-surface-variant">
+<a class="hover:text-secondary hover:underline" href="mailto:sarah.m@company.org">sarah.m@company.org</a>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span> On Duty
+              </span>
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-2">
+<span class="font-semibold text-on-surface">5 active</span>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md font-bold text-secondary">
+              38 resolved
+            </td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="Reassign Tickets" type="button">
+<span class="material-symbols-outlined text-[18px]">forward</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="Deactivate Agent" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="Manage Permissions" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Agent 3 -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-3.5 px-unit-lg">
+<input aria-label="Select Liam Vance" class="w-4 h-4 rounded text-secondary-container focus:ring-secondary-container cursor-pointer" type="checkbox">
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-on-primary font-headline-sm text-headline-sm flex-shrink-0 font-bold">
+                  LV
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-[15px] font-semibold text-primary truncate leading-snug">Liam Vance</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Network &amp; VPN Access</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-mono text-[13px] text-on-surface-variant">
+<a class="hover:text-secondary hover:underline" href="mailto:liam.v@company.org">liam.v@company.org</a>
+</td>
+<td class="py-3.5 px-unit-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-tertiary-fixed text-tertiary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Away
+              </span>
+</td>
+<td class="py-3.5 px-unit-md">
+<div class="flex items-center gap-2">
+<span class="font-semibold text-on-surface">3 active</span>
+</div>
+</td>
+<td class="py-3.5 px-unit-md font-label-md text-label-md font-bold text-secondary">
+              52 resolved
+            </td>
+<td class="py-3.5 px-unit-lg text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="Reassign Tickets" type="button">
+<span class="material-symbols-outlined text-[18px]">forward</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-error-container text-on-surface-variant hover:text-error transition-colors" title="Deactivate Agent" type="button">
+<span class="material-symbols-outlined text-[18px]">person_off</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="Manage Permissions" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="px-unit-lg py-unit-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-unit-md">
+<div class="flex items-center gap-unit-md text-on-surface-variant font-label-sm text-label-sm">
+<span id="footer-count-text" class="">Showing <strong class="text-on-surface font-semibold">1</strong> to <strong class="text-on-surface font-semibold">7</strong> of <strong class="text-on-surface font-semibold">1,420</strong> employees</span>
+<div class="flex items-center gap-2">
+<span class="">Rows per page:</span>
+<select class="appearance-none bg-surface-container-lowest px-2.5 py-1 rounded text-on-surface font-label-sm text-label-sm focus:outline-none shadow-sm cursor-pointer">
+<option value="10">10</option>
+<option value="25">25</option>
+<option value="50">50</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-outline font-label-sm text-label-sm opacity-50 cursor-not-allowed shadow-sm flex items-center gap-1" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span> Previous
+        </button>
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-bold flex items-center justify-center shadow-sm" type="button">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center transition-colors" type="button">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center transition-colors" type="button">3</button>
+<span class="px-1 text-on-surface-variant font-label-sm text-label-sm">...</span>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center transition-colors" type="button">142</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-primary font-label-sm text-label-sm shadow-sm transition-colors flex items-center gap-1" type="button">
+          Next <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- IT Agent Workload & Shift Summary Card -->
+<div class="bg-surface-container-lowest p-unit-lg rounded-xl shadow-sm flex flex-col lg:flex-row gap-unit-lg items-center justify-between">
+<div class="flex items-center gap-unit-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-secondary-container flex-shrink-0">
+<span class="material-symbols-outlined text-[28px]">headset</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm font-bold text-primary">Need to onboard a Tier-1 or Tier-2 IT Agent?</h2>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-primary font-label-sm text-[11px] font-bold">RBAC Ready</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Assigned agents will automatically receive access to incident routing pools, automated SLA escalations, and internal knowledge base articles.</p>
+</div>
+</div>
+<div class="flex items-center gap-unit-sm flex-shrink-0 w-full lg:w-auto justify-end">
+<button class="px-unit-md h-10 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md transition-colors shadow-sm flex items-center gap-2" onclick="switchUserTab('agents')" type="button">
+<span class="material-symbols-outlined text-[18px]">manage_accounts</span>
+<span class="">View Agent Workload</span>
+</button>
+<button class="px-unit-lg h-10 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md transition-all shadow-md active:scale-95 flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">add_moderator</span>
+<span class="">Grant Agent Access</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  function switchUserTab(tab) {
+    const empBtn = document.getElementById('tab-btn-employees');
+    const agentBtn = document.getElementById('tab-btn-agents');
+    const empView = document.getElementById('view-employees-tab');
+    const agentView = document.getElementById('view-agents-tab');
+    const countText = document.getElementById('footer-count-text');
+
+    if (tab === 'employees') {
+      empBtn.className = "relative px-unit-md py-3 font-label-md text-label-md font-bold text-primary transition-colors flex items-center gap-2 border-b-2 border-primary";
+      agentBtn.className = "relative px-unit-md py-3 font-label-md text-label-md font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 border-b-2 border-transparent";
+      empView.classList.remove('hidden');
+      empView.classList.add('block');
+      agentView.classList.add('hidden');
+      agentView.classList.remove('block');
+      if (countText) {
+        countText.innerHTML = 'Showing <strong class="text-on-surface font-semibold">1</strong> to <strong class="text-on-surface font-semibold">7</strong> of <strong class="text-on-surface font-semibold">1,420</strong> employees';
+      }
+    } else if (tab === 'agents') {
+      agentBtn.className = "relative px-unit-md py-3 font-label-md text-label-md font-bold text-primary transition-colors flex items-center gap-2 border-b-2 border-primary";
+      empBtn.className = "relative px-unit-md py-3 font-label-md text-label-md font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 border-b-2 border-transparent";
+      agentView.classList.remove('hidden');
+      agentView.classList.add('block');
+      empView.classList.add('hidden');
+      empView.classList.remove('block');
+      if (countText) {
+        countText.innerHTML = 'Showing <strong class="text-on-surface font-semibold">1</strong> to <strong class="text-on-surface font-semibold">3</strong> of <strong class="text-on-surface font-semibold">38</strong> IT agents';
+      }
+    }
+  }
+</script></main></div>
+
+</body></html>

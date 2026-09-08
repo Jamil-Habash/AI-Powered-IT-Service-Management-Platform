@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { LOGO_SRC } from "../Shell";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../services/authService";
-import Icon from "../Icon";
 
 function FieldIcon({ path }) {
   return (
@@ -50,7 +49,6 @@ const navigate = useNavigate();
 const [error, setError] = useState("");
 const [loading, setLoading] = useState(false);
 
-// Replace your existing `submit` function with this:
 const submit = async (event) => {
   event.preventDefault();
   setError("");

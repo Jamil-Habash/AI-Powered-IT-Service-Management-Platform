@@ -49,8 +49,34 @@ export function AuthProvider({ children }) {
     });
   };
 
+  const refreshUser = (userData) => {
+    setUser((current) => {
+      const updated = { ...current, ...userData };
+      const storage = localStorage.getItem("smartdesk_token")
+        ? localStorage
+        : sessionStorage;
+      storage.setItem("smartdesk_user", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const refreshSession = (sessionData) => {
+    const storage = localStorage.getItem("smartdesk_token")
+      ? localStorage
+      : sessionStorage;
+    const updated = {
+      userId: sessionData.userId,
+      name: sessionData.name,
+      email: sessionData.email,
+      role: sessionData.role,
+    };
+    storage.setItem("smartdesk_token", sessionData.token);
+    storage.setItem("smartdesk_user", JSON.stringify(updated));
+    setUser(updated);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, refreshUser, refreshSession }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1263,9 +1263,194 @@ td strong {
   flex-direction: column;
   gap: 6px;
 }
+.form-success {
+  color: #047857 !important;
+}
 .settings .remember {
   flex-direction: row;
   align-items: center;
+}
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.admin-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 36px;
+}
+.admin-hero h1 {
+  margin: 8px 0 4px;
+  color: #0b1c30;
+  font-size: 36px;
+  line-height: 1.1;
+}
+.admin-hero p:not(.eyebrow) {
+  max-width: 680px;
+  margin: 0;
+  font-size: 15px;
+}
+.admin-hero .page-actions {
+  max-width: 520px;
+  justify-content: flex-end;
+}
+.admin-hero .secondary-button,
+.admin-hero .primary-button {
+  min-height: 42px;
+}
+.admin-stats {
+  grid-template-columns: repeat(3, 1fr);
+}
+.admin-stat {
+  position: relative;
+  min-height: 150px;
+  padding: 24px 28px;
+}
+.admin-stat > div {
+  display: flex;
+  flex-direction: column;
+}
+.admin-stat strong {
+  color: #03224d;
+  font-size: 38px;
+}
+.admin-stat > .material-symbols-outlined {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #dce9ff;
+  color: #0058be;
+  font-size: 26px;
+}
+.admin-stat small {
+  display: block;
+  margin-top: 22px;
+  padding-top: 10px;
+  border-top: 1px solid #eff4ff;
+}
+.admin-directory {
+  padding: 0;
+  overflow: hidden;
+}
+.admin-tabs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 76px;
+  padding: 0 28px;
+  border-bottom: 1px solid #dce9ff;
+}
+.admin-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 76px;
+  padding: 0 14px;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: #44474f;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.admin-tabs button.selected {
+  border-bottom-color: #03224d;
+  color: #03224d;
+}
+.admin-tabs button b {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #dce9ff;
+  font-size: 11px;
+}
+.directory-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: #44474f;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.directory-live i,
+.account-status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2170e4;
+}
+.admin-filters {
+  display: grid;
+  grid-template-columns: minmax(250px, 1.4fr) 1fr 1fr auto;
+  gap: 10px;
+  padding: 24px 28px;
+  background: #eff4ff;
+}
+.admin-filters select,
+.admin-search {
+  min-height: 44px;
+  width: 100%;
+  padding: 0 12px;
+  border: 1px solid #d3e4fe;
+  border-radius: 8px;
+  background: #fff;
+  color: #0b1c30;
+}
+.admin-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-search input {
+  min-width: 0;
+  flex: 1;
+  padding: 10px 0;
+  border: 0;
+  outline: 0;
+}
+.admin-table-scroll {
+  overflow-x: auto;
+}
+.admin-table {
+  min-width: 900px;
+}
+.admin-table th {
+  background: #eff4ff;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.admin-table td {
+  vertical-align: middle;
+}
+.admin-table td strong {
+  margin: 0;
+  font-size: 14px;
+}
+.admin-table td small {
+  margin-top: 3px;
+  color: #44474f;
+}
+.account-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #dce9ff;
+  color: #03224d;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.admin-directory > .queue-pagination {
+  padding: 16px 28px;
+  background: #eff4ff;
 }
 @media (max-width: 900px) {
   .sidebar {
@@ -1319,6 +1504,16 @@ td strong {
   .article-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  .admin-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .admin-hero .page-actions {
+    justify-content: flex-start;
+  }
+  .admin-filters {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 @media (max-width: 560px) {
   .topbar > input,
@@ -1335,6 +1530,27 @@ td strong {
   .article-grid,
   .form-row {
     grid-template-columns: 1fr;
+  }
+  .admin-hero {
+    padding: 20px;
+  }
+  .admin-hero h1 {
+    font-size: 30px;
+  }
+  .admin-hero .page-actions,
+  .admin-hero .page-actions button {
+    width: 100%;
+  }
+  .admin-tabs {
+    overflow-x: auto;
+    padding: 0 12px;
+  }
+  .directory-live {
+    display: none;
+  }
+  .admin-filters {
+    grid-template-columns: 1fr;
+    padding: 16px;
   }
   .panel {
     padding: 16px;
