@@ -59,27 +59,10 @@ export default function TicketTable({ rows, onSelect, variant = "default" }) {
 }
 
 function QueueTicketTable({ rows, onSelect }) {
-  const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(1);
   const pageSize = 8;
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
   const visibleRows = rows.slice((page - 1) * pageSize, page * pageSize);
-  const visibleIds = visibleRows.map(([id]) => id);
-  const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selected.includes(id));
-
-  const toggleAll = () => {
-    setSelected((current) =>
-      allVisibleSelected
-        ? current.filter((id) => !visibleIds.includes(id))
-        : [...new Set([...current, ...visibleIds])],
-    );
-  };
-
-  const toggle = (id) => {
-    setSelected((current) =>
-      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
-    );
-  };
 
   return (
     <div className="queue-table-wrap">

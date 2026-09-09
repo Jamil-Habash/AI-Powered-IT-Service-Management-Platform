@@ -40,7 +40,15 @@ export default function Shell({ children }) {
               <small>ITSM PLATFORM</small>
             </span>
           </Link>
-          
+          <button
+            className="sidebar-toggle"
+            type="button"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-expanded={!collapsed}
+            onClick={() => setCollapsed((value) => !value)}
+          >
+            <Icon>{collapsed ? "chevron_right" : "chevron_left"}</Icon>
+          </button>
         </div>
 
         <p className="nav-label">{!collapsed && "Workspace"}</p>

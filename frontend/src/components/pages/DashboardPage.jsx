@@ -54,7 +54,6 @@ function AdminDashboard() {
   const agents = users.filter((item) => item.role === "IT_AGENT");
   const activeAccounts = users.filter((item) => item.active !== false).length;
   const tabUsers = tab === "employees" ? employees : agents ;
-  const departments = [...new Set(tabUsers.map((item) => item.department || item.categoryName).filter(Boolean))];
   const filtered = tabUsers.filter((item) => {
     const name = item.name || item.createdByName || item.assignedAgentName || "";
     const email = item.email || "";

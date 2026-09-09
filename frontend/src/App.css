@@ -1,7 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-family: "DM Sans", Inter, ui-sans-serif, system-ui, sans-serif;
   color: #0b1c30;
   background: #f8f9ff;
+  --canvas: #f4f7fb;
+  --surface: #ffffff;
+  --surface-soft: #edf3fb;
+  --surface-muted: #e5edf8;
+  --ink: #0b1c30;
+  --ink-muted: #5b687a;
+  --navy: #162e52;
+  --navy-deep: #0b2344;
+  --blue: #2d72dc;
+  --blue-soft: #dceaff;
+  --border: #dbe4ef;
+  --shadow-sm: 0 1px 2px rgba(11, 28, 48, 0.04), 0 8px 24px rgba(11, 28, 48, 0.04);
+  --shadow-md: 0 14px 34px rgba(11, 28, 48, 0.12);
+  --radius: 10px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -11,6 +27,7 @@
 }
 body {
   margin: 0;
+  background: var(--canvas);
 }
 button,
 input,
@@ -21,6 +38,14 @@ textarea {
 button {
   cursor: pointer;
   border: 0;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(45, 114, 220, 0.28);
+  outline-offset: 2px;
 }
 a {
   color: inherit;
@@ -1700,5 +1725,243 @@ td strong {
     margin-left: -20px;
     margin-right: -20px;
     margin-bottom: -28px;
+  }
+}
+
+/* Shared polish layer: keep the existing design language, but give each route a clearer rhythm. */
+.app-shell {
+  background:
+    linear-gradient(135deg, rgba(220, 234, 255, 0.36), transparent 34%),
+    var(--canvas);
+}
+.sidebar {
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+  box-shadow: 8px 0 24px rgba(11, 28, 48, 0.08);
+  transition: width 180ms ease;
+}
+.sidebar-top {
+  position: relative;
+}
+.brand {
+  padding-right: 52px;
+  background: rgba(7, 24, 51, 0.28);
+}
+.brand strong,
+.page-header h1,
+.admin-hero h1,
+.panel h2,
+.modal h2 {
+  font-family: "Space Grotesk", "DM Sans", sans-serif;
+}
+.sidebar-toggle {
+  position: absolute;
+  top: 16px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #dceaff;
+}
+.sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.sidebar.collapsed {
+  width: 76px;
+}
+.sidebar.collapsed .brand {
+  justify-content: center;
+  padding: 16px 8px;
+}
+.sidebar.collapsed .brand-text,
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .nav-text,
+.sidebar.collapsed .profile span,
+.sidebar.collapsed .profile em {
+  display: none;
+}
+.sidebar.collapsed .sidebar-toggle {
+  right: 23px;
+  top: 58px;
+  z-index: 1;
+}
+.sidebar.collapsed .sidebar-top {
+  min-height: 96px;
+}
+.sidebar.collapsed nav a,
+.sidebar.collapsed .sidebar-bottom > button {
+  justify-content: center;
+}
+.sidebar.collapsed .profile {
+  justify-content: center;
+}
+.sidebar.collapsed + .app-main {
+  margin-left: 76px;
+}
+.sidebar.collapsed + .app-main .topbar {
+  left: 76px;
+}
+.topbar {
+  border-bottom: 1px solid rgba(219, 228, 239, 0.85);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+}
+.top-actions button:hover,
+.icon-button:hover {
+  color: var(--blue);
+  background: var(--blue-soft);
+  border-radius: 8px;
+}
+.page-content {
+  width: 100%;
+  margin: 0 auto;
+}
+.page-header {
+  padding-bottom: 4px;
+}
+.eyebrow {
+  color: var(--blue);
+  letter-spacing: 1.4px;
+}
+.page-header h1 {
+  letter-spacing: -0.7px;
+}
+.stat-card,
+.panel {
+  border: 1px solid rgba(219, 228, 239, 0.9);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.stat-card {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+.stat-card:hover {
+  border-color: #b9cce5;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.stat-card > strong {
+  font-family: "Space Grotesk", "DM Sans", sans-serif;
+}
+.panel {
+  overflow: hidden;
+}
+.panel-heading {
+  align-items: flex-start;
+}
+.panel-heading input {
+  max-width: 260px;
+}
+.primary-button,
+.submit-button {
+  background: var(--blue);
+  box-shadow: 0 5px 12px rgba(45, 114, 220, 0.2);
+}
+.primary-button:hover,
+.submit-button:hover {
+  background: #205fb9;
+  transform: translateY(-1px);
+}
+.secondary-button {
+  border: 1px solid #cbd9ea;
+  background: var(--surface);
+  color: var(--navy);
+}
+.secondary-button:hover {
+  border-color: #9eb8d8;
+  background: var(--blue-soft);
+}
+.primary-button,
+.secondary-button,
+.submit-button,
+.success-button,
+.danger-button {
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+input,
+select,
+textarea {
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #a8bdd7;
+}
+th {
+  background: var(--surface-soft);
+}
+td {
+  border-bottom-color: var(--border);
+}
+tbody tr:hover,
+.admin-user-row:hover {
+  background: #f5f9ff;
+}
+.queue-table-wrap,
+.admin-directory {
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.queue-table thead th {
+  background: var(--navy);
+}
+.login-page,
+.registration-page {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(45, 114, 220, 0.18), transparent 30%),
+    radial-gradient(circle at 85% 85%, rgba(22, 46, 82, 0.12), transparent 32%),
+    var(--canvas);
+}
+.login-card,
+.registration-card {
+  border-color: var(--border);
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgba(11, 28, 48, 0.13);
+}
+.login-card h1,
+.registration-card h1 {
+  font-family: "Space Grotesk", "DM Sans", sans-serif;
+  letter-spacing: -0.5px;
+}
+.modal {
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+@media (max-width: 900px) {
+  .sidebar:not(.collapsed) {
+    width: 76px;
+  }
+  .sidebar:not(.collapsed) .brand {
+    justify-content: center;
+    padding: 16px 8px;
+  }
+  .sidebar:not(.collapsed) .brand-text,
+  .sidebar:not(.collapsed) .nav-label,
+  .sidebar:not(.collapsed) .nav-text,
+  .sidebar:not(.collapsed) .profile span,
+  .sidebar:not(.collapsed) .profile em {
+    display: none;
+  }
+  .sidebar:not(.collapsed) .sidebar-toggle {
+    right: 23px;
+    top: 58px;
+  }
+  .sidebar:not(.collapsed) .sidebar-top {
+    min-height: 96px;
+  }
+  .sidebar:not(.collapsed) nav a,
+  .sidebar:not(.collapsed) .sidebar-bottom > button,
+  .sidebar:not(.collapsed) .profile {
+    justify-content: center;
+  }
+  .sidebar:not(.collapsed) + .app-main {
+    margin-left: 76px;
+  }
+  .sidebar:not(.collapsed) + .app-main .topbar {
+    left: 76px;
   }
 }

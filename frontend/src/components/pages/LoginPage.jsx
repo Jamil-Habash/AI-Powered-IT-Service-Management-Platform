@@ -60,6 +60,14 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
               />
+              <button
+                className="visibility-button"
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword((visible) => !visible)}
+              >
+                <Icon>{showPassword ? "visibility_off" : "visibility"}</Icon>
+              </button>
             </div>
           </label>
           <label className="remember">

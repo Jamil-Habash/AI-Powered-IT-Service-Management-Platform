@@ -134,6 +134,14 @@ const submit = async (event) => {
               onChange={update("password")}
               required
             />
+            <button
+              className="visibility-button"
+              type="button"
+              aria-label={visible.password ? "Hide password" : "Show password"}
+              onClick={() => setVisible((current) => ({ ...current, password: !current.password }))}
+            >
+              {visible.password ? "Hide" : "Show"}
+            </button>
           </div>
           <p className="hint">Must be at least 8 characters</p>
           <label htmlFor="confirmPassword">Confirm Password</label>
@@ -148,6 +156,14 @@ const submit = async (event) => {
               onChange={update("confirmPassword")}
               required
             />
+            <button
+              className="visibility-button"
+              type="button"
+              aria-label={visible.confirmPassword ? "Hide password" : "Show password"}
+              onClick={() => setVisible((current) => ({ ...current, confirmPassword: !current.confirmPassword }))}
+            >
+              {visible.confirmPassword ? "Hide" : "Show"}
+            </button>
           </div>
           <label className="terms">
             <input
