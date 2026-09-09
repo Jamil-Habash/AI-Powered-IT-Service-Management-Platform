@@ -3,6 +3,7 @@ package com.smartdesk.project.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import com.smartdesk.project.models.Role;
 
 public class UpdateUserRequest {
     
@@ -15,6 +16,8 @@ public class UpdateUserRequest {
 
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
+
+    private Role role;
 
     public String getName() { 
         return name; 
@@ -35,5 +38,13 @@ public class UpdateUserRequest {
     }
     public void setPassword(String password) { 
         this.password = password; 
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

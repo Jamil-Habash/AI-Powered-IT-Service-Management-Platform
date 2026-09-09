@@ -33,7 +33,7 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
-  const [userForm, setUserForm] = useState({ name: "", email: "", password: "" });
+  const [userForm, setUserForm] = useState({ name: "", email: "", password: "", role: "EMPLOYEE" });
   const [userModalError, setUserModalError] = useState("");
   const [savingUser, setSavingUser] = useState(false);
   const pageSize = 7;
@@ -52,9 +52,8 @@ function AdminDashboard() {
 
   const employees = users.filter((item) => item.role === "EMPLOYEE");
   const agents = users.filter((item) => item.role === "IT_AGENT");
-  const assignedTickets = tickets.filter((item) => item.assignedAgentName);
   const activeAccounts = users.filter((item) => item.active !== false).length;
-  const tabUsers = tab === "employees" ? employees : tab === "agents" ? agents : assignedTickets;
+  const tabUsers = tab === "employees" ? employees : agents ;
   const departments = [...new Set(tabUsers.map((item) => item.department || item.categoryName).filter(Boolean))];
   const filtered = tabUsers.filter((item) => {
     const name = item.name || item.createdByName || item.assignedAgentName || "";
@@ -79,7 +78,7 @@ function AdminDashboard() {
   const openUserEditor = (item) => {
     if (tab === "assigned" || !item.id) return;
     setSelectedUser(item);
-    setUserForm({ name: item.name || "", email: item.email || "", password: "" });
+    setUserForm({ name: item.name || "", email: item.email || "", password: "", role: item.role || "EMPLOYEE" });
     setUserModalError("");
   };
 
@@ -96,6 +95,7 @@ function AdminDashboard() {
         userForm.name.trim(),
         userForm.email.trim(),
         userForm.password,
+        userForm.role,
       );
       setUsers((current) => current.map((item) => item.id === selectedUser.id ? response.data : item));
       setSelectedUser(null);
@@ -162,7 +162,7 @@ function AdminDashboard() {
 
         <section className="panel admin-directory">
           <div className="admin-tabs">
-            {[["employees", "Employees", employees.length, "badge"], ["agents", "IT Agents", agents.length, "support_agent"], ["assigned", "Assigned Tickets", assignedTickets.length, "confirmation_number"]].map(([value, label, count, icon]) => (
+            {[["employees", "Employees", employees.length, "badge"], ["agents", "IT Agents", agents.length, "support_agent"]].map(([value, label, count, icon]) => (
               <button className={tab === value ? "selected" : ""} key={value} onClick={() => { setTab(value); setPage(1); }}>
                 <Icon>{icon}</Icon>{label}<b>{count}</b>
               </button>
@@ -171,17 +171,29 @@ function AdminDashboard() {
           </div>
           <div className="admin-filters">
             <label className="admin-search"><Icon>search</Icon><input value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Search by name or email..." /></label>
-            <select value={department} onChange={(event) => { setDepartment(event.target.value); setPage(1); }}><option value="">Role / Dept: All Departments</option>{departments.map((item) => <option key={item}>{item}</option>)}</select>
             <select value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }}><option value="">Status: All Statuses</option><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option></select>
             <button className="secondary-button" onClick={resetFilters}><Icon>restart_alt</Icon>Reset Filters</button>
           </div>
           {error && <p className="form-error">{error}</p>}
           {loading && <p>Loading user directory...</p>}
-          {!loading && !error && <div className="admin-table-scroll"><table className="admin-table"><thead><tr><th><input type="checkbox" aria-label="Select all users" /></th><th>Employee / Dept</th><th>Email Address</th><th>Account Status</th><th>Role</th><th>Tickets Created</th><th>Actions</th></tr></thead><tbody>{visible.map((item) => { const itemTickets = tickets.filter((ticket) => ticket.createdById === item.id || ticket.assignedAgentId === item.id); const isUser = tab !== "assigned" && item.id; const isActive = item.active !== false; return <tr key={item.id} className={isUser ? "admin-user-row" : ""} onClick={() => openUserEditor(item)}><td><input type="checkbox" aria-label={`Select ${item.name || item.assignedAgentName}`} onClick={(event) => event.stopPropagation()} /></td><td><strong>{item.name || item.assignedAgentName}</strong><small>{item.department || (item.role === "IT_AGENT" ? "IT Operations" : "Employee")}</small></td><td>{item.email || "Not available"}</td><td><span className={`account-status ${isActive ? "active" : "inactive"}`}><i />{isActive ? "Active" : "Inactive"}</span></td><td>{item.role?.replace("_", " ") || "Ticket assignment"}</td><td><b>{itemTickets.length}</b> tickets</td><td>{isUser ? <button className="secondary-button deactivate-button" disabled={!isActive} onClick={(event) => { event.stopPropagation(); setSelectedUser(item); setUserForm({ name: item.name || "", email: item.email || "", password: "" }); setUserModalError(""); }} >{isActive ? "Deactivate" : "Inactive"}</button> : <button className="icon-button" title="View details" onClick={() => item.id && navigate(`/settings?user=${item.id}`)}><Icon>more_vert</Icon></button>}</td></tr>; })}</tbody></table></div>}
+          {!loading && !error && <div className="admin-table-scroll">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Employee / Dept</th>
+                  <th>Email Address</th>
+                  <th>Account Status</th>
+                  <th>Role</th>
+                  <th>Tickets Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visible.map((item) => { const itemTickets = tickets.filter((ticket) => ticket.createdById === item.id || ticket.assignedAgentId === item.id); const isUser = tab !== "assigned" && item.id; const isActive = item.active !== false; return <tr key={item.id} className={isUser ? "admin-user-row" : ""} onClick={() => openUserEditor(item)}><td><strong>{item.name || item.assignedAgentName}</strong><small>{item.department || (item.role === "IT_AGENT" ? "IT Operations" : "Employee")}</small></td><td>{item.email || "Not available"}</td><td><span className={`account-status ${isActive ? "active" : "inactive"}`}><i />{isActive ? "Active" : "Inactive"}</span></td><td>{item.role?.replace("_", " ") || "Ticket assignment"}</td><td><b>{itemTickets.length}</b> tickets</td><td>{isUser ? <button className="secondary-button deactivate-button" disabled={!isActive} onClick={(event) => { event.stopPropagation(); openUserEditor(item); }} >{isActive ? "Deactivate" : "Inactive"}</button> : <button className="icon-button" title="View details" onClick={() => item.id && navigate(`/settings?user=${item.id}`)}><Icon>more_vert</Icon></button>}</td></tr>; })}</tbody></table></div>}
           {!loading && !error && visible.length === 0 && <p>No directory records match these filters.</p>}
           <div className="queue-pagination"><span>Showing {filtered.length ? (page - 1) * pageSize + 1 : 0} to {Math.min(page * pageSize, filtered.length)} of {filtered.length} records</span><div><button disabled={page === 1} onClick={() => setPage((value) => value - 1)}>Previous</button><button className="current">{page}</button><button disabled={page === pageCount} onClick={() => setPage((value) => value + 1)}>Next</button></div></div>
         </section>
-        {selectedUser && <div className="modal-backdrop" role="presentation" onClick={() => !savingUser && setSelectedUser(null)}><form className="modal user-editor-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()} onSubmit={saveUser}><div className="panel-heading"><div><span className="eyebrow">ACCOUNT PROFILE</span><h2>Edit {selectedUser.role === "IT_AGENT" ? "IT Agent" : "Employee"}</h2></div><button type="button" className="icon-button" aria-label="Close user editor" onClick={() => setSelectedUser(null)}><Icon>close</Icon></button></div><p className="modal-lead">Update directory details for {selectedUser.name || "this account"}. Password changes are optional.</p><label>Full Name<input value={userForm.name} onChange={updateUserField("name")} required /></label><label>Work Email<input type="email" value={userForm.email} onChange={updateUserField("email")} required /></label><label>New Password<input type="password" value={userForm.password} onChange={updateUserField("password")} minLength="8" placeholder="Leave blank to keep current password" /></label>{userModalError && <p className="form-error">{userModalError}</p>}<div className="form-actions"><button type="button" className="danger-button" disabled={savingUser || selectedUser.active === false} onClick={deactivateSelectedUser}>Deactivate</button><span className="form-actions-spacer" /><button type="button" className="secondary-button" disabled={savingUser} onClick={() => setSelectedUser(null)}>Cancel</button><button type="submit" className="primary-button" disabled={savingUser}>{savingUser ? "Saving..." : "Save Changes"}</button></div></form></div>}
+        {selectedUser && <div className="modal-backdrop" role="presentation" onClick={() => !savingUser && setSelectedUser(null)}><form className="modal user-editor-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()} onSubmit={saveUser}><div className="panel-heading"><div><span className="eyebrow">ACCOUNT PROFILE</span><h2>Edit {selectedUser.role === "IT_AGENT" ? "IT Agent" : "Employee"}</h2></div><button type="button" className="icon-button" aria-label="Close user editor" onClick={() => setSelectedUser(null)}><Icon>close</Icon></button></div><p className="modal-lead">Update directory details for {selectedUser.name || "this account"}. You can also change this account's access role.</p><label>Full Name<input value={userForm.name} onChange={updateUserField("name")} required /></label><label>Work Email<input type="email" value={userForm.email} onChange={updateUserField("email")} required /></label><label>Access Role<select value={userForm.role} onChange={updateUserField("role")} required><option value="EMPLOYEE">Employee</option><option value="IT_AGENT">IT Agent</option><option value="ADMIN">Administrator</option></select></label><label>New Password<input type="password" value={userForm.password} onChange={updateUserField("password")} minLength="8" placeholder="Leave blank to keep current password" /></label>{userModalError && <p className="form-error">{userModalError}</p>}<div className="form-actions"><button type="button" className="danger-button" disabled={savingUser || selectedUser.active === false} onClick={deactivateSelectedUser}>Deactivate</button><span className="form-actions-spacer" /><button type="button" className="secondary-button" disabled={savingUser} onClick={() => setSelectedUser(null)}>Cancel</button><button type="submit" className="primary-button" disabled={savingUser}>{savingUser ? "Saving..." : "Save Changes"}</button></div></form></div>}
       </div>
     </Shell>
   );

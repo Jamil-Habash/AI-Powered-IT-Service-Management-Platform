@@ -56,6 +56,9 @@ public class UserService {
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
+        if (request.getRole() != null) {
+            user.setRole(request.getRole());
+        }
 
         User saved = userRepository.save(user);
         return UserResponse.fromEntity(saved);
