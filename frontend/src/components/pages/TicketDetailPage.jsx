@@ -26,7 +26,7 @@ export default function TicketDetailPage() {
   const [sendingReply, setSendingReply] = useState(false);
   const [agents, setAgents] = useState([]);
 
-  const initials = (ticket?.createdByName || "User")
+  const initials = (name) => (name || "User")
     .split(" ")
     .map((part) => part[0])
     .join("")
@@ -41,6 +41,11 @@ export default function TicketDetailPage() {
       .then((response) => setComments(Array.isArray(response.data) ? response.data : []))
       .catch(() => {});
   }, [id, user?.role]);
+
+  const loadComments = async () => {
+    const response = await getComments(id);
+    setComments(Array.isArray(response.data) ? response.data : []);
+  };
 
   useEffect(() => {
       getAgents()
@@ -78,7 +83,7 @@ export default function TicketDetailPage() {
     try {
       await addComment(id, reply);
       setReply("");
-      loadComments();
+      await loadComments();
     } catch (err) {
       setError(err.response?.data?.error || "Unable to post comment.");
     } finally {
@@ -165,7 +170,7 @@ export default function TicketDetailPage() {
             {comments.map((c) => (
               <div key={c.id} className="comment">
                 <div className="av-com">
-                  <span className="avatar">{initials}</span>
+                  <span className="avatar">{initials(c.authorName)}</span>
                 </div>
                 <div>
                   <strong>{c.authorName}</strong>
@@ -238,7 +243,7 @@ export default function TicketDetailPage() {
             </label>
             <h2>Requester Profile</h2>
             <div className="profile large">
-              <b>{initials}</b>
+              <b>{initials(ticket?.createdByName)}</b>
               <span>
                 <strong>{ticket.createdByName || "Unknown"}</strong><br></br>
                 <small>Requester</small>

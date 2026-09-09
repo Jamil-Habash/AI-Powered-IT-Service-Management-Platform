@@ -32,7 +32,11 @@ export default function TicketsPage() {
   }, []);
 
   const unassignedCount = tickets.filter((t) => !t.assignedAgentName).length;
-  const highCriticalCount = tickets.filter((t) => t.priority === "HIGH" || t.priority === "CRITICAL").length;
+  const highCriticalCount = tickets.filter(
+    (ticket) =>
+      ticket.status !== "RESOLVED" &&
+      (ticket.priority === "HIGH" || ticket.priority === "CRITICAL"),
+  ).length;
   const myAssignedCount = tickets.filter((t) => t.assignedAgentName === user?.name).length;
 
   const rows = tickets
@@ -42,8 +46,10 @@ export default function TicketsPage() {
     .filter((ticket) => {
       if (quickFilter === "unassigned") return !ticket.assignedAgentName;
       if (quickFilter === "mine") return ticket.assignedAgentName === user?.name;
-      if (quickFilter === "high") return ticket.priority === "HIGH" || ticket.priority === "CRITICAL";
-      if (quickFilter === "sla") return ticket.priority === "CRITICAL";
+      if (quickFilter === "high") {
+        return ticket.status !== "RESOLVED" && (ticket.priority === "HIGH" || ticket.priority === "CRITICAL");
+      }
+      if (quickFilter === "sla") return ticket.status !== "RESOLVED" && ticket.priority === "CRITICAL";
       return true;
     })
     .filter((ticket) => {

@@ -23,7 +23,7 @@ export default function App() {
           <Route path="/create-ticket" element={<ProtectedRoute><CreateTicketPage /></ProtectedRoute>} />
           <Route path="/tickets" element={<ProtectedRoute><TicketsPage /></ProtectedRoute>} />
           <Route path="/ticket/:id" element={<ProtectedRoute><TicketDetailPage /></ProtectedRoute>} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/analytics" element={<ProtectedRoute role="ADMIN"><AnalyticsPage /></ProtectedRoute>} />
           <Route path="/knowledge-base" element={<KnowledgeBasePage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/login" replace />} />

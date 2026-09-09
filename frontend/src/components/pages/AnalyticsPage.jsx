@@ -35,7 +35,9 @@ export default function AnalyticsPage() {
 
   const openTickets = tickets.filter((ticket) => ticket.status === "OPEN");
   const priorityTickets = tickets.filter(
-    (ticket) => ticket.priority === "HIGH" || ticket.priority === "CRITICAL",
+    (ticket) =>
+      ticket.status !== "RESOLVED" &&
+      (ticket.priority === "HIGH" || ticket.priority === "CRITICAL"),
   );
   const inProgressTickets = tickets.filter(
     (ticket) => ticket.status === "IN_PROGRESS",
