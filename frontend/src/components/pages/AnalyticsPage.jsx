@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import { getTickets } from "../../services/ticketService";
+import { addCategory, getCategories } from "../../services/categoryService";
 
 export default function AnalyticsPage() {
   const [metric, setMetric] = useState("volume");
@@ -10,17 +11,26 @@ export default function AnalyticsPage() {
   const [error, setError] = useState("");
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [newCategory, setNewCategory] = useState("");
-  const [customCategories, setCustomCategories] = useState([]);
+  const [categoryDescription, setCategoryDescription] = useState("");
+  const [categoryError, setCategoryError] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [categorySearch, setCategorySearch] = useState("");
+  const [categoryLoading, setCategoryLoading] = useState(true);
 
   useEffect(() => {
-    getTickets()
-      .then((response) => {
-        const data = Array.isArray(response.data)
-          ? response.data
-          : response.data?.content || [];
-        setTickets(data);
+    Promise.all([getTickets(), getCategories()])
+      .then(([ticketsResponse, categoriesResponse]) => {
+        const ticketData = Array.isArray(ticketsResponse.data)
+          ? ticketsResponse.data
+          : ticketsResponse.data?.content || [];
+        const categoryData = Array.isArray(categoriesResponse.data)
+          ? categoriesResponse.data
+          : [];
+        setTickets(ticketData);
+        setCategories(categoryData);
       })
-      .catch(() => setError("Unable to load analytics data."));
+      .catch(() => setError("Unable to load analytics data."))
+      .finally(() => setCategoryLoading(false));
   }, []);
 
   const openTickets = tickets.filter((ticket) => ticket.status === "OPEN");
@@ -31,13 +41,21 @@ export default function AnalyticsPage() {
     (ticket) => ticket.status === "IN_PROGRESS",
   );
   const resolvedTickets = tickets.filter((ticket) => ticket.status === "RESOLVED");
-  const categoryCounts = Object.entries(
-    tickets.reduce((counts, ticket) => {
-      const name = ticket.categoryName || "Uncategorized";
-      counts[name] = (counts[name] || 0) + 1;
-      return counts;
-    }, {}),
-  ).concat(customCategories.map((category) => [category, 0]));
+  const ticketCountByName = tickets.reduce((counts, ticket) => {
+    const name = ticket.categoryName || "Uncategorized";
+    counts[name] = (counts[name] || 0) + 1;
+    return counts;
+  }, {});
+  const categoryRows = Array.from(
+    new Map(categories.map((category) => [category.name, category])).values(),
+  );
+  const categoryCounts = Object.entries({
+    ...Object.fromEntries(categoryRows.map((category) => [category.name, 0])),
+    ...ticketCountByName,
+  });
+  const visibleCategories = categoryRows.filter((category) =>
+    category.name.toLowerCase().includes(categorySearch.toLowerCase()),
+  );
   const agentCounts = Object.entries(
     tickets.reduce((counts, ticket) => {
       if (ticket.assignedAgentName) {
@@ -134,27 +152,35 @@ export default function AnalyticsPage() {
         </section>
       </div>
       <section className="panel">
-        <div className="panel-heading">
+          <div className="panel-heading">
           <div>
             <h2>Manage Ticket Categories</h2>
             <p>
-              Configure routing queues, SLA commitments, and activation
-              statuses.
+              Configure the taxonomy used for routing, reporting, and ticket intake.
             </p>
           </div>
-          <button className="primary-button" onClick={() => setShowCategoryForm(true)}>+ Add Service Category</button>
-        </div>
-        {categoryCounts.map(([category, count]) => (
-          <div className="category-row" key={category}>
-            <strong>{category}</strong>
-            <span>{count} tickets</span>
-            <span>SLA data unavailable</span>
-            <button className="secondary-button">Active</button>
+            <button className="primary-button" onClick={() => { setCategoryError(""); setShowCategoryForm(true); }}>+ Add Service Category</button>
           </div>
-        ))}
+          <div className="category-toolbar">
+            <div>
+              <strong>{categoryRows.length}</strong>
+              <span>configured categories</span>
+            </div>
+            <input value={categorySearch} onChange={(event) => setCategorySearch(event.target.value)} placeholder="Filter categories..." aria-label="Filter categories" />
+        </div>
+          {categoryLoading && <p>Loading service categories...</p>}
+          {!categoryLoading && visibleCategories.map((category) => (
+            <div className="category-row" key={category.id || category.name}>
+              <div><strong>{category.name}</strong><small>{category.description || "No description provided"}</small></div>
+              <span><b>{ticketCountByName[category.name] || 0}</b> active tickets</span>
+              <span className="category-routing">General Service Desk</span>
+              <span className="category-status">Active</span>
+            </div>
+          ))}
+          {!categoryLoading && !visibleCategories.length && <p>No categories match this filter.</p>}
       </section>
       {showCategoryForm && (
-        <div className="modal-backdrop" role="presentation" onClick={() => setShowCategoryForm(false)}>
+        <div className="modal-backdrop" role="presentation" onClick={() => !categoryLoading && setShowCategoryForm(false)}>
           <form
             className="modal"
             role="dialog"
@@ -162,23 +188,40 @@ export default function AnalyticsPage() {
             onClick={(event) => event.stopPropagation()}
             onSubmit={(event) => {
               event.preventDefault();
-              if (!newCategory.trim()) return;
-              setCustomCategories((current) => [...current, newCategory.trim()]);
-              setNewCategory("");
-              setShowCategoryForm(false);
+              const name = newCategory.trim();
+              const description = categoryDescription.trim();
+              if (!name || !description) return;
+
+              setCategoryLoading(true);
+              addCategory(name, description)
+                .then((response) => {
+                  setCategories((current) => [...current, response.data || { name, description }]);
+                  setNewCategory("");
+                  setCategoryDescription("");
+                  setCategoryError("");
+                  setShowCategoryForm(false);
+                })
+                .catch(() => setCategoryError("Unable to save category."))
+                .finally(() => setCategoryLoading(false));
             }}
           >
             <div className="panel-heading">
-              <h2>New Service Category</h2>
+              <div><span className="eyebrow">TAXONOMY MANAGEMENT</span><h2>New Service Category</h2></div>
               <button type="button" className="icon-button" aria-label="Close category form" onClick={() => setShowCategoryForm(false)}><span>×</span></button>
             </div>
+            <p className="modal-lead">Add a clear category description so teams can route requests consistently.</p>
             <label>
-              Category Name
+              Category Name:
               <input value={newCategory} onChange={(event) => setNewCategory(event.target.value)} placeholder="Cloud Infrastructure & DevOps" required autoFocus />
+            </label><br></br>
+            <label>
+              Category Description:
+              <textarea value={categoryDescription} onChange={(event) => setCategoryDescription(event.target.value)} placeholder="Describe the requests this category should receive." rows="4" required />
             </label>
+            {categoryError && <p className="form-error">{categoryError}</p>}
             <div className="form-actions">
-              <button type="button" className="secondary-button" onClick={() => setShowCategoryForm(false)}>Cancel</button>
-              <button type="submit" className="primary-button">Save Category</button>
+              <button type="button" className="secondary-button" disabled={categoryLoading} onClick={() => setShowCategoryForm(false)}>Cancel</button>
+              <button type="submit" className="primary-button" disabled={categoryLoading}>{categoryLoading ? "Saving..." : "Save Category"}</button>
             </div>
           </form>
         </div>

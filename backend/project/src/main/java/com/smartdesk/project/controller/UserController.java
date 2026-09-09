@@ -17,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.smartdesk.project.security.JwtService;
 import com.smartdesk.project.models.User;
+import com.smartdesk.project.models.Role;
 
 import java.util.List;
 
@@ -59,5 +60,31 @@ public class UserController {
             updated.getName(),
             updated.getEmail(),
             updated.getRole()));
+    }
+
+    @PatchMapping("/admin/users/{id}")
+    public ResponseEntity<UserResponse> adminUpdateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserRequest request,
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+        requireAdmin(currentUser);
+        return ResponseEntity.ok(userService.updateUser(id, request));
+    }
+
+    @PatchMapping("/admin/users/{id}/deactivate")
+    public ResponseEntity<UserResponse> deactivateUser(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+        requireAdmin(currentUser);
+        if (id.equals(currentUser.getUser().getId())) {
+            throw new AccessDeniedException("You cannot deactivate your own account");
+        }
+        return ResponseEntity.ok(userService.deactivateUser(id));
+    }
+
+    private void requireAdmin(UserPrincipal currentUser) {
+        if (currentUser == null || currentUser.getUser().getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Administrator access is required");
+        }
     }
 }

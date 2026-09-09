@@ -1181,12 +1181,66 @@ td strong {
 }
 .category-row {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1.3fr auto;
+  grid-template-columns: 1.6fr 1fr 1.2fr auto;
   gap: 12px;
   align-items: center;
   padding: 14px 0;
   border-bottom: 1px solid #eff4ff;
   font-size: 12px;
+}
+.category-row strong,
+.category-row small {
+  display: block;
+}
+.category-row small {
+  margin-top: 4px;
+  color: #64748b;
+  line-height: 1.4;
+}
+.category-row b {
+  color: #03224d;
+}
+.category-routing {
+  color: #44474f;
+}
+.category-status {
+  justify-self: end;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #d1fae5;
+  color: #047857;
+  font-size: 11px;
+  font-weight: 700;
+}
+.category-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  margin-bottom: 4px;
+  border: 1px solid #dce9ff;
+  border-radius: 8px;
+  background: #f8faff;
+}
+.category-toolbar div {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: #64748b;
+  font-size: 11px;
+}
+.category-toolbar strong {
+  color: #03224d;
+  font-size: 18px;
+}
+.category-toolbar input {
+  width: min(100%, 260px);
+  padding: 9px 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  outline: none;
 }
 .article-grid {
   display: grid;
@@ -1242,6 +1296,55 @@ td strong {
 .modal p {
   color: #44474f;
   line-height: 1.6;
+}
+.modal-lead {
+  margin: 8px 0 18px;
+  font-size: 12px;
+}
+.modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+}
+.modal input,
+.modal textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #0f172a;
+  outline: none;
+  resize: vertical;
+}
+.modal input:focus,
+.modal textarea:focus,
+.category-toolbar input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px #dbeafe;
+}
+.form-actions-spacer {
+  flex: 1;
+}
+.danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #ffdad6;
+  color: #93000a;
+  font-size: 12px;
+  font-weight: 700;
+}
+.danger-button:disabled,
+.deactivate-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 .icon-button {
   display: inline-flex;
@@ -1436,6 +1539,17 @@ td strong {
   margin-top: 3px;
   color: #44474f;
 }
+.admin-user-row {
+  cursor: pointer;
+}
+.admin-user-row:hover {
+  background: #f8faff;
+}
+.deactivate-button {
+  padding: 7px 10px;
+  background: #ffdad6;
+  color: #93000a;
+}
 .account-status {
   display: inline-flex;
   align-items: center;
@@ -1447,6 +1561,13 @@ td strong {
   font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
+}
+.account-status.inactive {
+  background: #f1f5f9;
+  color: #64748b;
+}
+.account-status.inactive i {
+  background: #94a3b8;
 }
 .admin-directory > .queue-pagination {
   padding: 16px 28px;

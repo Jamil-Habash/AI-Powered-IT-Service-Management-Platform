@@ -8,6 +8,7 @@ public class UserResponse {
     private String name;
     private String email;
     private Role role;
+    private boolean active;
 
     public static UserResponse fromEntity(User user){
         UserResponse dto = new UserResponse();
@@ -15,6 +16,7 @@ public class UserResponse {
         dto.name = user.getName();
         dto.email = user.getEmail();
         dto.role = user.getRole();
+        dto.active = user.isActive();
         return dto;
     }
 
@@ -29,5 +31,9 @@ public class UserResponse {
     }
     public Role getRole() { 
         return role; 
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

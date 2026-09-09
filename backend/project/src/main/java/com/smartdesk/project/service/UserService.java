@@ -60,4 +60,13 @@ public class UserService {
         User saved = userRepository.save(user);
         return UserResponse.fromEntity(saved);
     }
+
+    @Transactional
+    public UserResponse deactivateUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+
+        user.setActive(false);
+        return UserResponse.fromEntity(userRepository.save(user));
+    }
 }

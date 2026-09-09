@@ -29,6 +29,7 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private Boolean active = true;
 
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
@@ -101,6 +102,14 @@ public class User {
 
     public void setRole(Role role){
         this.role = role;
+    }
+
+    public boolean isActive() {
+        return active == null || active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public List<Comment> getComments(){
