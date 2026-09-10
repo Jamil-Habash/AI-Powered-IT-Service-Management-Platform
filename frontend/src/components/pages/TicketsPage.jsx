@@ -6,8 +6,10 @@ import Shell from "../Shell";
 import TicketTable from "../TicketTable";
 import { useAuth } from "../../context/AuthContext";
 import { getTickets } from "../../services/ticketService";
+import usePageTitle from "../../hooks/usePageTitle";
 
 export default function TicketsPage() {
+  usePageTitle("All Tickets");
   const navigate = useNavigate();
   const { user } = useAuth();
   const [searchParams] = useSearchParams();

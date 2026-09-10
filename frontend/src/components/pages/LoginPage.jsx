@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LOGO_SRC } from "../Shell";
 import { useAuth } from "../../context/AuthContext";
+import usePageTitle from "../../hooks/usePageTitle";
 
 export default function LoginPage() {
+  usePageTitle("Login");
   const navigate = useNavigate();
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);

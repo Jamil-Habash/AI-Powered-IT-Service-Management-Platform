@@ -3,8 +3,10 @@ import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import { kbArticles } from "../../data/kbArticles";
+import usePageTitle from "../../hooks/usePageTitle";
 
 export default function KnowledgeBasePage() {
+  usePageTitle("Knowledge Base");
   const navigate = useNavigate();
 
   return (

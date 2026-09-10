@@ -3,11 +3,13 @@ import Icon from "../Icon";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import { kbArticles } from "../../data/kbArticles";
+import usePageTitle from "../../hooks/usePageTitle";
 
 export default function KnowledgeBaseArticlePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const article = kbArticles.find((a) => a.id === id);
+  usePageTitle(`Knowledge Base | ${article.title}`)
 
   if (!article) {
     return (

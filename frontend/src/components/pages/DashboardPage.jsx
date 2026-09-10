@@ -7,8 +7,10 @@ import TicketTable from "../TicketTable";
 import { useAuth } from "../../context/AuthContext";
 import { getTickets } from "../../services/ticketService";
 import { adminUpdateUser, deactivateUser, getUsers, activateUser} from "../../services/userService";
+import usePageTitle from "../../hooks/usePageTitle";
 
 export default function DashboardPage() {
+  usePageTitle("Dashboard");
   const { user } = useAuth();
   if (user?.role == "ADMIN") {
     return <AdminDashboard  />;

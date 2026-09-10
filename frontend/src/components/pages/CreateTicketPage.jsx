@@ -5,8 +5,10 @@ import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import { getCategories } from "../../services/categoryService";
 import { createTicket } from "../../services/ticketService";
+import usePageTitle from "../../hooks/usePageTitle";
 
 export default function CreateTicketPage() {
+  usePageTitle("Create a support Ticket");
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");

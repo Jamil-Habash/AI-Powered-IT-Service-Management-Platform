@@ -13,6 +13,7 @@ import {
 } from "../../services/ticketService";
 import {getAgents} from "../../services/userService";
 import { getComments, addComment } from "../../services/commentService";
+import usePageTitle from "../../hooks/usePageTitle";
 
 export default function TicketDetailPage() {
   const { id } = useParams();
@@ -42,6 +43,7 @@ export default function TicketDetailPage() {
       .catch(() => {});
   }, [id, user?.role]);
 
+  usePageTitle(`Ticket ${id} ${ticket.title}`);
   const loadComments = async () => {
     const response = await getComments(id);
     setComments(Array.isArray(response.data) ? response.data : []);

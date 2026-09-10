@@ -4,8 +4,10 @@ import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import { useAuth } from "../../context/AuthContext";
 import { updateUser } from "../../services/userService";
+import usePageTitle from "../../hooks/usePageTitle";
 
 export default function SettingsPage() {
+  usePageTitle("Profile Settings");
   const { user, refreshSession } = useAuth();
   const [form, setForm] = useState({
     name: user?.name || "",

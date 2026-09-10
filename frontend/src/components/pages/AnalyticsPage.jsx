@@ -3,8 +3,10 @@ import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import { getTickets } from "../../services/ticketService";
 import { addCategory, getCategories, updateCategory } from "../../services/categoryService";
+import usePageTitle from "../../hooks/usePageTitle";
 
 export default function AnalyticsPage() {
+  usePageTitle("Analytics Page");
   const [metric, setMetric] = useState("volume");
   const [date, setDate] = useState("Last 30 Days");
   const [tickets, setTickets] = useState([]);
