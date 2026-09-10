@@ -9,9 +9,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.smartdesk.project.models.User;
-import com.smartdesk.project.security.UserPrincipal;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,12 +18,6 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal UserPrincipal currentUser) {
-        User user = currentUser.getUser();
-        return ResponseEntity.ok(UserResponse.fromEntity(user));
     }
 
     @PostMapping("/register")
