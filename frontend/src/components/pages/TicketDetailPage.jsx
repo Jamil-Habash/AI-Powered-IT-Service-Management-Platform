@@ -27,6 +27,10 @@ export default function TicketDetailPage() {
   const [sendingReply, setSendingReply] = useState(false);
   const [agents, setAgents] = useState([]);
 
+  usePageTitle(
+    ticket ? `Ticket ${id} ${ticket.title}` : `Ticket ${id}`
+  );
+
   const initials = (name) => (name || "User")
     .split(" ")
     .map((part) => part[0])
@@ -43,7 +47,6 @@ export default function TicketDetailPage() {
       .catch(() => {});
   }, [id, user?.role]);
 
-  usePageTitle(`Ticket ${id} ${ticket.title}`);
   const loadComments = async () => {
     const response = await getComments(id);
     setComments(Array.isArray(response.data) ? response.data : []);
@@ -99,9 +102,7 @@ export default function TicketDetailPage() {
   const status = ticket.status || "OPEN";
   const priority = ticket.priority || "MEDIUM";
   const statusLabel = status.replace("_", " ");
-  const created = ticket.createdAt
-    ? new Date(ticket.createdAt).toLocaleString()
-    : "Date unavailable";
+  const created = ticket.createdAt ? new Date(ticket.createdAt).toLocaleString() : "Date unavailable";
   return (
     <Shell>
       <PageHeader
