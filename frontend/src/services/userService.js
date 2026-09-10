@@ -7,3 +7,4 @@ export const updateUser = (id, name, email, password) =>
 export const adminUpdateUser = (id, name, email, password, role) =>
   api.patch(`/admin/users/${id}`, { name, email, password: password || undefined, role });
 export const deactivateUser = (id) => api.patch(`/admin/users/${id}/deactivate`);
+export const activateUser = (id) => api.patch(`/admin/users/${id}/activate`);

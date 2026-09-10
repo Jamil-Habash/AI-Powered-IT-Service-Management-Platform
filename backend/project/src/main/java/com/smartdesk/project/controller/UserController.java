@@ -77,6 +77,14 @@ public class UserController {
         return ResponseEntity.ok(userService.deactivateUser(id));
     }
 
+    @PatchMapping("/admin/users/{id}/activate")
+    public ResponseEntity<UserResponse> activateUser(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+        requireAdmin(currentUser);
+        return ResponseEntity.ok(userService.activateUser(id));
+    }
+
     private void requireAdmin(UserPrincipal currentUser) {
         if (currentUser == null || currentUser.getUser().getRole() != Role.ADMIN) {
             throw new AccessDeniedException("Administrator access is required");
