@@ -10,6 +10,7 @@ import TicketDetailPage from "./components/pages/TicketDetailPage";
 import TicketsPage from "./components/pages/TicketsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import KnowledgeBaseArticlePage from "./components/pages/KnowledgeBaseArticlePage";
 import "./App.css";
 
 export default function App() {
@@ -24,8 +25,9 @@ export default function App() {
           <Route path="/tickets" element={<ProtectedRoute><TicketsPage /></ProtectedRoute>} />
           <Route path="/ticket/:id" element={<ProtectedRoute><TicketDetailPage /></ProtectedRoute>} />
           <Route path="/analytics" element={<ProtectedRoute role="ADMIN"><AnalyticsPage /></ProtectedRoute>} />
-          <Route path="/knowledge-base" element={<KnowledgeBasePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/knowledge-base" element={<ProtectedRoute><KnowledgeBasePage /></ProtectedRoute>} />
+          <Route path="/knowledge-base/:id" element={<ProtectedRoute><KnowledgeBaseArticlePage /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
