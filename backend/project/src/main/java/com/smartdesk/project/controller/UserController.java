@@ -54,12 +54,7 @@ public class UserController {
         UserResponse updated = userService.updateUser(id, request);
         User updatedUser = currentUser.getUser();
         String token = jwtService.generateToken(new UserPrincipal(updatedUser));
-        return ResponseEntity.ok(new AuthResponse(
-            token,
-            updated.getId(),
-            updated.getName(),
-            updated.getEmail(),
-            updated.getRole()));
+        return ResponseEntity.ok(new AuthResponse(token, updated.getId(), updated.getName(), updated.getEmail(), updated.getRole()));
     }
 
     @PatchMapping("/admin/users/{id}")

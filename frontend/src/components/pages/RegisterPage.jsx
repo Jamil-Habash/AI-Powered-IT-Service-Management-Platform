@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { LOGO_SRC } from "../Shell";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../services/authService";
+import { useAuth } from "../../context/AuthContext";
 
 function FieldIcon({ path }) {
   return (
@@ -26,6 +27,7 @@ const lockPath =
   "M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z";
 
 export default function RegisterPage() {
+  const { user } = useAuth();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -65,7 +67,11 @@ const submit = async (event) => {
   setLoading(true);
   try {
     await registerUser(form.name, form.email, form.password);
+    if (user?.role == "ADMIN") {
+    navigate("/dashboard");
+  } else {
     navigate("/login");
+  }
   } catch (err) {
     const msg =
       err.response?.data?.error ||
@@ -94,7 +100,8 @@ const submit = async (event) => {
             src={LOGO_SRC}
             alt="SmartDesk IT Service Management Logo"
           />
-          <h1>Create your account</h1>
+          {user?.role == "ADMIN" && <h1>Add a User</h1>}
+          {user == null && <h1>Create your account</h1>}
           <p>Join SmartDesk IT Service Management Platform</p>
           <div
             className="role-badge"
@@ -134,14 +141,6 @@ const submit = async (event) => {
               onChange={update("password")}
               required
             />
-            <button
-              className="visibility-button"
-              type="button"
-              aria-label={visible.password ? "Hide password" : "Show password"}
-              onClick={() => setVisible((current) => ({ ...current, password: !current.password }))}
-            >
-              {visible.password ? "Hide" : "Show"}
-            </button>
           </div>
           <p className="hint">Must be at least 8 characters</p>
           <label htmlFor="confirmPassword">Confirm Password</label>
@@ -156,14 +155,6 @@ const submit = async (event) => {
               onChange={update("confirmPassword")}
               required
             />
-            <button
-              className="visibility-button"
-              type="button"
-              aria-label={visible.confirmPassword ? "Hide password" : "Show password"}
-              onClick={() => setVisible((current) => ({ ...current, confirmPassword: !current.confirmPassword }))}
-            >
-              {visible.confirmPassword ? "Hide" : "Show"}
-            </button>
           </div>
           <label className="terms">
             <input
@@ -181,14 +172,14 @@ const submit = async (event) => {
             {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
-        <footer className="card-footer">
-          Already have an account? <Link to="/login">Log in</Link>
+        {user == null && <><footer className="card-footer">
+          Already registered? <Link to="/login">Log in</Link>
         </footer>
         <footer className="page-footer">
           <a href="#privacy">Privacy Policy</a>
           <a href="#terms">Terms of Service</a>
           <a href="#help">Help Center</a>
-        </footer>
+        </footer></>}
       </main>
     </div>
   );

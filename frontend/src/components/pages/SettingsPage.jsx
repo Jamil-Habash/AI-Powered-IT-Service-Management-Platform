@@ -118,13 +118,11 @@ export default function SettingsPage() {
         <div className="input-wrap">
           <FieldIcon path={lockPath} />
           <input id="password" name="password" type={visible.password ? "text" : "password"} value={form.password} onChange={update("password")} minLength="8" placeholder="Leave blank to keep current password" />
-          <button className="visibility-button" type="button" aria-label={visible.password ? "Hide password" : "Show password"} onClick={() => setVisible((current) => ({ ...current, password: !current.password }))}><Icon>{visible.password ? "visibility_off" : "visibility"}</Icon></button>
         </div>
         <label htmlFor="confirmPassword">Confirm New Password</label>
         <div className="input-wrap">
           <FieldIcon path={lockPath} />
           <input id="confirmPassword" name="confirmPassword" type={visible.confirmPassword ? "text" : "password"} value={form.confirmPassword} onChange={update("confirmPassword")} minLength="8" placeholder="Leave blank to keep current password" />
-          <button className="visibility-button" type="button" aria-label={visible.confirmPassword ? "Hide password" : "Show password"} onClick={() => setVisible((current) => ({ ...current, confirmPassword: !current.confirmPassword }))}><Icon>{visible.confirmPassword ? "visibility_off" : "visibility"}</Icon></button>
         </div>
         <button className="primary-button" type="submit" disabled={loading}>
           {loading ? "Saving..." : "Save Changes"}

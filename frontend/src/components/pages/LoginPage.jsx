@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Icon from "../Icon";
 import { LOGO_SRC } from "../Shell";
 import { useAuth } from "../../context/AuthContext";
 
@@ -60,14 +59,6 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
               />
-              <button
-                className="visibility-button"
-                type="button"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                onClick={() => setShowPassword((visible) => !visible)}
-              >
-                <Icon>{showPassword ? "visibility_off" : "visibility"}</Icon>
-              </button>
             </div>
           </label>
           <label className="remember">
@@ -83,8 +74,8 @@ export default function LoginPage() {
           </button>
         </form>
         <p>
-          Don't have an account?{" "}
-          <Link to="/register">Create employee account</Link>
+          Not registered yet?{" "}
+          <Link to="/register">Register with your work email</Link>
         </p>
         <footer>
           <a href="#privacy">Privacy Policy</a>

@@ -30,4 +30,9 @@ public class CategoryController {
         CategoryResponse response = categoryService.addCategory(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CategoryResponse> edit(@Valid @RequestBody CreateCategoryRequest request, @PathVariable Long id) {
+        return ResponseEntity.ok(categoryService.updateCategory(id, request));
+    }
 }

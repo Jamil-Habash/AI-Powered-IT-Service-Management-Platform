@@ -185,7 +185,7 @@ export default function TicketDetailPage() {
             <textarea
               value={reply}
               onChange={(event) => setReply(event.target.value)}
-              placeholder="Type your response to the employee..."
+              placeholder="Type your response..."
               rows="3"
             />
             <button className="primary-button" onClick={handleSendReply} disabled={sendingReply}>

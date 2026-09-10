@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PageHeader from "../PageHeader";
 import Shell from "../Shell";
 import { getTickets } from "../../services/ticketService";
-import { addCategory, getCategories } from "../../services/categoryService";
+import { addCategory, getCategories, updateCategory } from "../../services/categoryService";
 
 export default function AnalyticsPage() {
   const [metric, setMetric] = useState("volume");
@@ -10,6 +10,7 @@ export default function AnalyticsPage() {
   const [tickets, setTickets] = useState([]);
   const [error, setError] = useState("");
   const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
   const [newCategory, setNewCategory] = useState("");
   const [categoryDescription, setCategoryDescription] = useState("");
   const [categoryError, setCategoryError] = useState("");
@@ -66,6 +67,35 @@ export default function AnalyticsPage() {
       return counts;
     }, {}),
   );
+  const openNewCategoryForm = () => {
+    setEditingCategory(null);
+    setNewCategory("");
+    setCategoryDescription("");
+    setCategoryError("");
+    setShowCategoryForm(true);
+  };
+
+  const openEditCategoryForm = (category) => {
+    setEditingCategory(category);
+    setNewCategory(category.name);
+    setCategoryDescription(category.description || "");
+    setCategoryError("");
+    setShowCategoryForm(true);
+  };
+
+  const resetCategoryForm = () => {
+    setShowCategoryForm(false);
+    setEditingCategory(null);
+    setNewCategory("");
+    setCategoryDescription("");
+    setCategoryError("");
+  };
+
+  const closeCategoryForm = () => {
+    if (categoryLoading) return;
+    resetCategoryForm();
+  };
+
   return (
     <Shell>
       <PageHeader
@@ -161,7 +191,7 @@ export default function AnalyticsPage() {
               Configure the taxonomy used for routing, reporting, and ticket intake.
             </p>
           </div>
-            <button className="primary-button" onClick={() => { setCategoryError(""); setShowCategoryForm(true); }}>+ Add Service Category</button>
+            <button className="primary-button" onClick={openNewCategoryForm}>+ Add Service Category</button>
           </div>
           <div className="category-toolbar">
             <div>
@@ -172,7 +202,19 @@ export default function AnalyticsPage() {
         </div>
           {categoryLoading && <p>Loading service categories...</p>}
           {!categoryLoading && visibleCategories.map((category) => (
-            <div className="category-row" key={category.id || category.name}>
+            <div
+              className="category-row"
+              key={category.id || category.name}
+              onClick={() => openEditCategoryForm(category)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  openEditCategoryForm(category);
+                }
+              }}
+            >
               <div><strong>{category.name}</strong><small>{category.description || "No description provided"}</small></div>
               <span><b>{ticketCountByName[category.name] || 0}</b> active tickets</span>
               <span className="category-routing">General Service Desk</span>
@@ -182,7 +224,7 @@ export default function AnalyticsPage() {
           {!categoryLoading && !visibleCategories.length && <p>No categories match this filter.</p>}
       </section>
       {showCategoryForm && (
-        <div className="modal-backdrop" role="presentation" onClick={() => !categoryLoading && setShowCategoryForm(false)}>
+        <div className="modal-backdrop" role="presentation" onClick={closeCategoryForm}>
           <form
             className="modal"
             role="dialog"
@@ -195,21 +237,29 @@ export default function AnalyticsPage() {
               if (!name || !description) return;
 
               setCategoryLoading(true);
-              addCategory(name, description)
+              const saveCategory = editingCategory
+                ? updateCategory(editingCategory.id, name, description)
+                : addCategory(name, description);
+
+              saveCategory
                 .then((response) => {
-                  setCategories((current) => [...current, response.data || { name, description }]);
-                  setNewCategory("");
-                  setCategoryDescription("");
-                  setCategoryError("");
-                  setShowCategoryForm(false);
+                  const savedCategory = response.data || {
+                    ...editingCategory,
+                    name,
+                    description,
+                  };
+                  setCategories((current) => editingCategory
+                    ? current.map((category) => category.id === editingCategory.id ? savedCategory : category)
+                    : [...current, savedCategory]);
+                  resetCategoryForm();
                 })
-                .catch(() => setCategoryError("Unable to save category."))
+                .catch(() => setCategoryError(`Unable to ${editingCategory ? "update" : "save"} category.`))
                 .finally(() => setCategoryLoading(false));
             }}
           >
             <div className="panel-heading">
-              <div><span className="eyebrow">TAXONOMY MANAGEMENT</span><h2>New Service Category</h2></div>
-              <button type="button" className="icon-button" aria-label="Close category form" onClick={() => setShowCategoryForm(false)}><span>×</span></button>
+              <div><span className="eyebrow">TAXONOMY MANAGEMENT</span><h2>{editingCategory ? "Edit Service Category" : "New Service Category"}</h2></div>
+              <button type="button" className="icon-button" aria-label="Close category form" onClick={closeCategoryForm}><span>×</span></button>
             </div>
             <p className="modal-lead">Add a clear category description so teams can route requests consistently.</p>
             <label>
@@ -222,8 +272,8 @@ export default function AnalyticsPage() {
             </label>
             {categoryError && <p className="form-error">{categoryError}</p>}
             <div className="form-actions">
-              <button type="button" className="secondary-button" disabled={categoryLoading} onClick={() => setShowCategoryForm(false)}>Cancel</button>
-              <button type="submit" className="primary-button" disabled={categoryLoading}>{categoryLoading ? "Saving..." : "Save Category"}</button>
+              <button type="button" className="secondary-button" disabled={categoryLoading} onClick={closeCategoryForm}>Cancel</button>
+              <button type="submit" className="primary-button" disabled={categoryLoading}>{categoryLoading ? "Saving..." : editingCategory ? "Update Category" : "Save Category"}</button>
             </div>
           </form>
         </div>

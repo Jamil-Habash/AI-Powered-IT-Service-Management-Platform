@@ -88,9 +88,9 @@ a {
   background: linear-gradient(90deg, #1d4ed8, #60a5fa);
 }
 .logo {
-  height: 36px;
+  height: 100px;
   width: auto;
-  margin-bottom: 16px;
+  margin-bottom: 2px;
 }
 .registration-card h1,
 .login-card h1 {
@@ -172,6 +172,7 @@ a {
   border-color: #2563eb;
   box-shadow: 0 0 0 2px #dbeafe;
 }
+
 .field-icon {
   position: absolute;
   top: 50%;
@@ -835,7 +836,6 @@ td strong {
   white-space: nowrap;
 }
 .filter-row select {
-  width: 135px;
   min-height: 42px;
   background: #eff4ff;
 }
