@@ -14,6 +14,7 @@ import {
 import {getAgents} from "../services/userService";
 import { getComments, addComment } from "../services/commentService";
 import usePageTitle from "../hooks/usePageTitle";
+import {exportTicketPdf} from "../utils/exportTicketPdf"
 
 export default function TicketDetailPage() {
   const { id } = useParams();
@@ -114,8 +115,8 @@ export default function TicketDetailPage() {
             <button className="secondary-button" onClick={() => navigate("/tickets")}>
               <Icon>arrow_back</Icon>Back to Tickets
             </button>
-            <button className="secondary-button" onClick={() => window.print()}>
-              <Icon>print</Icon>Print Summary
+            <button className="secondary-button" onClick={() => exportTicketPdf(ticket, comments)}>
+              <Icon>picture_as_pdf</Icon>Export PDF
             </button>
             <button className="secondary-button" onClick={() => navigator.clipboard?.writeText(window.location.href)}>
               <Icon>share</Icon>Share
