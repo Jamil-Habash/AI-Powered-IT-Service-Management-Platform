@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LOGO_SRC } from "../components/Shell";
+import { Light_LOGO_SRC, Dark_LOGO_SRC } from "../components/Shell";
 import { useAuth } from "../context/AuthContext";
 import usePageTitle from "../hooks/usePageTitle";
 
@@ -14,6 +14,7 @@ export default function LoginPage() {
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const theme = localStorage.getItem("theme") || "light"
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,7 +37,8 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <main className="login-card">
-        <img src={LOGO_SRC} alt="SmartDesk logo" />
+        {theme == "light" &&<img src={Light_LOGO_SRC} alt="SmartDesk logo" />}
+        {theme == "dark" && <img src={Dark_LOGO_SRC} alt="SmartDesk logo" />}
         <h1>SmartDesk</h1>
         <p>IT Service Management Platform</p>
 

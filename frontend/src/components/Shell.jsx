@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "../assets/smartdesk_logo.png";
+import lightLogo from "../assets/light_logo.png";
+import darkLogo from "../assets/dark_logo.png";
 import Icon from "./Icon";
 import { useAuth } from "../context/AuthContext";
 import { getTickets } from "../services/ticketService";
@@ -15,7 +16,8 @@ const navigation = [
   ["/settings", "settings", "Settings"],
 ];
 
-export const LOGO_SRC = logo;
+export const Light_LOGO_SRC = lightLogo;
+export const Dark_LOGO_SRC = darkLogo;
 
 export default function Shell({ children }) {
   const location = useLocation();
@@ -178,7 +180,8 @@ export default function Shell({ children }) {
       <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
         <div className="sidebar-top">
           <Link to="/dashboard" className="brand">
-            <img src={LOGO_SRC} alt="SmartDesk logo" />
+            {theme == "light" && <img src={Light_LOGO_SRC} alt="SmartDesk logo" />}
+            {theme == "dark" && <img src={Dark_LOGO_SRC} alt="SmartDesk logo" />}
             <span className="brand-text">
               <strong>SmartDesk</strong>
               <small>ITSM PLATFORM</small>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { LOGO_SRC } from "../components/Shell";
+import { Light_LOGO_SRC, Dark_LOGO_SRC } from "../components/Shell";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
@@ -52,6 +52,7 @@ export default function RegisterPage() {
 const navigate = useNavigate();
 const [error, setError] = useState("");
 const [loading, setLoading] = useState(false);
+const theme = localStorage.getItem("theme") || "light"
 
 const submit = async (event) => {
   event.preventDefault();
@@ -97,11 +98,8 @@ const submit = async (event) => {
     <div className="registration-page">
       <main className="registration-card">
         <header className="card-header">
-          <img
-            className="logo"
-            src={LOGO_SRC}
-            alt="SmartDesk IT Service Management Logo"
-          />
+          {theme == "light" && <img src={Light_LOGO_SRC} alt="SmartDesk IT Service Management Logo"/>}
+          {theme == "dark" && <img src={Dark_LOGO_SRC} alt="SmartDesk IT Service Management Logo"/>}
           {user?.role == "ADMIN" && <h1>Add a User</h1>}
           {user == null && <h1>Create your account</h1>}
           <p>Join SmartDesk IT Service Management Platform</p>
