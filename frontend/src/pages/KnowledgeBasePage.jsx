@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import Icon from "../Icon";
-import PageHeader from "../PageHeader";
-import Shell from "../Shell";
-import { kbArticles } from "../../data/kbArticles";
-import usePageTitle from "../../hooks/usePageTitle";
+import Icon from "../components/Icon";
+import PageHeader from "../components/PageHeader";
+import Shell from "../components/Shell";
+import { kbArticles } from "../data/kbArticles";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function KnowledgeBasePage() {
   usePageTitle("Knowledge Base");

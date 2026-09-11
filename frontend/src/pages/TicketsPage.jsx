@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Icon from "../Icon";
-import PageHeader from "../PageHeader";
-import Shell from "../Shell";
-import TicketTable from "../TicketTable";
-import { useAuth } from "../../context/AuthContext";
-import { getTickets } from "../../services/ticketService";
-import usePageTitle from "../../hooks/usePageTitle";
+import Icon from "../components/Icon";
+import PageHeader from "../components/PageHeader";
+import Shell from "../components/Shell";
+import TicketTable from "../components/TicketTable";
+import { useAuth } from "../context/AuthContext";
+import { getTickets } from "../services/ticketService";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function TicketsPage() {
   usePageTitle("All Tickets");
@@ -39,6 +39,7 @@ export default function TicketsPage() {
       ticket.status !== "RESOLVED" &&
       (ticket.priority === "HIGH" || ticket.priority === "CRITICAL"),
   ).length;
+  const isAgent = user?.role === "IT_AGENT";
   const myAssignedCount = tickets.filter((t) => t.assignedAgentName === user?.name).length;
 
   const rows = tickets
@@ -107,7 +108,7 @@ export default function TicketsPage() {
         {[
           ["Unassigned Tickets", unassignedCount, "Action Required"],
           ["High / Critical Queue", highCriticalCount, "Needs Attention"],
-          ["My Assigned Queue", myAssignedCount, "Active"],
+          ...(isAgent ? [["My Assigned Queue", myAssignedCount, "Active"]] : []),
         ].map(([label, value, note]) => (
           <section className="stat-card" key={label}>
             <span>{label}</span>
@@ -153,14 +154,14 @@ export default function TicketsPage() {
           <select value={assigneeFilter} onChange={(event) => setAssigneeFilter(event.target.value)}>
             <option value="">All Agents</option>
             <option value="unassigned">Unassigned</option>
-            <option value="mine">Assigned to Me</option>
+            {isAgent && <option value="mine">Assigned to Me</option>}
           </select>
         </div>
         <div className="tabs">
           {[
             ["all", "All Tickets", tickets.length],
             ["unassigned", "Unassigned", unassignedCount],
-            ["mine", "Assigned to Me", myAssignedCount],
+            ...(isAgent ? [["mine", "Assigned to Me", myAssignedCount]] : []),
             ["high", "High Priority", highCriticalCount],
             ["sla", "SLA Breaching", tickets.filter((ticket) => ticket.priority === "CRITICAL").length],
           ].map(([value, label, count]) => (

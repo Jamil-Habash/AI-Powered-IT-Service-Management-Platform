@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import PageHeader from "../PageHeader";
-import Shell from "../Shell";
-import { getTickets } from "../../services/ticketService";
-import { addCategory, getCategories, updateCategory } from "../../services/categoryService";
-import usePageTitle from "../../hooks/usePageTitle";
+import PageHeader from "../components/PageHeader";
+import Shell from "../components/Shell";
+import { getTickets } from "../services/ticketService";
+import { addCategory, getCategories, updateCategory } from "../services/categoryService";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function AnalyticsPage() {
   usePageTitle("Analytics Page");

@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Icon from "../Icon";
-import PageHeader from "../PageHeader";
-import Shell from "../Shell";
-import { useAuth } from "../../context/AuthContext";
+import Icon from "../components/Icon";
+import PageHeader from "../components/PageHeader";
+import Shell from "../components/Shell";
+import { useAuth } from "../context/AuthContext";
 import {
   getTicket,
   assignTicket,
   resolveTicket,
   updateTicketPriority,
   updateTicketStatus,
-} from "../../services/ticketService";
-import {getAgents} from "../../services/userService";
-import { getComments, addComment } from "../../services/commentService";
-import usePageTitle from "../../hooks/usePageTitle";
+} from "../services/ticketService";
+import {getAgents} from "../services/userService";
+import { getComments, addComment } from "../services/commentService";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function TicketDetailPage() {
   const { id } = useParams();

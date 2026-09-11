@@ -1,16 +1,16 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import AnalyticsPage from "./components/pages/AnalyticsPage";
-import CreateTicketPage from "./components/pages/CreateTicketPage";
-import DashboardPage from "./components/pages/DashboardPage";
-import KnowledgeBasePage from "./components/pages/KnowledgeBasePage";
-import LoginPage from "./components/pages/LoginPage";
-import RegisterPage from "./components/pages/RegisterPage";
-import SettingsPage from "./components/pages/SettingsPage";
-import TicketDetailPage from "./components/pages/TicketDetailPage";
-import TicketsPage from "./components/pages/TicketsPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
+import CreateTicketPage from "./pages/CreateTicketPage";
+import DashboardPage from "./pages/DashboardPage";
+import KnowledgeBasePage from "./pages/KnowledgeBasePage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import SettingsPage from "./pages/SettingsPage";
+import TicketDetailPage from "./pages/TicketDetailPage";
+import TicketsPage from "./pages/TicketsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
-import KnowledgeBaseArticlePage from "./components/pages/KnowledgeBaseArticlePage";
+import KnowledgeBaseArticlePage from "./pages/KnowledgeBaseArticlePage";
 import "./App.css";
 
 export default function App() {

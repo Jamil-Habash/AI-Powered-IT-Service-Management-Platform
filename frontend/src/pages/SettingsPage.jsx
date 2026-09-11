@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import Icon from "../Icon";
-import PageHeader from "../PageHeader";
-import Shell from "../Shell";
-import { useAuth } from "../../context/AuthContext";
-import { updateUser } from "../../services/userService";
-import usePageTitle from "../../hooks/usePageTitle";
+import PageHeader from "../components/PageHeader";
+import Shell from "../components/Shell";
+import { useAuth } from "../context/AuthContext";
+import { updateUser } from "../services/userService";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function SettingsPage() {
   usePageTitle("Profile Settings");

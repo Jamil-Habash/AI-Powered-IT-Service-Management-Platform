@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Icon from "../Icon";
-import PageHeader from "../PageHeader";
-import Shell from "../Shell";
-import { getCategories } from "../../services/categoryService";
-import { createTicket } from "../../services/ticketService";
-import usePageTitle from "../../hooks/usePageTitle";
+import Icon from "../components/Icon";
+import PageHeader from "../components/PageHeader";
+import Shell from "../components/Shell";
+import { getCategories } from "../services/categoryService";
+import { createTicket } from "../services/ticketService";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function CreateTicketPage() {
   usePageTitle("Create a support Ticket");

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { LOGO_SRC } from "../Shell";
+import { LOGO_SRC } from "../components/Shell";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../../services/authService";
-import { useAuth } from "../../context/AuthContext";
-import usePageTitle from "../../hooks/usePageTitle";
+import { registerUser } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
+import usePageTitle from "../hooks/usePageTitle";
 
 function FieldIcon({ path }) {
   return (

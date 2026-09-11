@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Icon from "../Icon";
-import PageHeader from "../PageHeader";
-import Shell from "../Shell";
-import TicketTable from "../TicketTable";
-import { useAuth } from "../../context/AuthContext";
-import { getTickets } from "../../services/ticketService";
-import { adminUpdateUser, deactivateUser, getUsers, activateUser} from "../../services/userService";
-import usePageTitle from "../../hooks/usePageTitle";
+import Icon from "../components/Icon";
+import PageHeader from "../components/PageHeader";
+import Shell from "../components/Shell";
+import TicketTable from "../components/TicketTable";
+import { useAuth } from "../context/AuthContext";
+import { getTickets } from "../services/ticketService";
+import { adminUpdateUser, deactivateUser, getUsers, activateUser} from "../services/userService";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function DashboardPage() {
   usePageTitle("Dashboard");

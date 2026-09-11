@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LOGO_SRC } from "../Shell";
-import { useAuth } from "../../context/AuthContext";
-import usePageTitle from "../../hooks/usePageTitle";
+import { LOGO_SRC } from "../components/Shell";
+import { useAuth } from "../context/AuthContext";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function LoginPage() {
   usePageTitle("Login");
