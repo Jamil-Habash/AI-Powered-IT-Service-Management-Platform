@@ -598,6 +598,32 @@ a {
   color: #0058be;
   font-size: 11px;
 }
+.agent-dashboard{
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr);
+  gap: 18px;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+.agent-primary-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  padding: 28px;
+}
+.agent-primary-stat > strong {
+  margin-top: 16px;
+  font-size: 52px;
+}
+.agent-secondary-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.agent-secondary-stats .stat-card {
+  min-width: 0;
+}
 .panel {
   padding: 22px;
   margin-bottom: 22px;
@@ -1680,6 +1706,9 @@ td strong {
   .analytics-grid {
     grid-template-columns: 1fr;
   }
+  .agent-dashboard {
+    grid-template-columns: 1fr;
+  }
   .stats-grid,
   .stats-grid.queue-stats,
   .stats-grid.analytics-stats,
@@ -1711,6 +1740,9 @@ td strong {
   .stats-grid.analytics-stats,
   .article-grid,
   .form-row {
+    grid-template-columns: 1fr;
+  }
+  .agent-secondary-stats {
     grid-template-columns: 1fr;
   }
   .admin-hero {

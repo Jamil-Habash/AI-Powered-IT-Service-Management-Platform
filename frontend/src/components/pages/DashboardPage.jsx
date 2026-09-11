@@ -434,9 +434,8 @@ function AgentDashboard({ user }) {
   );
   const openTickets = tickets.filter((ticket) => ticket.status === "OPEN");
   const unassignedTickets = tickets.filter((ticket) => !ticket.assignedAgentName);
-  const inProgressTickets = tickets.filter(
-    (ticket) => ticket.status === "IN_PROGRESS",
-  );
+  const inProgressTickets = tickets.filter((ticket) => ticket.status === "IN_PROGRESS");
+  const resolvedTickets = tickets.filter((tickets) => tickets.status === "RESOLVED");
   const shown = tickets
     .slice()
     .sort((first, second) => {
@@ -476,12 +475,18 @@ function AgentDashboard({ user }) {
           </button>
         }
       />
-      <div className="stats-grid">
+      <div className="agent-dashboard">
+        <section className="stat-card agent-primary-stat">
+          <span>My Assigned</span>
+          <strong>{assignedToMe.length}</strong>
+          <small>assigned to you</small>
+        </section>
+        <div className="agent-secondary-stats">
         {[
           ["Open Queue", openTickets.length, "tickets awaiting action"],
-          ["Unassigned", unassignedTickets.length, "need an owner"],
-          ["My Assigned", assignedToMe.length, "assigned to you"],
           ["In Progress", inProgressTickets.length, "actively being handled"],
+          ["Resolved Tickets", resolvedTickets.length, "already handled"],
+          ["Unassigned", unassignedTickets.length, "need an owner"]
         ].map(([label, value, note]) => (
           <section className="stat-card" key={label}>
             <span>{label}</span>
@@ -489,6 +494,7 @@ function AgentDashboard({ user }) {
             <small>{note}</small>
           </section>
         ))}
+        </div>
       </div>
       <section className="panel">
         <div className="panel-heading">
