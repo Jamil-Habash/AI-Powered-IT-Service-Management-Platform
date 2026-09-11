@@ -1,5 +1,31 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+:root {
+  --bg-page: #f8f9ff;
+  --bg-panel: #ffffff;
+  --bg-panel-alt: #f1f5f9;
+  --text-primary: #0b1c30;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+}
 
+[data-theme="dark"] {
+  --bg-page: #0f172a;
+  --bg-panel: #1e293b;
+  --bg-panel-alt: #273449;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+
+.panel {
+  background: var(--bg-panel);
+  color: var(--text-primary);
+}
 :root {
   font-family: "DM Sans", Inter, ui-sans-serif, system-ui, sans-serif;
   color: #0b1c30;
@@ -2095,4 +2121,305 @@ tbody tr:hover,
   margin: 0;
   color: #6b7280;
   font-size: 14px;
+}
+
+/* Dark theme overrides for the existing light-first component styles. */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0f172a;
+  --surface: #1e293b;
+  --surface-soft: #273449;
+  --surface-muted: #334155;
+  --ink: #e2e8f0;
+  --ink-muted: #94a3b8;
+  --navy: #172554;
+  --navy-deep: #0b1120;
+  --blue: #60a5fa;
+  --blue-soft: #1e3a5f;
+  --border: #3b4b63;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.16);
+  --shadow-md: 0 14px 34px rgba(0, 0, 0, 0.32);
+}
+
+[data-theme="dark"] body,
+[data-theme="dark"] .app-shell {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+[data-theme="dark"] .app-shell {
+  background:
+    linear-gradient(135deg, rgba(30, 58, 95, 0.28), transparent 34%),
+    var(--canvas);
+}
+
+[data-theme="dark"] .topbar {
+  border-bottom-color: rgba(59, 75, 99, 0.9);
+  background: rgba(15, 23, 42, 0.88);
+}
+
+[data-theme="dark"] .top-actions,
+[data-theme="dark"] .top-actions button,
+[data-theme="dark"] .user-name,
+[data-theme="dark"] .icon-button {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .top-actions button:hover,
+[data-theme="dark"] .icon-button:hover {
+  color: #bfdbfe;
+  background: #1e3a5f;
+}
+
+[data-theme="dark"] .panel,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .queue-table-wrap,
+[data-theme="dark"] .admin-directory,
+[data-theme="dark"] .modal,
+[data-theme="dark"] .login-card,
+[data-theme="dark"] .registration-card {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="dark"] .page-header h1,
+[data-theme="dark"] .admin-hero h1,
+[data-theme="dark"] .panel h2,
+[data-theme="dark"] .modal h2,
+[data-theme="dark"] .stat-card > strong,
+[data-theme="dark"] .metadata b,
+[data-theme="dark"] .category-toolbar strong,
+[data-theme="dark"] .admin-stat strong,
+[data-theme="dark"] td strong,
+[data-theme="dark"] .kb-step-content h3 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .page-header p,
+[data-theme="dark"] .panel p,
+[data-theme="dark"] .stat-card > small,
+[data-theme="dark"] .admin-table td small,
+[data-theme="dark"] .kb-step-content p,
+[data-theme="dark"] .kb-still-stuck p,
+[data-theme="dark"] .modal p,
+[data-theme="dark"] .hint,
+[data-theme="dark"] .notification-popover p {
+  color: #a8b4c5;
+}
+
+[data-theme="dark"] .eyebrow,
+[data-theme="dark"] .ticket-id,
+[data-theme="dark"] .text-button,
+[data-theme="dark"] .article small,
+[data-theme="dark"] .queue-ticket-id,
+[data-theme="dark"] .notification-heading button {
+  color: #7db7ff;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea,
+[data-theme="dark"] .admin-search,
+[data-theme="dark"] .category-toolbar input,
+[data-theme="dark"] .queue-search,
+[data-theme="dark"] .filter-row select,
+[data-theme="dark"] .upload,
+[data-theme="dark"] .editor-toolbar {
+  border-color: var(--border);
+  background: #162235;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #7f8da3;
+}
+
+[data-theme="dark"] input:hover,
+[data-theme="dark"] select:hover,
+[data-theme="dark"] textarea:hover {
+  border-color: #6482a8;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] .category-toolbar input:focus,
+[data-theme="dark"] .modal input:focus,
+[data-theme="dark"] .modal textarea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+[data-theme="dark"] .primary-button,
+[data-theme="dark"] .submit-button {
+  background: #2563eb;
+  color: #fff;
+}
+
+[data-theme="dark"] .primary-button:hover,
+[data-theme="dark"] .submit-button:hover {
+  background: #3b82f6;
+}
+
+[data-theme="dark"] .secondary-button {
+  border-color: #526783;
+  background: #24344c;
+  color: #dbeafe;
+}
+
+[data-theme="dark"] .secondary-button:hover {
+  border-color: #7293bd;
+  background: #304968;
+}
+
+[data-theme="dark"] th,
+[data-theme="dark"] .admin-filters,
+[data-theme="dark"] .admin-directory > .queue-pagination {
+  background: #24344c;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] td {
+  border-bottom-color: #334155;
+}
+
+[data-theme="dark"] tbody tr:hover,
+[data-theme="dark"] .admin-user-row:hover,
+[data-theme="dark"] .queue-table tbody tr:hover {
+  background: #24344c;
+}
+
+[data-theme="dark"] .queue-table-wrap,
+[data-theme="dark"] .admin-directory {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .queue-table thead th {
+  background: #172554;
+  color: #dbeafe;
+}
+
+[data-theme="dark"] .queue-subject,
+[data-theme="dark"] .requester-name {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .queue-table td small,
+[data-theme="dark"] .queue-pagination,
+[data-theme="dark"] .rows-per-page,
+[data-theme="dark"] .category-routing,
+[data-theme="dark"] .directory-live,
+[data-theme="dark"] .admin-tabs button {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .queue-tag,
+[data-theme="dark"] .tab-count,
+[data-theme="dark"] .admin-tabs button b,
+[data-theme="dark"] .account-status,
+[data-theme="dark"] .role-badge {
+  background: #30445f;
+  color: #dbeafe;
+  border-color: #4b6382;
+}
+
+[data-theme="dark"] .account-status.inactive,
+[data-theme="dark"] .role-badge {
+  background: #273449;
+  color: #a8b4c5;
+}
+
+[data-theme="dark"] .notification-popover,
+[data-theme="dark"] .notification-item {
+  border-color: var(--border);
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .notification-item:hover {
+  background: #30445f !important;
+}
+
+[data-theme="dark"] .notification-item small {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .metadata,
+[data-theme="dark"] .triage-callout,
+[data-theme="dark"] .comment,
+[data-theme="dark"] .category-toolbar,
+[data-theme="dark"] .ai-panel {
+  background: #1b2b43;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .progress,
+[data-theme="dark"] .bar-row i {
+  background: #30445f;
+}
+
+[data-theme="dark"] .kb-step,
+[data-theme="dark"] .category-row,
+[data-theme="dark"] .card-footer {
+  border-bottom-color: #334155;
+  border-top-color: #334155;
+}
+
+[data-theme="dark"] .kb-step-number {
+  background: #2563eb;
+}
+
+[data-theme="dark"] .login-page,
+[data-theme="dark"] .registration-page {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(37, 99, 235, 0.2), transparent 30%),
+    radial-gradient(circle at 85% 85%, rgba(30, 64, 175, 0.2), transparent 32%),
+    var(--canvas);
+}
+
+[data-theme="dark"] .login-card h1,
+[data-theme="dark"] .registration-card h1,
+[data-theme="dark"] .login-card > p,
+[data-theme="dark"] .registration-card p,
+[data-theme="dark"] .login-card label,
+[data-theme="dark"] .registration-card label,
+[data-theme="dark"] .page-footer,
+[data-theme="dark"] .login-card footer,
+[data-theme="dark"] .card-footer {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .login-card a,
+[data-theme="dark"] .registration-card a {
+  color: #7db7ff;
+}
+
+[data-theme="dark"] .danger-button {
+  background: #57252a;
+  color: #fecaca;
+}
+
+[data-theme="dark"] .success-button,
+[data-theme="dark"] .form-success {
+  color: #bbf7d0;
+}
+
+[data-theme="dark"] .queue-pagination button,
+[data-theme="dark"] .rows-per-page select {
+  border-color: #4b5f7a;
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .queue-pagination button:hover:not(:disabled) {
+  background: #30445f;
+}
+
+[data-theme="dark"] .queue-pagination button.current {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
 }

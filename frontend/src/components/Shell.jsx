@@ -24,15 +24,16 @@ export default function Shell({ children }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [collapsed, setCollapsed] = useState(false); // ← new
+  const [collapsed, setCollapsed] = useState(false);
   const isEmployee = user?.role === "EMPLOYEE";
   const isAdmin = user?.role === "ADMIN";
-  const initials = (user?.name || "User")
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const initials = (user?.name || "User").split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     if (!user?.userId) return undefined;
@@ -220,6 +221,9 @@ export default function Shell({ children }) {
       <div className="app-main">
         <header className="topbar">
           <div className="top-actions">
+            <button aria-label="Toggle dark mode" onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}>
+              <Icon>{theme === "light" ? "dark_mode" : "light_mode"}</Icon>
+            </button>
             <button aria-label="Help and documentation" onClick={() => navigate("/knowledge-base")}>
               <Icon>help</Icon>
             </button>
