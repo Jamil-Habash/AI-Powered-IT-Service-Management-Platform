@@ -9,11 +9,14 @@ import com.smartdesk.project.models.*;
 import com.smartdesk.project.repository.CategoryRepository;
 import com.smartdesk.project.repository.TicketRepository;
 import com.smartdesk.project.repository.UserRepository;
+import com.smartdesk.project.repository.TicketAttachmentRepository;
 import com.smartdesk.project.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import com.smartdesk.project.dto.request.UpdateTicketStatusRequest;
 import com.smartdesk.project.dto.request.UpdateTicketPriorityRequest;
 
@@ -23,15 +26,22 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final TicketAttachmentRepository attachmentRepository;
 
-    public TicketService(TicketRepository ticketRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
+    public TicketService(TicketRepository ticketRepository, CategoryRepository categoryRepository, UserRepository userRepository, TicketAttachmentRepository attachmentRepository) {
         this.ticketRepository = ticketRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
     @Transactional
     public TicketResponse create(CreateTicketRequest request, UserPrincipal currentUser) {
+        return create(request, List.of(), currentUser);
+    }
+
+    @Transactional
+    public TicketResponse create(CreateTicketRequest request, List<MultipartFile> files, UserPrincipal currentUser) {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + request.getCategoryId()));
 
@@ -41,7 +51,28 @@ public class TicketService {
         ticket.setCreatedBy(currentUser.getUser());
 
         Ticket saved = ticketRepository.save(ticket);
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) continue;
+            try {
+                TicketAttachment attachment = new TicketAttachment();
+                attachment.setFileName(file.getOriginalFilename() == null ? "attachment" : file.getOriginalFilename());
+                attachment.setContentType(file.getContentType() == null ? "application/octet-stream" : file.getContentType());
+                attachment.setFileSize(file.getSize());
+                attachment.setData(file.getBytes());
+                attachment.setTicket(saved);
+                attachmentRepository.save(attachment);
+            } catch (IOException exception) {
+                throw new IllegalArgumentException("Unable to read attachment: " + file.getOriginalFilename(), exception);
+            }
+        }
         return TicketResponse.fromEntity(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public TicketAttachment getAttachment(Long ticketId, Long attachmentId, UserPrincipal currentUser) {
+        getById(ticketId, currentUser);
+        return attachmentRepository.findByIdAndTicketId(attachmentId, ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Attachment not found: " + attachmentId));
     }
 
     @Transactional(readOnly = true)

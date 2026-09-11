@@ -3,8 +3,11 @@ package com.smartdesk.project.dto.response;
 import com.smartdesk.project.models.Priority;
 import com.smartdesk.project.models.Ticket;
 import com.smartdesk.project.models.TicketStatus;
+import com.smartdesk.project.models.TicketAttachment;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TicketResponse {
 
@@ -26,6 +29,7 @@ public class TicketResponse {
     private Date createdAt;
     private Date updatedAt;
     private Date resolvedAt;
+    private List<AttachmentResponse> attachments;
 
     public static TicketResponse fromEntity(Ticket ticket) {
         TicketResponse dto = new TicketResponse();
@@ -53,6 +57,9 @@ public class TicketResponse {
         dto.createdAt = ticket.getCreatedAt();
         dto.updatedAt = ticket.getUpdatedAt();
         dto.resolvedAt = ticket.getResolvedAt();
+        dto.attachments = ticket.getAttachments() == null ? List.of() : ticket.getAttachments().stream()
+            .map(AttachmentResponse::fromEntity)
+            .collect(Collectors.toList());
         return dto;
     }
 
@@ -110,5 +117,30 @@ public class TicketResponse {
 
     public Date getResolvedAt() {
          return resolvedAt; 
+    }
+
+    public List<AttachmentResponse> getAttachments() {
+        return attachments;
+    }
+
+    public static class AttachmentResponse {
+        private Long id;
+        private String fileName;
+        private String contentType;
+        private long fileSize;
+
+        private static AttachmentResponse fromEntity(TicketAttachment attachment) {
+            AttachmentResponse response = new AttachmentResponse();
+            response.id = attachment.getId();
+            response.fileName = attachment.getFileName();
+            response.contentType = attachment.getContentType();
+            response.fileSize = attachment.getFileSize();
+            return response;
+        }
+
+        public Long getId() { return id; }
+        public String getFileName() { return fileName; }
+        public String getContentType() { return contentType; }
+        public long getFileSize() { return fileSize; }
     }
 }

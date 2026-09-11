@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import PageHeader from "../components/PageHeader";
@@ -6,6 +6,55 @@ import Shell from "../components/Shell";
 import { getCategories } from "../services/categoryService";
 import { createTicket } from "../services/ticketService";
 import usePageTitle from "../hooks/usePageTitle";
+
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function markdownToHtml(markdown) {
+  return String(markdown || "")
+    .split("\n")
+    .map((line) => {
+      if (/^\s*[-*]\s+/.test(line)) {
+        return `<ul><li>${escapeHtml(line.replace(/^\s*[-*]\s+/, ""))}</li></ul>`;
+      }
+      if (line.trim()) {
+        return `<p>${escapeHtml(line)
+          .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+          .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+          .replace(/`([^`]+)`/g, "<code>$1</code>")}</p>`;
+      }
+      return "<p><br></p>";
+    })
+    .join("");
+}
+
+function htmlToMarkdown(root) {
+  const serialize = (node) => {
+    if (node.nodeType === Node.TEXT_NODE) return node.nodeValue;
+    if (node.nodeType !== Node.ELEMENT_NODE) return "";
+    const content = Array.from(node.childNodes).map(serialize).join("");
+    const tag = node.tagName.toLowerCase();
+    if (tag === "strong" || tag === "b") return `**${content}**`;
+    if (tag === "em" || tag === "i") return `*${content}*`;
+    if (tag === "code") return `\`${content}\``;
+    if (tag === "br") return "\n";
+    if (tag === "li") return `- ${content}\n`;
+    if (tag === "p" || tag === "div") return `${content}\n`;
+    if (tag === "ul" || tag === "ol") return content;
+    return content;
+  };
+
+  return Array.from(root.childNodes)
+    .map(serialize)
+    .join("")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
 
 export default function CreateTicketPage() {
   usePageTitle("Create a support Ticket");
@@ -15,10 +64,12 @@ export default function CreateTicketPage() {
   const [priority, setPriority] = useState("MEDIUM");
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const editorRef = useRef(null);
 
   useEffect(() => {
     const draft = localStorage.getItem("smartdesk_ticket_draft");
@@ -29,6 +80,7 @@ export default function CreateTicketPage() {
       setCategory(saved.category || "");
       setPriority(saved.priority || "MEDIUM");
       setDescription(saved.description || "");
+      if (editorRef.current) editorRef.current.innerHTML = markdownToHtml(saved.description || "");
     } catch {
       localStorage.removeItem("smartdesk_ticket_draft");
     }
@@ -80,7 +132,7 @@ export default function CreateTicketPage() {
         description,
         categoryId: Number(category),
         priority,
-      });
+      }, files);
       localStorage.removeItem("smartdesk_ticket_draft");
       navigate(`/ticket/${response.data.id}`);
     } catch (err) {
@@ -88,6 +140,24 @@ export default function CreateTicketPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const runEditorCommand = (command, value) => {
+    editorRef.current?.focus();
+    document.execCommand(command, false, value);
+    if (editorRef.current) setDescription(htmlToMarkdown(editorRef.current));
+  };
+
+  const updateDescription = () => {
+    if (editorRef.current) setDescription(htmlToMarkdown(editorRef.current));
+  };
+
+  const acceptFiles = (selectedFiles) => {
+    const validFiles = Array.from(selectedFiles).filter((file) => file.size <= 25 * 1024 * 1024);
+    if (validFiles.length !== selectedFiles.length) {
+      setError("Each attachment must be 25 MB or smaller.");
+    }
+    setFiles((current) => [...current, ...validFiles]);
   };
   return (
     <Shell>
@@ -158,31 +228,56 @@ export default function CreateTicketPage() {
           <label>
             Description
             <div className="editor-toolbar" aria-label="Formatting tools">
-              <button type="button" title="Bold" onClick={() => setDescription((value) => `${value}**bold text**`)}><Icon>format_bold</Icon></button>
-              <button type="button" title="Italic" onClick={() => setDescription((value) => `${value}*italic text*`)}><Icon>format_italic</Icon></button>
-              <button type="button" title="Bullet list" onClick={() => setDescription((value) => `${value}\n- `)}><Icon>format_list_bulleted</Icon></button>
-              <button type="button" title="Code block" onClick={() => setDescription((value) => `${value}\n\`\`\`\n\`\`\``)}><Icon>code</Icon></button>
+              <button type="button" title="Bold" onMouseDown={(event) => event.preventDefault()} onClick={() => runEditorCommand("bold")}><Icon>format_bold</Icon></button>
+              <button type="button" title="Italic" onMouseDown={(event) => event.preventDefault()} onClick={() => runEditorCommand("italic")}><Icon>format_italic</Icon></button>
+              <button type="button" title="Bullet list" onMouseDown={(event) => event.preventDefault()} onClick={() => runEditorCommand("insertUnorderedList")}><Icon>format_list_bulleted</Icon></button>
+              <button type="button" title="Code block" onMouseDown={(event) => event.preventDefault()} onClick={() => runEditorCommand("formatBlock", "pre")}><Icon>code</Icon></button>
             </div>
-            <textarea
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              placeholder="Describe the issue in detail..."
-              rows="7"
-              required
+            <div
+              id="ticket-description"
+              ref={editorRef}
+              className="description-editor"
+              contentEditable
+              role="textbox"
+              aria-multiline="true"
+              aria-label="Ticket description"
+              data-placeholder="Describe the issue in detail..."
+              onInput={updateDescription}
+              onBlur={updateDescription}
+              suppressContentEditableWarning
             />
+            <input type="hidden" name="description" value={description} readOnly />
           </label>
-          <label className="upload">
+          <label
+            className={`upload ${isDragging ? "is-dragging" : ""}`}
+            onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={(event) => { event.preventDefault(); setIsDragging(false); acceptFiles(event.dataTransfer.files); }}
+          >
             <Icon>cloud_upload</Icon>Attach screenshots or logs
             <input
               type="file"
               multiple
-              onChange={(event) => setFiles([...event.target.files])}
+              accept="image/*,.pdf,.log,.txt,.csv,.doc,.docx"
+              onChange={(event) => { acceptFiles(event.target.files); event.target.value = ""; }}
             />
             <small>
               {files.length
-                ? `${files.length} file(s) attached`
+                ? `${files.length} file(s) attached. Click to add more.`
                 : "PNG, JPG, PDF, LOG up to 25MB"}
             </small>
+            {files.length > 0 && (
+              <ul className="selected-files">
+                {files.map((file, index) => (
+                  <li key={`${file.name}-${index}`}>
+                    <span>{file.name}</span>
+                    <button type="button" onClick={(event) => { event.preventDefault(); setFiles((current) => current.filter((_, fileIndex) => fileIndex !== index)); }} aria-label={`Remove ${file.name}`}>
+                      <Icon>close</Icon>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </label>
           <section className="triage-callout">
             <Icon>auto_awesome</Icon>

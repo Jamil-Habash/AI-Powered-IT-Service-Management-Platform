@@ -6,11 +6,13 @@ import Shell from "../components/Shell";
 import { useAuth } from "../context/AuthContext";
 import {
   getTicket,
+  downloadAttachment,
   assignTicket,
   resolveTicket,
   updateTicketPriority,
   updateTicketStatus,
 } from "../services/ticketService";
+import MarkdownContent from "../components/MarkdownContent";
 import {getAgents} from "../services/userService";
 import { getComments, addComment } from "../services/commentService";
 import usePageTitle from "../hooks/usePageTitle";
@@ -27,6 +29,7 @@ export default function TicketDetailPage() {
   const [comments, setComments] = useState([]);
   const [sendingReply, setSendingReply] = useState(false);
   const [agents, setAgents] = useState([]);
+  const [attachmentError, setAttachmentError] = useState("");
 
   usePageTitle(
     ticket ? `Ticket ${id} ${ticket.title}` : `Ticket ${id}`
@@ -97,6 +100,24 @@ export default function TicketDetailPage() {
     }
   };
 
+  const openAttachment = async (attachment) => {
+    setAttachmentError("");
+    try {
+      const response = await downloadAttachment(id, attachment.id);
+      const url = URL.createObjectURL(response.data);
+      window.open(url, "_blank", "noopener,noreferrer");
+      window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    } catch {
+      setAttachmentError("Unable to open this attachment.");
+    }
+  };
+
+  const formatFileSize = (bytes) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
   if (error) return <Shell><p className="form-error">{error}</p></Shell>;
   if (!ticket) return <Shell><p>Loading ticket...</p></Shell>;
 
@@ -117,9 +138,6 @@ export default function TicketDetailPage() {
             </button>
             <button className="secondary-button" onClick={() => exportTicketPdf(ticket, comments)}>
               <Icon>picture_as_pdf</Icon>Export PDF
-            </button>
-            <button className="secondary-button" onClick={() => navigator.clipboard?.writeText(window.location.href)}>
-              <Icon>share</Icon>Share
             </button>
           </div>
         }
@@ -162,9 +180,30 @@ export default function TicketDetailPage() {
           </section>
           <section className="panel">
             <h2>Issue Description</h2>
-            <p>
-              {ticket.description}
-            </p>
+            <MarkdownContent>{ticket.description}</MarkdownContent>
+            {ticket.attachments?.length > 0 && (
+              <div className="attachments-section">
+                <div className="panel-heading">
+                  <h3>Attachments</h3>
+                  <small>{ticket.attachments.length} file{ticket.attachments.length === 1 ? "" : "s"}</small>
+                </div>
+                <div className="attachments-list">
+                  {ticket.attachments.map((attachment) => (
+                    <div className="attachment-item" key={attachment.id}>
+                      <Icon>{attachment.contentType?.startsWith("image/") ? "image" : "description"}</Icon>
+                      <div>
+                        <strong>{attachment.fileName}</strong>
+                        <small>{formatFileSize(attachment.fileSize)}</small>
+                      </div>
+                      <button type="button" className="icon-button" title="Open attachment" onClick={() => openAttachment(attachment)}>
+                        <Icon>open_in_new</Icon>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {attachmentError && <p className="form-error">{attachmentError}</p>}
+              </div>
+            )}
           </section>
           <section className="panel">
             <div className="panel-heading">

@@ -135,20 +135,6 @@ export default function AnalyticsPage() {
         <section className="panel chart">
           <div className="panel-heading">
             <h2>Tickets by Category</h2>
-            <div className="tabs">
-              <button
-                className={metric === "volume" ? "selected" : ""}
-                onClick={() => setMetric("volume")}
-              >
-                Volume
-              </button>
-              <button
-                className={metric === "sla" ? "selected" : ""}
-                onClick={() => setMetric("sla")}
-              >
-                SLA Breach %
-              </button>
-            </div>
           </div>
           {categoryCounts.map(([name, value]) => (
             <div className="bar-row" key={name}>

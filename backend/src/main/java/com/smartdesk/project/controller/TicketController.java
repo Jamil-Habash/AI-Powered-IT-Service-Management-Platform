@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import com.smartdesk.project.dto.request.UpdateTicketStatusRequest;
 import com.smartdesk.project.dto.request.UpdateTicketPriorityRequest;
 import java.util.List;
+import com.smartdesk.project.models.TicketAttachment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -24,9 +28,11 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @PostMapping
-    public ResponseEntity<TicketResponse> create(@Valid @RequestBody CreateTicketRequest request, @AuthenticationPrincipal UserPrincipal currentUser) {
-        TicketResponse response = ticketService.create(request, currentUser);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<TicketResponse> create(@RequestPart("ticket") @Valid CreateTicketRequest request,
+                                                  @RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                                  @AuthenticationPrincipal UserPrincipal currentUser) {
+        TicketResponse response = ticketService.create(request, files == null ? List.of() : files, currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -38,6 +44,17 @@ public class TicketController {
     @GetMapping("/{id}")
     public ResponseEntity<TicketResponse> getById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal currentUser) {
         return ResponseEntity.ok(ticketService.getById(id, currentUser));
+    }
+
+    @GetMapping("/{ticketId}/attachments/{attachmentId}")
+    public ResponseEntity<byte[]> getAttachment(@PathVariable Long ticketId, @PathVariable Long attachmentId,
+                                                 @AuthenticationPrincipal UserPrincipal currentUser) {
+        TicketAttachment attachment = ticketService.getAttachment(ticketId, attachmentId, currentUser);
+        MediaType contentType = MediaType.parseMediaType(attachment.getContentType());
+        return ResponseEntity.ok()
+                .contentType(contentType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + attachment.getFileName().replace("\"", "") + "\"")
+                .body(attachment.getData());
     }
 
     @PatchMapping("/{id}/assign")

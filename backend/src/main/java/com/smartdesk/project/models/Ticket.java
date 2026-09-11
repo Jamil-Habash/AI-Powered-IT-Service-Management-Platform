@@ -15,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +45,9 @@ public class Ticket {
 
     @OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TicketAttachment> attachments;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -136,6 +140,14 @@ public class Ticket {
 
     public void setComments(List<Comment> comments){
         this.comments = comments;
+    }
+
+    public List<TicketAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<TicketAttachment> attachments) {
+        this.attachments = attachments;
     }
 
     public Category getCategory(){

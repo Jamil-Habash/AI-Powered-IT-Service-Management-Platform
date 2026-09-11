@@ -766,6 +766,8 @@ td strong {
   resize: vertical;
 }
 .upload {
+  position: relative;
+  cursor: pointer;
   align-items: center;
   padding: 22px;
   border: 2px dashed #c4c6d0;
@@ -773,12 +775,50 @@ td strong {
   text-align: center;
   color: #0058be;
 }
+.upload.is-dragging,
+.upload:hover {
+  background: #dceaff;
+  border-color: #2d72dc;
+}
 .upload input {
   display: none;
 }
 .upload small {
   color: #44474f;
   font-size: 11px;
+}
+.selected-files {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+.selected-files li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 9px;
+  border-radius: 6px;
+  background: #fff;
+  color: #334155;
+  font-size: 12px;
+}
+.selected-files li span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.selected-files button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  background: transparent;
 }
 .editor-toolbar {
   display: flex;
@@ -798,8 +838,124 @@ td strong {
   color: #44474f;
   background: transparent;
 }
-.editor-toolbar + textarea {
+.description-editor {
+  position: relative;
+  min-height: 168px;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
   border-radius: 0 0 6px 6px;
+  background: #fff;
+  color: #0f172a;
+  outline: none;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.description-editor:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+}
+.description-editor:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px #dbeafe;
+}
+.description-editor p {
+  margin: 0 0 8px;
+}
+.description-editor ul {
+  margin: 0 0 8px;
+  padding-left: 22px;
+}
+.description-editor pre {
+  margin: 0 0 8px;
+  padding: 10px;
+  border-radius: 5px;
+  background: #0b1c30;
+  color: #e2e8f0;
+  overflow-x: auto;
+}
+.markdown-content {
+  color: #44474f;
+  line-height: 1.7;
+}
+.markdown-content p {
+  margin: 0 0 10px;
+  white-space: pre-wrap;
+}
+.markdown-content ul {
+  margin: 0 0 10px;
+  padding-left: 22px;
+}
+.markdown-content code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: #eff4ff;
+  color: #03224d;
+  font-family: monospace;
+  font-size: 0.92em;
+}
+.markdown-content pre {
+  margin: 0 0 10px;
+  padding: 12px;
+  overflow-x: auto;
+  border-radius: 6px;
+  background: #0b1c30;
+  color: #e2e8f0;
+}
+.markdown-content pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+.markdown-spacer {
+  height: 8px;
+}
+.attachments-section {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #eff4ff;
+}
+.attachments-section h3 {
+  margin: 0;
+  color: #03224d;
+  font-size: 14px;
+}
+.attachments-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.attachment-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 7px;
+  background: #eff4ff;
+}
+.attachment-item > .material-symbols-outlined {
+  color: #0058be;
+}
+.attachment-item > div {
+  min-width: 0;
+  flex: 1;
+}
+.attachment-item strong,
+.attachment-item small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.attachment-item strong {
+  color: #0b1c30;
+  font-size: 12px;
+}
+.attachment-item small {
+  color: #64748b;
+  margin-top: 3px;
+  font-size: 10px;
 }
 .triage-callout {
   display: flex;
