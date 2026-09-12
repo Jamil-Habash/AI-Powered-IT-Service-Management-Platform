@@ -3,14 +3,20 @@ import { loginUser } from "../services/authService";
 
 const AuthContext = createContext(null);
 
-function getStoredValue(key) {
-  return localStorage.getItem(key) || sessionStorage.getItem(key);
+function getStoredSession() {
+  for (const storage of [localStorage, sessionStorage]) {
+    const token = storage.getItem("smartdesk_token");
+    const user = storage.getItem("smartdesk_user");
+    if (token && user) {
+      return { token, user: JSON.parse(user) };
+    }
+  }
+  return null;
 }
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const stored = getStoredValue("smartdesk_user");
-    return stored ? JSON.parse(stored) : null;
+    return getStoredSession()?.user || null;
   });
 
   const login = async (email, password, rememberMe) => {

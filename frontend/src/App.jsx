@@ -11,6 +11,7 @@ import TicketsPage from "./pages/TicketsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import KnowledgeBaseArticlePage from "./pages/KnowledgeBaseArticlePage";
+import AdminAuditLog from "./pages/AdminAuditLog";
 import "./App.css";
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/knowledge-base" element={<ProtectedRoute><KnowledgeBasePage /></ProtectedRoute>} />
           <Route path="/knowledge-base/:id" element={<ProtectedRoute><KnowledgeBaseArticlePage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+          <Route path="/audit-logs" element={<ProtectedRoute role="ADMIN"><AdminAuditLog /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>

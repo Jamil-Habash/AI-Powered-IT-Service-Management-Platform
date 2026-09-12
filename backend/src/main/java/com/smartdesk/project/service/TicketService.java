@@ -4,6 +4,7 @@ import com.smartdesk.project.dto.request.AssignTicketRequest;
 import com.smartdesk.project.dto.request.CreateTicketRequest;
 import com.smartdesk.project.dto.response.TicketResponse;
 import com.smartdesk.project.exception.ExceptionsHandler.ResourceNotFoundException;
+
 import org.springframework.security.access.AccessDeniedException;
 import com.smartdesk.project.models.*;
 import com.smartdesk.project.repository.CategoryRepository;
@@ -27,12 +28,15 @@ public class TicketService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final TicketAttachmentRepository attachmentRepository;
+    private final AuditLogService auditLogService;
 
-    public TicketService(TicketRepository ticketRepository, CategoryRepository categoryRepository, UserRepository userRepository, TicketAttachmentRepository attachmentRepository) {
+    public TicketService(TicketRepository ticketRepository, CategoryRepository categoryRepository, 
+        UserRepository userRepository, TicketAttachmentRepository attachmentRepository, AuditLogService auditLogService) {
         this.ticketRepository = ticketRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.attachmentRepository = attachmentRepository;
+        this.auditLogService = auditLogService;
     }
 
     @Transactional
@@ -128,6 +132,7 @@ public class TicketService {
 
         ticket.setAssignedAgent(agent);
         Ticket saved = ticketRepository.save(ticket);
+        auditLogService.log("Assign", "TICKET", ticket.getId(), "Assigned to " + agent.getName(), currentUser.getUser());
         return TicketResponse.fromEntity(saved);
     }
 
@@ -145,6 +150,7 @@ public class TicketService {
         }
 
         Ticket saved = ticketRepository.save(ticket);
+        auditLogService.log("STATUS_CHANGE", "TICKET", ticket.getId(), "Status Change to " + request.getStatus(), currentUser.getUser());
         return TicketResponse.fromEntity(saved);
     }
 
@@ -157,6 +163,7 @@ public class TicketService {
 
         ticket.setPriority(request.getPriority());
         Ticket saved = ticketRepository.save(ticket);
+        auditLogService.log("PRIORITY_CHANGE", "TICKET", ticket.getId(), "Priority changed to  " + request.getPriority(), currentUser.getUser());
         return TicketResponse.fromEntity(saved);
     }
 
@@ -171,6 +178,7 @@ public class TicketService {
         ticket.setResolvedAt(new java.util.Date());
 
         Ticket saved = ticketRepository.save(ticket);
+        auditLogService.log("RESOLVE", "TICKET", ticket.getId(), "Ticket Resolved", currentUser.getUser());
         return TicketResponse.fromEntity(saved);
     }
 }

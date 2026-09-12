@@ -2,7 +2,6 @@ package com.smartdesk.project.service;
 
 import com.smartdesk.project.dto.request.CreateCategoryRequest;
 import com.smartdesk.project.dto.response.CategoryResponse;
-import com.smartdesk.project.dto.response.UserResponse;
 import com.smartdesk.project.exception.ExceptionsHandler.ResourceNotFoundException;
 import com.smartdesk.project.models.Category;
 import com.smartdesk.project.repository.CategoryRepository;

@@ -164,6 +164,9 @@ function AdminDashboard() {
             <button className="secondary-button" onClick={() => navigate("/tickets")}>
               <Icon>confirmation_number</Icon>Manage Tickets
             </button>
+            <button className="secondary-button" onClick={() => navigate("/audit-logs")} type="button">
+              <Icon>history</Icon><span>Audit Log</span>
+            </button>
             <button className="primary-button" onClick={() => navigate("/register")}>
               <Icon>person_add</Icon>Add New User
             </button>
