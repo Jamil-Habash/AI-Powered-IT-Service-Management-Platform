@@ -25,11 +25,17 @@ public class ExceptionsHandler {
     }
 
     public static class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String message) {
-        super(message);
+        public ResourceNotFoundException(String message) {
+            super(message);
+        }
     }
 
-}
+    public static class EmailNotVerifiedException extends RuntimeException {
+        public EmailNotVerifiedException() {
+            super("Please verify your email before logging in.");
+        }
+    }
+
 
     @RestControllerAdvice
     public static class GlobalExceptionHandler {
@@ -68,6 +74,13 @@ public class ExceptionsHandler {
             Map<String, String> body = new HashMap<>();
             body.put("error", ex.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+        }
+
+        @ExceptionHandler(EmailNotVerifiedException.class)
+        public ResponseEntity<Map<String, String>> handleNotVerified(EmailNotVerifiedException ex) {
+            Map<String, String> body = new HashMap<>();
+            body.put("error", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
         }
     }
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Light_LOGO_SRC, Dark_LOGO_SRC } from "../components/Shell";
 import { useAuth } from "../context/AuthContext";
 import usePageTitle from "../hooks/usePageTitle";
@@ -15,6 +15,10 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const theme = localStorage.getItem("theme") || "light"
+  const location = useLocation();
+  const [successMessage, setSuccessMessage] = useState(
+    location.state?.message || ""
+  );
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -43,6 +47,11 @@ export default function LoginPage() {
         <p>IT Service Management Platform</p>
 
         {error && <p className="form-error">{error}</p>}
+        {successMessage && (
+          <p className="form-success">
+            {successMessage}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit}>
           <label>
@@ -65,6 +74,9 @@ export default function LoginPage() {
               />
             </div>
           </label>
+          <div style={{ textAlign: "right", marginTop: "-8px", marginBottom: "8px" }}>
+            <Link to="/forgot-password" style={{ fontSize: "13px" }}>Forgot password?</Link>
+          </div>
           <label className="remember">
             <input
               type="checkbox"
@@ -81,7 +93,7 @@ export default function LoginPage() {
           Not registered yet?{" "}
           <Link to="/register">Register with your work email</Link>
         </p>
-        <footer>
+        <footer >
           <a href="#privacy">Privacy Policy</a>
           <a href="#terms">Terms of Service</a>
           <a href="#help">Help Center</a>

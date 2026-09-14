@@ -30,6 +30,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private Boolean active = true;
+    @Column(nullable = false)
+    private Boolean emailVerified = false;
 
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<Ticket> tickets;
@@ -45,6 +47,9 @@ public class User {
     private Date createdAt;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
+
+    private String resetToken;
+    private Date resetTokenExpiry;
 
     public User() {
 
@@ -136,5 +141,27 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = new Date();
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified != null && emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getResetToken() { 
+        return resetToken; 
+    }
+    public void setResetToken(String resetToken) { 
+        this.resetToken = resetToken; 
+    }
+
+    public Date getResetTokenExpiry() { 
+        return resetTokenExpiry; 
+    }
+    public void setResetTokenExpiry(Date resetTokenExpiry) { 
+        this.resetTokenExpiry = resetTokenExpiry; 
     }
 }

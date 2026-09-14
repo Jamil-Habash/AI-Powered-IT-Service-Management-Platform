@@ -9,6 +9,7 @@ public class UserResponse {
     private String email;
     private Role role;
     private boolean active;
+    private boolean verified;
 
     public static UserResponse fromEntity(User user){
         UserResponse dto = new UserResponse();
@@ -17,6 +18,7 @@ public class UserResponse {
         dto.email = user.getEmail();
         dto.role = user.getRole();
         dto.active = user.isActive();
+        dto.verified = user.isEmailVerified();
         return dto;
     }
 
@@ -35,5 +37,9 @@ public class UserResponse {
 
     public boolean isActive() {
         return active;
+    }
+
+    public boolean isEmailVerified() {
+        return verified;
     }
 }
