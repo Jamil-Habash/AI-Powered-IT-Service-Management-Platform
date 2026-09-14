@@ -5,7 +5,13 @@ import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
 import TicketTable from "../components/TicketTable";
 import { useAuth } from "../context/AuthContext";
-import { getTickets } from "../services/ticketService";
+import {
+  assignTicket,
+  getTickets,
+  getAgents,
+  updateTicketPriority,
+  updateTicketStatus,
+} from "../services/ticketService";
 import usePageTitle from "../hooks/usePageTitle";
 
 export default function TicketsPage() {
@@ -20,7 +26,13 @@ export default function TicketsPage() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [assigneeFilter, setAssigneeFilter] = useState("");
   const [tickets, setTickets] = useState([]);
+  const [agents, setAgents] = useState([]);
   const [error, setError] = useState("");
+  const [selectedTicketsIds, setSelectedTicketsIds] = useState([]);
+  const [bulkAssignee, setBulkAssignee] = useState("");
+  const [bulkPriority, setBulkPriority] = useState("");
+  const [bulkStatus, setBulkStatus] = useState("");
+  const [bulkSaving, setBulkSaving] = useState(false);
 
   useEffect(() => {
     getTickets()
@@ -32,6 +44,17 @@ export default function TicketsPage() {
       })
       .catch(() => setError("Unable to load tickets. Please try again."));
   }, []);
+
+  useEffect(() => {
+        getAgents()
+          .then((response) => {
+            const data = Array.isArray(response.data)
+              ? response.data
+              : response.data?.content || [];
+            setAgents(data);
+          })
+          .catch(() => {});
+      }, []);
 
   const unassignedCount = tickets.filter((t) => !t.assignedAgentName).length;
   const highCriticalCount = tickets.filter(
@@ -79,6 +102,38 @@ export default function TicketsPage() {
       ticket.createdAt,
       ticket.createdByName,
     ]);
+
+  const selectedTickets = tickets.filter((ticket) => selectedTicketsIds.includes(ticket.id));
+
+  const updateSelectedTickets = (responses) => {
+    const updates = responses.map(({ data }) => data);
+    setTickets((current) => current.map((ticket) => {
+      const updated = updates.find((item) => item.id === ticket.id);
+      return updated || ticket;
+    }));
+    setSelectedTicketsIds([]);
+  };
+
+  const applyBulkAction = async () => {
+    if (!selectedTickets.length || (!bulkAssignee && !bulkPriority && !bulkStatus)) return;
+    setBulkSaving(true);
+    setError("");
+    try {
+      const responses = await Promise.all(selectedTickets.map((ticket) => {
+        if (bulkAssignee) return assignTicket(ticket.id, Number(bulkAssignee));
+        if (bulkPriority) return updateTicketPriority(ticket.id, bulkPriority);
+        return updateTicketStatus(ticket.id, bulkStatus);
+      }));
+      updateSelectedTickets(responses);
+      setBulkAssignee("");
+      setBulkPriority("");
+      setBulkStatus("");
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to update all selected tickets.");
+    } finally {
+      setBulkSaving(false);
+    }
+  };
   return (
     <Shell>
       {user?.role == "EMPLOYEE" && (
@@ -188,11 +243,55 @@ export default function TicketsPage() {
           </button>
         </div>
         {error && <p className="form-error">{error}</p>}
+        {user?.role !== "EMPLOYEE" && selectedTickets.length > 0 && (
+          <div className="bulk-toolbar" aria-live="polite">
+            <strong>{selectedTickets.length} selected</strong>
+            <select value={bulkAssignee} onChange={(event) => {
+              setBulkAssignee(event.target.value);
+              setBulkPriority("");
+              setBulkStatus("");
+            }} disabled={bulkSaving} aria-label="Assign selected tickets">
+              <option value="">Assign to...</option>
+              {agents.map((agent) => <option value={agent.id} key={agent.id}>{agent.name}</option>)}
+            </select>
+            <select value={bulkPriority} onChange={(event) => {
+              setBulkPriority(event.target.value);
+              setBulkAssignee("");
+              setBulkStatus("");
+            }} disabled={bulkSaving} aria-label="Set priority for selected tickets">
+              <option value="">Set priority...</option>
+              <option value="CRITICAL">Critical</option>
+              <option value="HIGH">High</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="LOW">Low</option>
+            </select>
+            <select value={bulkStatus} onChange={(event) => {
+              setBulkStatus(event.target.value);
+              setBulkAssignee("");
+              setBulkPriority("");
+            }} disabled={bulkSaving} aria-label="Set status for selected tickets">
+              <option value="">Set status...</option>
+              <option value="OPEN">Open</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="RESOLVED">Resolved</option>
+            </select>
+            <button className="primary-button" onClick={applyBulkAction} disabled={bulkSaving || (!bulkAssignee && !bulkPriority && !bulkStatus)}>
+              {bulkSaving ? "Applying..." : "Apply"}
+            </button>
+            <button className="text-button" onClick={() => setSelectedTicketsIds([])} disabled={bulkSaving}>Clear</button>
+          </div>
+        )}
         {!error && rows.length > 0 && (
           <TicketTable
             rows={rows}
             variant="queue"
             onSelect={(ticketId) => navigate(`/ticket/${ticketId}`)}
+            selectable={user?.role !== "EMPLOYEE"}
+            selectedIds={selectedTicketsIds}
+            onToggleSelection={(ticketId) => setSelectedTicketsIds((current) => current.includes(ticketId)
+              ? current.filter((id) => id !== ticketId)
+              : [...current, ticketId])}
+            onSelectionChange={setSelectedTicketsIds}
           />
         )}
         {!error && rows.length === 0 && <p>No tickets found.</p>}

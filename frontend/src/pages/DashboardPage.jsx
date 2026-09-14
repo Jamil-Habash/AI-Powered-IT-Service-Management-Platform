@@ -38,6 +38,9 @@ function AdminDashboard() {
   const [userForm, setUserForm] = useState({ name: "", email: "", password: "", role: "EMPLOYEE" });
   const [userModalError, setUserModalError] = useState("");
   const [savingUser, setSavingUser] = useState(false);
+  const [selectedUserIds, setSelectedUserIds] = useState([]);
+  const [bulkRole, setBulkRole] = useState("");
+  const [bulkSaving, setBulkSaving] = useState(false);
   const pageSize = 7;
 
   useEffect(() => {
@@ -68,12 +71,84 @@ function AdminDashboard() {
   });
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
   const visible = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const visibleUserIds = visible.filter((item) => item.id).map((item) => item.id);
+  const selectedUsers = users.filter((item) => selectedUserIds.includes(item.id));
+  const allVisibleSelected = visibleUserIds.length > 0 && visibleUserIds.every((id) => selectedUserIds.includes(id));
 
   const resetFilters = () => {
     setSearch("");
     setDepartment("");
     setStatus("");
     setPage(1);
+  };
+
+  const toggleUserSelection = (id) => {
+    setSelectedUserIds((current) => current.includes(id)
+      ? current.filter((selectedId) => selectedId !== id)
+      : [...current, id]);
+  };
+
+  const toggleVisibleSelection = () => {
+    setSelectedUserIds((current) => allVisibleSelected
+      ? current.filter((id) => !visibleUserIds.includes(id))
+      : [...new Set([...current, ...visibleUserIds])]);
+  };
+
+  const bulkDeactivateUsers = async () => {
+    if (!selectedUsers.length || !window.confirm(`Deactivate ${selectedUsers.length} selected account${selectedUsers.length === 1 ? "" : "s"}?`)) return;
+    setBulkSaving(true);
+    setError("");
+    try {
+      const responses = await Promise.all(selectedUsers.map((item) => deactivateUser(item.id)));
+      setUsers((current) => current.map((item) => {
+        const response = responses.find(({ data }) => data.id === item.id);
+        return response ? response.data : item;
+      }));
+      setSelectedUserIds([]);
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to deactivate all selected accounts.");
+    } finally {
+      setBulkSaving(false);
+    }
+  };
+
+  const bulkActivateUsers = async () => {
+    if (!selectedUsers.length || !window.confirm(`Deactivate ${selectedUsers.length} selected account${selectedUsers.length === 1 ? "" : "s"}?`)) return;
+    setBulkSaving(true);
+    setError("");
+    try {
+      const responses = await Promise.all(selectedUsers.map((item) => activateUser(item.id)));
+      setUsers((current) => current.map((item) => {
+        const response = responses.find(({ data }) => data.id === item.id);
+        return response ? response.data : item;
+      }));
+      setSelectedUserIds([]);
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to activate all selected accounts.");
+    } finally {
+      setBulkSaving(false);
+    }
+  };
+
+  const bulkChangeRole = async () => {
+    if (!selectedUsers.length || !bulkRole) return;
+    setBulkSaving(true);
+    setError("");
+    try {
+      const responses = await Promise.all(selectedUsers.map((item) =>
+        adminUpdateUser(item.id, item.name || "", item.email || "", "", bulkRole)
+      ));
+      setUsers((current) => current.map((item) => {
+        const response = responses.find(({ data }) => data.id === item.id);
+        return response ? response.data : item;
+      }));
+      setSelectedUserIds([]);
+      setBulkRole("");
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to change the role for all selected accounts.");
+    } finally {
+      setBulkSaving(false);
+    }
   };
 
   const openUserEditor = (item) => {
@@ -202,6 +277,7 @@ function AdminDashboard() {
                 onClick={() => {
                   setTab(value);
                   setPage(1);
+                  setSelectedUserIds([]);
                 }}
               >
                 <Icon>{icon}</Icon>
@@ -245,11 +321,41 @@ function AdminDashboard() {
           {error && <p className="form-error">{error}</p>}
           {loading && <p>Loading user directory...</p>}
 
+          {selectedUsers.length > 0 && (
+            <div className="bulk-toolbar" aria-live="polite">
+              <strong>{selectedUsers.length} selected</strong>
+              <button className="danger-button" onClick={bulkDeactivateUsers} disabled={bulkSaving}>
+                <Icon>block</Icon>Deactivate Selected
+              </button>
+              <button className="success-button" onClick={bulkActivateUsers} disabled={bulkSaving}>
+                <Icon>check_circle</Icon>Activate Selected
+              </button>
+              <select value={bulkRole} onChange={(event) => setBulkRole(event.target.value)} disabled={bulkSaving} aria-label="New role for selected users">
+                <option value="">Change role...</option>
+                <option value="EMPLOYEE">Employee</option>
+                <option value="IT_AGENT">IT Agent</option>
+                <option value="ADMIN">Administrator</option>
+              </select>
+              <button className="secondary-button" onClick={bulkChangeRole} disabled={bulkSaving || !bulkRole}>
+                {bulkSaving ? "Applying..." : "Apply Role"}
+              </button>
+              <button className="text-button" onClick={() => setSelectedUserIds([])} disabled={bulkSaving}>Clear</button>
+            </div>
+          )}
+
           {!loading && !error && (
             <div className="admin-table-scroll">
               <table className="admin-table">
                 <thead>
                   <tr>
+                    <th className="selection-cell">
+                      <input
+                        type="checkbox"
+                        checked={allVisibleSelected}
+                        onChange={toggleVisibleSelection}
+                        aria-label="Select all visible users"
+                      />
+                    </th>
                     <th>Employee / Dept</th>
                     <th>Email Address</th>
                     <th>Account Status</th>
@@ -265,12 +371,24 @@ function AdminDashboard() {
                     );
                     const isUser = tab !== "assigned" && item.id;
                     const isActive = item.active !== false;
+                    const isSelected = selectedUserIds.includes(item.id);
                     return (
                       <tr
                         key={item.id}
                         className={isUser ? "admin-user-row" : ""}
                         onClick={() => openUserEditor(item)}
                       >
+                        <td className="selection-cell">
+                          {isUser && (
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleUserSelection(item.id)}
+                              onClick={(event) => event.stopPropagation()}
+                              aria-label={`Select ${item.name || "user"}`}
+                            />
+                          )}
+                        </td>
                         <td>
                           <strong>{item.name || item.assignedAgentName}</strong>
                           <small>{item.department || (item.role === "IT_AGENT" ? "IT Operations" : "Employee")}</small>
@@ -384,7 +502,7 @@ function AdminDashboard() {
                 <button type="button" className="danger-button" disabled={savingUser || selectedUser.active === false} onClick={deactivateSelectedUser}>
                   Deactivate
                 </button>
-                <button type="button" className="danger-button" disabled={savingUser || selectedUser.active === true} onClick={activateSelectedUser}>
+                <button type="button" className="success-button" disabled={savingUser || selectedUser.active === true} onClick={activateSelectedUser}>
                   Activate
                 </button>
                 <span className="form-actions-spacer" />

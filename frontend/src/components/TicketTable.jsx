@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Icon from "./Icon";
 
-export default function TicketTable({ rows, onSelect, variant = "default" }) {
+export default function TicketTable({ rows, onSelect, variant = "default", selectable = false, selectedIds = [], onToggleSelection, onSelectionChange }) {
   if (variant === "queue") {
-    return <QueueTicketTable rows={rows} onSelect={onSelect} />;
+    return <QueueTicketTable rows={rows} onSelect={onSelect} selectable={selectable} selectedIds={selectedIds} onToggleSelection={onToggleSelection} onSelectionChange={onSelectionChange} />;
   }
 
   return (
@@ -58,11 +58,13 @@ export default function TicketTable({ rows, onSelect, variant = "default" }) {
   );
 }
 
-function QueueTicketTable({ rows, onSelect }) {
+function QueueTicketTable({ rows, onSelect, selectable, selectedIds, onToggleSelection, onSelectionChange }) {
   const [page, setPage] = useState(1);
   const pageSize = 8;
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
   const visibleRows = rows.slice((page - 1) * pageSize, page * pageSize);
+  const visibleIds = visibleRows.map(([, , , , , ticketId]) => ticketId);
+  const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.includes(id));
 
   return (
     <div className="queue-table-wrap">
@@ -70,6 +72,7 @@ function QueueTicketTable({ rows, onSelect }) {
         <table className="queue-table">
           <thead>
             <tr>
+              {selectable && <th className="selection-cell"><input type="checkbox" checked={allVisibleSelected} onChange={() => onSelectionChange(allVisibleSelected ? selectedIds.filter((id) => !visibleIds.includes(id)) : [...new Set([...selectedIds, ...visibleIds])])} aria-label="Select all visible tickets" /></th>}
               <th>ID</th>
               <th>Subject / Issue Preview</th>
               <th>Employee / Requester</th>
@@ -81,6 +84,7 @@ function QueueTicketTable({ rows, onSelect }) {
           <tbody >
             {visibleRows.map(([id, title, category, status, priority, ticketId, description, createdAt, requester]) => (
               <tr key={id} onClick={() => onSelect(ticketId ?? id)}>
+                {selectable && <td className="selection-cell"><input type="checkbox" checked={selectedIds.includes(ticketId)} onChange={() => onToggleSelection(ticketId)} onClick={(event) => event.stopPropagation()} aria-label={`Select ticket ${id}`} /></td>}
                 <td><button className="queue-ticket-id">{id}</button></td>
                 <td>
                   <button className="queue-subject" >{title}</button>

@@ -1613,7 +1613,8 @@ td strong {
   font-weight: 700;
 }
 .danger-button:disabled,
-.deactivate-button:disabled {
+.deactivate-button:disabled,
+.success-button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
 }
@@ -1765,6 +1766,40 @@ td strong {
   gap: 10px;
   padding: 24px 28px;
   background: #eff4ff;
+}
+.bulk-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  border-bottom: 1px solid #dce9ff;
+  background: #f8faff;
+}
+.bulk-toolbar .text-button {
+  margin-top: 0;
+}
+.bulk-toolbar strong {
+  margin-right: auto;
+  color: #03224d;
+  font-size: 13px;
+}
+.bulk-toolbar select {
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #0b1c30;
+}
+.selection-cell {
+  width: 44px;
+  padding-right: 0 !important;
+  text-align: center;
+}
+.selection-cell input {
+  width: 16px;
+  height: 16px;
+  accent-color: #0058be;
 }
 .admin-filters select,
 .admin-search {
@@ -1949,6 +1984,14 @@ td strong {
   .admin-filters {
     grid-template-columns: 1fr;
     padding: 16px;
+  }
+  .bulk-toolbar {
+    align-items: stretch;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+  }
+  .bulk-toolbar strong {
+    width: 100%;
   }
   .panel {
     padding: 16px;
@@ -2455,9 +2498,16 @@ tbody tr:hover,
 
 [data-theme="dark"] th,
 [data-theme="dark"] .admin-filters,
+[data-theme="dark"] .bulk-toolbar,
 [data-theme="dark"] .admin-directory > .queue-pagination {
   background: #24344c;
   color: #cbd5e1;
+}
+
+[data-theme="dark"] .bulk-toolbar select {
+  border-color: #526783;
+  background: #162235;
+  color: #e2e8f0;
 }
 
 [data-theme="dark"] td {
