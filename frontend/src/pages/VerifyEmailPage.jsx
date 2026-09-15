@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  Light_LOGO_SRC,
-  Dark_LOGO_SRC,
-} from "../components/Shell";
+import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
 import {
   resendVerificationCode,
   verifyEmail,
@@ -34,7 +31,12 @@ export default function VerifyEmailPage() {
 
   const inputsRef = useRef([]);
 
-  const theme = localStorage.getItem("theme") || "light";
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+  
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const email =
     location.state?.email ||
@@ -321,18 +323,6 @@ export default function VerifyEmailPage() {
         <div className="verification-accent" />
 
         <div className="verification-content">
-          {/* Logo */}
-          <div className="verification-logo">
-            <img
-              src={
-                theme === "dark"
-                  ? Dark_LOGO_SRC
-                  : Light_LOGO_SRC
-              }
-              alt="SmartDesk IT Service Management Logo"
-            />
-          </div>
-
           {/* Email icon */}
           <div className="verification-icon-wrapper">
             <div className="verification-icon">

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import { Light_LOGO_SRC, Dark_LOGO_SRC } from "../components/Shell";
+import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
 import { resetPassword } from "../services/authService";
 
 
@@ -36,6 +36,13 @@ export default function ResetPasswordPage() {
     confirmPassword: "",
     terms: false,
   });
+
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+  
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
   const lockPath = "M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z";
 
   const submit = async (event) => {
@@ -99,7 +106,8 @@ export default function ResetPasswordPage() {
   return (
     <div className="login-page">
       <main className="login-card">
-        <img src={Dark_LOGO_SRC} alt="SmartDesk logo" />
+        {theme == "light" &&<img src={Light_PNG_SRC} alt="SmartDesk logo" />}
+        {theme == "dark" && <img src={Dark_PNG_SRC} alt="SmartDesk logo" />}
         <h1>Reset Password</h1>
         <p>Enter a new password for your account.</p>
 
@@ -124,25 +132,25 @@ export default function ResetPasswordPage() {
           </div>
 
           <div className="password-requirements">
-            <p className={passwordRules.length ? "valid" : ""}>
+            <small className={passwordRules.length ? "valid" : ""}>
               {passwordRules.length ? "✓" : "○"} At least 8 characters
-            </p>
+            </small><br></br>
 
-            <p className={passwordRules.uppercase ? "valid" : ""}>
+            <small className={passwordRules.uppercase ? "valid" : ""}>
               {passwordRules.uppercase ? "✓" : "○"} One uppercase letter
-            </p>
+            </small><br></br>
 
-            <p className={passwordRules.lowercase ? "valid" : ""}>
+            <small className={passwordRules.lowercase ? "valid" : ""}>
               {passwordRules.lowercase ? "✓" : "○"} One lowercase letter
-            </p>
+            </small><br></br>
 
-            <p className={passwordRules.number ? "valid" : ""}>
+            <small className={passwordRules.number ? "valid" : ""}>
               {passwordRules.number ? "✓" : "○"} One number
-            </p>
+            </small><br></br>
 
-            <p className={passwordRules.special ? "valid" : ""}>
+            <small className={passwordRules.special ? "valid" : ""}>
               {passwordRules.special ? "✓" : "○"} One special character
-            </p>
+            </small>
           </div>
 
           <label htmlFor="confirmPassword">Confirm Password</label>

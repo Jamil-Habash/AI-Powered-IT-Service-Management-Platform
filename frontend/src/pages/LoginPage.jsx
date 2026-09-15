@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
 import { useAuth } from "../context/AuthContext";
@@ -14,7 +14,12 @@ export default function LoginPage() {
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const theme = localStorage.getItem("theme") || "light"
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+  
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
   const location = useLocation();
   const [successMessage, setSuccessMessage] = useState(
     location.state?.message || ""
@@ -49,6 +54,7 @@ export default function LoginPage() {
             {successMessage}
           </p>
         )}
+       
 
         <form onSubmit={handleSubmit}>
           <label>
