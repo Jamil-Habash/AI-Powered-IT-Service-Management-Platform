@@ -28,7 +28,7 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/create-ticket" element={<ProtectedRoute><CreateTicketPage /></ProtectedRoute>} />
+          <Route path="/create-ticket" element={<ProtectedRoute role="EMPLOYEE"><CreateTicketPage /></ProtectedRoute>} />
           <Route path="/tickets" element={<ProtectedRoute><TicketsPage /></ProtectedRoute>} />
           <Route path="/ticket/:id" element={<ProtectedRoute><TicketDetailPage /></ProtectedRoute>} />
           <Route path="/analytics" element={<ProtectedRoute role="ADMIN"><AnalyticsPage /></ProtectedRoute>} />
