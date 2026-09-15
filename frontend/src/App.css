@@ -305,6 +305,9 @@ a {
 .login-card > img {
   height: 64px;
 }
+.registration-card > img {
+  height: 64px;
+}
 .login-card > p:last-of-type {
   margin-top: 24px;
 }

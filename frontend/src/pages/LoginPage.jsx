@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Light_LOGO_SRC, Dark_LOGO_SRC } from "../components/Shell";
+import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
 import { useAuth } from "../context/AuthContext";
 import usePageTitle from "../hooks/usePageTitle";
 
@@ -41,11 +41,8 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <main className="login-card">
-        {theme == "light" &&<img src={Light_LOGO_SRC} alt="SmartDesk logo" />}
-        {theme == "dark" && <img src={Dark_LOGO_SRC} alt="SmartDesk logo" />}
-        <h1>SmartDesk</h1>
-        <p>IT Service Management Platform</p>
-
+        {theme == "light" &&<img src={Light_PNG_SRC} alt="SmartDesk logo" />}
+        {theme == "dark" && <img src={Dark_PNG_SRC} alt="SmartDesk logo" />}
         {error && <p className="form-error">{error}</p>}
         {successMessage && (
           <p className="form-success">

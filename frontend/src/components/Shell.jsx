@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import lightLogo from "../assets/light_logo.png";
 import darkLogo from "../assets/dark_logo.png";
+import lightpng from "../assets/smartdesk_light.png";
+import darkpng from "../assets/smartdesk_dark.png";
 import Icon from "./Icon";
 import { useAuth } from "../context/AuthContext";
 import { getTickets } from "../services/ticketService";
@@ -18,6 +20,8 @@ const navigation = [
 
 export const Light_LOGO_SRC = lightLogo;
 export const Dark_LOGO_SRC = darkLogo;
+export const Light_PNG_SRC = lightpng;
+export const Dark_PNG_SRC = darkpng;
 
 export default function Shell({ children }) {
   const location = useLocation();

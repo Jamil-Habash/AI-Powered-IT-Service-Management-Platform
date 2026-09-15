@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Light_LOGO_SRC, Dark_LOGO_SRC } from "../components/Shell";
+import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
 import { registerUser } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 import usePageTitle from "../hooks/usePageTitle";
@@ -149,26 +149,12 @@ export default function RegisterPage() {
   return (
     <div className="registration-page">
       <main className="registration-card">
-        <header className="card-header">
-          {theme === "light" && (
-            <img
-              src={Light_LOGO_SRC}
-              alt="SmartDesk IT Service Management Logo"
-            />
-          )}
-
-          {theme === "dark" && (
-            <img
-              src={Dark_LOGO_SRC}
-              alt="SmartDesk IT Service Management Logo"
-            />
-          )}
+          {theme === "light" && (<img src={Light_PNG_SRC} alt="SmartDesk IT Service Management Logo"/>)}
+          {theme === "dark" && (<img src={Dark_PNG_SRC} alt="SmartDesk IT Service Management Logo"/>)}
 
           {user?.role === "ADMIN" && <h1>Add a User</h1>}
           {user == null && <h1>Create your account</h1>}
-
           <p>Join SmartDesk IT Service Management Platform</p>
-
           <div
             className="role-badge"
             style={{
@@ -180,7 +166,6 @@ export default function RegisterPage() {
             <span />
             Assigned Role: Employee
           </div>
-        </header>
 
         {error && <p className="form-error">{error}</p>}
 
