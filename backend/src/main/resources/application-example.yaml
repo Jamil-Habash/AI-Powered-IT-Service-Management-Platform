@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/smartdesk
+    username: root
+    password: ${DB_PASSWORD}
+
+  mail:
+    username: ${GMAIL_USERNAME}
+    password: ${GMAIL_APP_PASSWORD}
+
+  ai:
+    openai:
+      api-key: ${GROQ_API_KEY}
+
+app:
+  frontend-url: http://localhost:5173
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration-ms: 86400000

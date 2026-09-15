@@ -60,5 +60,5 @@ spring:
 app:
   frontend-url: http://localhost:5173
   jwt:
-    secret: 8f4a2c9e1d7b3f5a6c8e0d2b4f6a8c0e2d4f6b8a0c2e4d6f8b0a2c4e6d8f0b2a
+    secret: 803a558e445b1e2ce290c5def3ae5b783d039534e0b533abf592f156a1e0b41e
     expiration-ms: 86400000
