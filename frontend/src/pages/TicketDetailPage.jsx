@@ -49,6 +49,19 @@ export default function TicketDetailPage() {
     getComments(id)
       .then((response) => setComments(Array.isArray(response.data) ? response.data : []))
       .catch(() => {});
+    // Poll every 3 seconds until AI analysis appears, stop after ~30 seconds
+    let attempts = 0;
+    const interval = setInterval(() => {
+      attempts++;
+      getTicket(id).then((response) => {
+        setTicket(response.data);
+        if (response.data.aiSummary || attempts > 10) {
+          clearInterval(interval);
+        }
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, [id, user?.role]);
 
   const loadComments = async () => {
@@ -168,16 +181,6 @@ export default function TicketDetailPage() {
               </span>
             </div>
           </section>
-          <section className="panel ai-panel">
-            <h2>
-              <Icon>auto_awesome</Icon>SmartDesk AI Copilot Analysis
-            </h2>
-            <p>Review the ticket description and support history for recommended next steps.</p>
-            <div className="progress">
-              <span />
-            </div>
-            <button className="primary-button">Apply Firmware Patch</button>
-          </section>
           <section className="panel">
             <h2>Issue Description</h2>
             <MarkdownContent>{ticket.description}</MarkdownContent>
@@ -203,6 +206,23 @@ export default function TicketDetailPage() {
                 </div>
                 {attachmentError && <p className="form-error">{attachmentError}</p>}
               </div>
+            )}
+          </section>
+          <section className="panel ai-panel">
+            <h2><Icon>auto_awesome</Icon>SmartDesk AI Copilot Analysis</h2>
+            {ticket.aiSummary ? (
+              <>
+                <p>{ticket.aiSummary}</p>
+                <div className="ai-suggestions">
+                  <span>Suggested category: <strong>{ticket.aiSuggestedCategory}</strong></span><br></br>
+                  <span>Suggested priority: <strong>{ticket.aiSuggestedPriority}</strong></span>
+                </div>
+                <ul>
+                  {ticket.aiSuggestedActions?.map((action, i) => <li key={i}>{action}.</li>)}
+                </ul>
+              </>
+            ) : (
+              <p>Analyzing ticket... this usually takes a few seconds.</p>
             )}
           </section>
           <section className="panel">

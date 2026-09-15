@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import com.smartdesk.project.dto.request.UpdateTicketStatusRequest;
 import com.smartdesk.project.dto.request.UpdateTicketPriorityRequest;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service
 public class TicketService {
@@ -29,21 +31,19 @@ public class TicketService {
     private final UserRepository userRepository;
     private final TicketAttachmentRepository attachmentRepository;
     private final AuditLogService auditLogService;
+    private final AIAnalysisService aiAnalysisService;
 
-    public TicketService(TicketRepository ticketRepository, CategoryRepository categoryRepository, 
-        UserRepository userRepository, TicketAttachmentRepository attachmentRepository, AuditLogService auditLogService) {
+    public TicketService(TicketRepository ticketRepository, CategoryRepository categoryRepository, UserRepository userRepository,
+        TicketAttachmentRepository attachmentRepository, AuditLogService auditLogService, AIAnalysisService aiAnalysisService) 
+        {
         this.ticketRepository = ticketRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.attachmentRepository = attachmentRepository;
         this.auditLogService = auditLogService;
+        this.aiAnalysisService = aiAnalysisService;
     }
-
-    @Transactional
-    public TicketResponse create(CreateTicketRequest request, UserPrincipal currentUser) {
-        return create(request, List.of(), currentUser);
-    }
-
+    
     @Transactional
     public TicketResponse create(CreateTicketRequest request, List<MultipartFile> files, UserPrincipal currentUser) {
         Category category = categoryRepository.findById(request.getCategoryId())
@@ -69,6 +69,13 @@ public class TicketService {
                 throw new IllegalArgumentException("Unable to read attachment: " + file.getOriginalFilename(), exception);
             }
         }
+        final Long ticketId = saved.getId();
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                aiAnalysisService.analyzeTicketAsync(ticketId);
+            }
+        });
         return TicketResponse.fromEntity(saved);
     }
 

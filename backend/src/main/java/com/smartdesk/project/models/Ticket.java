@@ -27,6 +27,7 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
@@ -58,6 +59,17 @@ public class Ticket {
     private Date createdAt;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
+
+    @Column(columnDefinition = "TEXT")
+    private String aiSummary;
+
+    @Enumerated(EnumType.STRING)
+    private Priority aiSuggestedPriority;
+
+    private String aiSuggestedCategory;
+
+    @Column(columnDefinition = "TEXT")
+    private String aiSuggestedActions;
 
     public Ticket() {
     
@@ -174,5 +186,33 @@ public class Ticket {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = new Date();
+    }
+
+    public String getAiSummary() { 
+        return aiSummary; 
+    }
+    public void setAiSummary(String aiSummary) { 
+        this.aiSummary = aiSummary; 
+    }
+
+    public Priority getAiSuggestedPriority() { 
+        return aiSuggestedPriority; 
+    }
+    public void setAiSuggestedPriority(Priority aiSuggestedPriority) { 
+        this.aiSuggestedPriority = aiSuggestedPriority; 
+    }
+
+    public String getAiSuggestedCategory() { 
+        return aiSuggestedCategory; 
+    }
+    public void setAiSuggestedCategory(String aiSuggestedCategory) { 
+        this.aiSuggestedCategory = aiSuggestedCategory; 
+    }
+
+    public String getAiSuggestedActions() { 
+        return aiSuggestedActions; 
+    }
+    public void setAiSuggestedActions(String aiSuggestedActions) { 
+        this.aiSuggestedActions = aiSuggestedActions; 
     }
 }

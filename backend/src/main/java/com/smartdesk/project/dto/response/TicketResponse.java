@@ -8,6 +8,7 @@ import com.smartdesk.project.models.TicketAttachment;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Arrays;
 
 public class TicketResponse {
 
@@ -30,6 +31,11 @@ public class TicketResponse {
     private Date updatedAt;
     private Date resolvedAt;
     private List<AttachmentResponse> attachments;
+
+    private String aiSummary;
+    private String aiSuggestedCategory;
+    private Priority aiSuggestedPriority;
+    private List<String> aiSuggestedActions;
 
     public static TicketResponse fromEntity(Ticket ticket) {
         TicketResponse dto = new TicketResponse();
@@ -60,6 +66,13 @@ public class TicketResponse {
         dto.attachments = ticket.getAttachments() == null ? List.of() : ticket.getAttachments().stream()
             .map(AttachmentResponse::fromEntity)
             .collect(Collectors.toList());
+
+        dto.aiSummary = ticket.getAiSummary();
+        dto.aiSuggestedCategory = ticket.getAiSuggestedCategory();
+        dto.aiSuggestedPriority = ticket.getAiSuggestedPriority();
+        dto.aiSuggestedActions = ticket.getAiSuggestedActions() != null
+                ? Arrays.asList(ticket.getAiSuggestedActions().split("\n"))
+                : List.of();
         return dto;
     }
 
@@ -123,6 +136,19 @@ public class TicketResponse {
         return attachments;
     }
 
+    public String getAiSummary() { 
+        return aiSummary; 
+    }
+    public String getAiSuggestedCategory() { 
+        return aiSuggestedCategory; 
+    }
+    public Priority getAiSuggestedPriority() { 
+        return aiSuggestedPriority; 
+    }
+    public List<String> getAiSuggestedActions() { 
+        return aiSuggestedActions; 
+    }
+
     public static class AttachmentResponse {
         private Long id;
         private String fileName;
@@ -138,9 +164,17 @@ public class TicketResponse {
             return response;
         }
 
-        public Long getId() { return id; }
-        public String getFileName() { return fileName; }
-        public String getContentType() { return contentType; }
-        public long getFileSize() { return fileSize; }
+        public Long getId() { 
+            return id; 
+        }
+        public String getFileName() { 
+            return fileName; 
+        }
+        public String getContentType() { 
+            return contentType; 
+        }
+        public long getFileSize() { 
+            return fileSize; 
+        }
     }
 }

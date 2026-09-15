@@ -19,7 +19,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -28,8 +28,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: jamhab35@gmail.com
-    password: kgpwiwpjyhdxqpri
+    username: ${GMAIL_USERNAME}
+    password: ${GMAIL_APP_PASSWORD}
     properties:
       mail:
         debug: true
@@ -37,6 +37,25 @@ spring:
           auth: true
           starttls:
             enable: true
+
+  ai:
+    openai:
+      api-key: ${GROQ_API_KEY}
+      base-url: https://api.groq.com/openai/v1
+      chat:
+        model: openai/gpt-oss-20b
+        temperature: 0.3
+
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 5
+        queue-capacity: 50
+  http:
+    clients:
+      connect-timeout: 10s
+      read-timeout: 30s
 
 app:
   frontend-url: http://localhost:5173
