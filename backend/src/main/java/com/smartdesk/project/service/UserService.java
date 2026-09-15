@@ -9,7 +9,6 @@ import com.smartdesk.project.models.User;
 import com.smartdesk.project.dto.request.UpdateUserRequest;
 import com.smartdesk.project.dto.response.UserResponse;
 import com.smartdesk.project.exception.ExceptionsHandler.ResourceNotFoundException;
-
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

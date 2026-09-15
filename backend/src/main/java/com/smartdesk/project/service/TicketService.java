@@ -4,7 +4,6 @@ import com.smartdesk.project.dto.request.AssignTicketRequest;
 import com.smartdesk.project.dto.request.CreateTicketRequest;
 import com.smartdesk.project.dto.response.TicketResponse;
 import com.smartdesk.project.exception.ExceptionsHandler.ResourceNotFoundException;
-
 import org.springframework.security.access.AccessDeniedException;
 import com.smartdesk.project.models.*;
 import com.smartdesk.project.repository.CategoryRepository;

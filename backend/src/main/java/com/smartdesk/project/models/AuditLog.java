@@ -37,11 +37,25 @@ public class AuditLog {
         this.performedBy = performedBy;
     }
 
-    public Long getId() { return id; }
-    public String getAction() { return action; }
-    public String getTargetType() { return targetType; }
-    public Long getTargetId() { return targetId; }
-    public String getDetails() { return details; }
-    public User getPerformedBy() { return performedBy; }
-    public Date getCreatedAt() { return createdAt; }
+    public Long getId() { 
+        return id; 
+    }
+    public String getAction() { 
+        return action; 
+    }
+    public String getTargetType() { 
+        return targetType; 
+    }
+    public Long getTargetId() { 
+        return targetId; 
+    }
+    public String getDetails() { 
+        return details; 
+    }
+    public User getPerformedBy() { 
+        return performedBy; 
+    }
+    public Date getCreatedAt() { 
+        return createdAt; 
+    }
 }

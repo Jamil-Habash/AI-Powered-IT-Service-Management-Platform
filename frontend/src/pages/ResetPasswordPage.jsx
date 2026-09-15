@@ -22,9 +22,6 @@ export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const navigate = useNavigate();
-
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState({
@@ -52,9 +49,7 @@ export default function ResetPasswordPage() {
       const confirm = event.currentTarget.elements.confirmPassword;
   
       confirm.setCustomValidity(
-        form.password === form.confirmPassword
-          ? ""
-          : "Passwords do not match"
+        form.password === form.confirmPassword ? "": "Passwords do not match"
       );
   
       if (!passwordValid) {
@@ -69,7 +64,7 @@ export default function ResetPasswordPage() {
       }
       setLoading(true);
       try {
-        await resetPassword(token, password);
+        await resetPassword(token, form.password);
         navigate("/login");
       } catch (err) {
         setError(err.response?.data?.error || "This reset link is invalid or has expired.");

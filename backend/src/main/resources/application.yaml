@@ -11,7 +11,7 @@ spring:
       max-request-size: 100MB
 
   datasource:
-    url: jdbc:mysql://localhost:3306/smartdesk?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/smartdesk?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=Asia/Jerusalem&allowPublicKeyRetrieval=true
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
