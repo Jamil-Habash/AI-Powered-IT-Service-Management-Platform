@@ -271,12 +271,6 @@ export default function RegisterPage() {
             <footer className="card-footer">
               Already registered? <Link to="/login">Log in</Link>
             </footer>
-
-            <footer className="page-footer">
-              <a href="#privacy">Privacy Policy</a>
-              <a href="#terms">Terms of Service</a>
-              <a href="#help">Help Center</a>
-            </footer>
           </>
         )}
       </main>

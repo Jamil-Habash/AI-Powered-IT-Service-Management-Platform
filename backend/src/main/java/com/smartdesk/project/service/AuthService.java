@@ -177,4 +177,14 @@ public class AuthService {
         user.setResetTokenExpiry(null);
         userRepository.save(user);
     }
+
+    public void validateResetToken(String token) {
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(InvalidCredentialsException::new);
+
+        if (user.getResetTokenExpiry() == null ||
+            user.getResetTokenExpiry().before(new Date())) {
+            throw new InvalidCredentialsException();
+        }
+    }
 }

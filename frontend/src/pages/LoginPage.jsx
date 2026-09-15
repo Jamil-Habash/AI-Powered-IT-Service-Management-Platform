@@ -21,9 +21,7 @@ export default function LoginPage() {
     localStorage.setItem("theme", theme);
   }, [theme]);
   const location = useLocation();
-  const [successMessage, setSuccessMessage] = useState(
-    location.state?.message || ""
-  );
+  const [successMessage, setSuccessMessage] = useState(location.state?.message || "");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,13 +47,7 @@ export default function LoginPage() {
         {theme == "light" &&<img src={Light_PNG_SRC} alt="SmartDesk logo" />}
         {theme == "dark" && <img src={Dark_PNG_SRC} alt="SmartDesk logo" />}
         {error && <p className="form-error">{error}</p>}
-        {successMessage && (
-          <p className="form-success">
-            {successMessage}
-          </p>
-        )}
-       
-
+        {successMessage && (<p className="form-success">{successMessage}</p>)}
         <form onSubmit={handleSubmit}>
           <label>
             Email Address
@@ -92,14 +84,8 @@ export default function LoginPage() {
             {loading ? "Logging in..." : "Log in"}
           </button>
         </form>
-        <p>
-          Not registered yet?{" "}
-          <Link to="/register">Register with your work email</Link>
-        </p>
-        <footer >
-          <a href="#privacy">Privacy Policy</a>
-          <a href="#terms">Terms of Service</a>
-          <a href="#help">Help Center</a>
+        <footer className="card-footer">
+          Not registered yet?<Link to="/register">Register with your work email</Link>
         </footer>
       </main>
     </div>

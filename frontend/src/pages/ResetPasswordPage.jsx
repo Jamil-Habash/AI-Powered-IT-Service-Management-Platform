@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
-import { resetPassword } from "../services/authService";
+import { resetPassword, validateResetToken } from "../services/authService";
 
 
 function FieldIcon({ path }) {
@@ -19,8 +19,6 @@ function FieldIcon({ path }) {
   );
 }
 export default function ResetPasswordPage() {
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,6 +39,39 @@ export default function ResetPasswordPage() {
     localStorage.setItem("theme", theme);
   }, [theme]);
   const lockPath = "M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z";
+
+  const [checkingToken, setCheckingToken] = useState(true);
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const resetToken = new URLSearchParams(window.location.search).get("token");
+
+    if (!resetToken) {
+      navigate("/forgot-password", { replace: true });
+      return;
+    }
+
+    const checkToken = async () => {
+      try {
+        await validateResetToken(resetToken);
+        setToken(resetToken);
+      } catch (err) {
+        navigate("/forgot-password", { replace: true });
+      } finally {
+        setCheckingToken(false);
+      }
+    };
+
+    checkToken();
+  }, [navigate]);
+
+  if (checkingToken) {
+    return <div>Checking reset link...</div>;
+  }
+
+  if (!token) {
+    return null;
+  }
 
   const submit = async (event) => {
       event.preventDefault();

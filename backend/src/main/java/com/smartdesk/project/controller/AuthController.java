@@ -80,4 +80,10 @@ public class AuthController {
 
         return ResponseEntity.ok(body);
     }
+
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<?> validateResetToken(@RequestParam String token) {
+        authService.validateResetToken(token);
+        return ResponseEntity.ok().build();
+    }
 }

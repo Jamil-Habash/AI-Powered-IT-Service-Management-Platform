@@ -17,3 +17,6 @@ export const forgotPassword = (email) =>
 
 export const resetPassword = (token, newPassword) => 
   api.post("/auth/reset-password", { token, newPassword });
+
+export const validateResetToken = (token) =>
+  api.get("auth/validate-reset-token", {params: {token},});

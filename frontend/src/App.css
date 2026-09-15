@@ -244,7 +244,7 @@ a {
   accent-color: #1f3864;
 }
 .terms a,
-.login-card a {
+.login-card a, .registration-card a {
   color: #2563eb;
 }
 .submit-button,
@@ -292,7 +292,6 @@ a {
 }
 .page-footer,
 .login-card footer {
-  display: flex;
   justify-content: center;
   gap: 24px;
   margin-top: 28px;

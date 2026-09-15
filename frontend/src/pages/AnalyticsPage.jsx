@@ -140,11 +140,11 @@ export default function AnalyticsPage() {
             <div className="bar-row" key={name}>
               <span>
                 {name}
-                <b>
+                <small>
                   {metric === "volume"
                     ? `${value} tickets`
                     : "Unavailable"}
-                </b>
+                </small>
               </span>
               <i>
                 <em
@@ -162,7 +162,7 @@ export default function AnalyticsPage() {
             <div className="bar-row" key={name}>
               <span>
                 {name}
-                <b>{value} tickets</b>
+                <small>{value} tickets</small>
               </span>
               <i>
                 <em style={{ width: `${Math.min(value * 20, 100)}%` }} />
