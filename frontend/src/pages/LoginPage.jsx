@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
+import {
+  Light_LOGO_SRC,
+  Dark_LOGO_SRC,
+  Light_PNG_SRC,
+  Dark_PNG_SRC,
+} from "../components/Shell";
 import { useAuth } from "../context/AuthContext";
 import usePageTitle from "../hooks/usePageTitle";
 
@@ -14,14 +19,18 @@ export default function LoginPage() {
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem("smartdesk_theme") || "light");
-  
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("smartdesk_theme") || "light",
+  );
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
   const location = useLocation();
-  const [successMessage, setSuccessMessage] = useState(location.state?.message || "");
+  const [successMessage, setSuccessMessage] = useState(
+    location.state?.message || "",
+  );
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -44,10 +53,10 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <main className="login-card">
-        {theme == "light" &&<img src={Light_PNG_SRC} alt="SmartDesk logo" />}
+        {theme == "light" && <img src={Light_PNG_SRC} alt="SmartDesk logo" />}
         {theme == "dark" && <img src={Dark_PNG_SRC} alt="SmartDesk logo" />}
         {error && <p className="form-error">{error}</p>}
-        {successMessage && (<p className="form-success">{successMessage}</p>)}
+        {successMessage && <p className="form-success">{successMessage}</p>}
         <form onSubmit={handleSubmit}>
           <label>
             Email Address
@@ -69,8 +78,16 @@ export default function LoginPage() {
               />
             </div>
           </label>
-          <div style={{ textAlign: "right", marginTop: "-8px", marginBottom: "8px" }}>
-            <Link to="/forgot-password" style={{ fontSize: "13px" }}>Forgot password?</Link>
+          <div
+            style={{
+              textAlign: "right",
+              marginTop: "-8px",
+              marginBottom: "8px",
+            }}
+          >
+            <Link to="/forgot-password" style={{ fontSize: "13px" }}>
+              Forgot password?
+            </Link>
           </div>
           <label className="remember">
             <input
@@ -85,7 +102,8 @@ export default function LoginPage() {
           </button>
         </form>
         <footer className="card-footer">
-          Not registered yet?<Link to="/register">Register with your work email</Link>
+          Not registered yet?
+          <Link to="/register">Register with your work email</Link>
         </footer>
       </main>
     </div>

@@ -6,7 +6,9 @@ const statusStyles = {
 
 export default function StatusBadge({ status }) {
   return (
-    <span className={`px-2 py-1 rounded text-xs font-medium ${statusStyles[status] || "bg-gray-100 text-gray-800"}`}>
+    <span
+      className={`px-2 py-1 rounded text-xs font-medium ${statusStyles[status] || "bg-gray-100 text-gray-800"}`}
+    >
       {status.replace("_", " ")}
     </span>
   );

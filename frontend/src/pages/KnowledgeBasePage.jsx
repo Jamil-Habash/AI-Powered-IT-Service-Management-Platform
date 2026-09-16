@@ -15,6 +15,14 @@ export default function KnowledgeBasePage() {
         eyebrow="SELF-SERVICE"
         title="Knowledge Base & Self-Service Guides"
         description="Browse verified IT resolutions, deployment procedures, and troubleshooting wikis."
+        action={
+          <button
+            className="primary-button"
+            onClick={() => navigate("/ceate-knowledge-base")}
+          >
+            <Icon>add</Icon>Add New Article
+          </button>
+        }
       />
       <div className="article-grid">
         {kbArticles.map((article) => (

@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
+import {
+  Light_LOGO_SRC,
+  Dark_LOGO_SRC,
+  Light_PNG_SRC,
+  Dark_PNG_SRC,
+} from "../components/Shell";
 import { registerUser } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 import usePageTitle from "../hooks/usePageTitle";
@@ -20,9 +25,12 @@ function FieldIcon({ path }) {
   );
 }
 
-const userPath = "M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z";
-const mailPath = "M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z";
-const lockPath = "M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z";
+const userPath =
+  "M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z";
+const mailPath =
+  "M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z";
+const lockPath =
+  "M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z";
 
 export default function RegisterPage() {
   usePageTitle("Register");
@@ -46,8 +54,10 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
-  
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("theme") || "light",
+  );
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
@@ -78,7 +88,6 @@ export default function RegisterPage() {
     passwordRules.number &&
     passwordRules.special;
 
-
   const submit = async (event) => {
     event.preventDefault();
     setError("");
@@ -86,14 +95,12 @@ export default function RegisterPage() {
     const confirm = event.currentTarget.elements.confirmPassword;
 
     confirm.setCustomValidity(
-      form.password === form.confirmPassword
-        ? ""
-        : "Passwords do not match"
+      form.password === form.confirmPassword ? "" : "Passwords do not match",
     );
 
     if (!passwordValid) {
       setError(
-        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character."
+        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
       );
       return;
     }
@@ -109,18 +116,18 @@ export default function RegisterPage() {
       await registerUser(form.name, form.email, form.password);
 
       /*
-      * Admin-created users keep the existing flow.
-      * Normal users must verify their email first.
-      */
+       * Admin-created users keep the existing flow.
+       * Normal users must verify their email first.
+       */
       if (user?.role === "ADMIN") {
         navigate("/dashboard");
         return;
       }
 
       /*
-      * Keep the email temporarily so the verification page
-      * still knows which account is being verified after a refresh.
-      */
+       * Keep the email temporarily so the verification page
+       * still knows which account is being verified after a refresh.
+       */
       sessionStorage.setItem("smartdesk_verification_email", form.email);
 
       navigate("/verify-email", {
@@ -154,23 +161,27 @@ export default function RegisterPage() {
   return (
     <div className="registration-page">
       <main className="registration-card">
-          {theme === "light" && (<img src={Light_PNG_SRC} alt="SmartDesk IT Service Management Logo"/>)}
-          {theme === "dark" && (<img src={Dark_PNG_SRC} alt="SmartDesk IT Service Management Logo"/>)}
+        {theme === "light" && (
+          <img src={Light_PNG_SRC} alt="SmartDesk IT Service Management Logo" />
+        )}
+        {theme === "dark" && (
+          <img src={Dark_PNG_SRC} alt="SmartDesk IT Service Management Logo" />
+        )}
 
-          {user?.role === "ADMIN" && <h1>Add a User</h1>}
-          {user == null && <h1>Create your account</h1>}
-          <p>Join SmartDesk IT Service Management Platform</p>
-          <div
-            className="role-badge"
-            style={{
-              width: "208px",
-              justifyContent: "center",
-              textAlign: "center",
-            }}
-          >
-            <span />
-            Assigned Role: Employee
-          </div>
+        {user?.role === "ADMIN" && <h1>Add a User</h1>}
+        {user == null && <h1>Create your account</h1>}
+        <p>Join SmartDesk IT Service Management Platform</p>
+        <div
+          className="role-badge"
+          style={{
+            width: "208px",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
+        >
+          <span />
+          Assigned Role: Employee
+        </div>
 
         {error && <p className="form-error">{error}</p>}
 

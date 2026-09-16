@@ -80,7 +80,8 @@ export default function CreateTicketPage() {
       setCategory(saved.category || "");
       setPriority(saved.priority || "MEDIUM");
       setDescription(saved.description || "");
-      if (editorRef.current) editorRef.current.innerHTML = markdownToHtml(saved.description || "");
+      if (editorRef.current)
+        editorRef.current.innerHTML = markdownToHtml(saved.description || "");
     } catch {
       localStorage.removeItem("smartdesk_ticket_draft");
     }
@@ -94,8 +95,10 @@ export default function CreateTicketPage() {
       const name = item.name.toLowerCase();
       return (
         (/(vpn|wifi|network|dns)/.test(lower) && /network|vpn/.test(name)) ||
-        (/(monitor|dock|laptop|keyboard)/.test(lower) && /hardware|peripheral|display/.test(name)) ||
-        (/(password|login|sso|account)/.test(lower) && /account|access|identity/.test(name))
+        (/(monitor|dock|laptop|keyboard)/.test(lower) &&
+          /hardware|peripheral|display/.test(name)) ||
+        (/(password|login|sso|account)/.test(lower) &&
+          /account|access|identity/.test(name))
       );
     });
     if (match) setCategory(String(match.id));
@@ -127,12 +130,15 @@ export default function CreateTicketPage() {
     setError("");
     setLoading(true);
     try {
-      const response = await createTicket({
-        title,
-        description,
-        categoryId: Number(category),
-        priority,
-      }, files);
+      const response = await createTicket(
+        {
+          title,
+          description,
+          categoryId: Number(category),
+          priority,
+        },
+        files,
+      );
       localStorage.removeItem("smartdesk_ticket_draft");
       navigate(`/ticket/${response.data.id}`);
     } catch (err) {
@@ -153,7 +159,9 @@ export default function CreateTicketPage() {
   };
 
   const acceptFiles = (selectedFiles) => {
-    const validFiles = Array.from(selectedFiles).filter((file) => file.size <= 25 * 1024 * 1024);
+    const validFiles = Array.from(selectedFiles).filter(
+      (file) => file.size <= 25 * 1024 * 1024,
+    );
     if (validFiles.length !== selectedFiles.length) {
       setError("Each attachment must be 25 MB or smaller.");
     }
@@ -200,7 +208,9 @@ export default function CreateTicketPage() {
                 required
               >
                 <option value="">
-                  {categoriesLoading ? "Loading categories..." : "Select a category..."}
+                  {categoriesLoading
+                    ? "Loading categories..."
+                    : "Select a category..."}
                 </option>
                 {categories.map((item) => (
                   <option value={item.id} key={item.id}>
@@ -228,10 +238,38 @@ export default function CreateTicketPage() {
           <label>
             Description
             <div className="editor-toolbar" aria-label="Formatting tools">
-              <button type="button" title="Bold" onMouseDown={(event) => event.preventDefault()} onClick={() => runEditorCommand("bold")}><Icon>format_bold</Icon></button>
-              <button type="button" title="Italic" onMouseDown={(event) => event.preventDefault()} onClick={() => runEditorCommand("italic")}><Icon>format_italic</Icon></button>
-              <button type="button" title="Bullet list" onMouseDown={(event) => event.preventDefault()} onClick={() => runEditorCommand("insertUnorderedList")}><Icon>format_list_bulleted</Icon></button>
-              <button type="button" title="Code block" onMouseDown={(event) => event.preventDefault()} onClick={() => runEditorCommand("formatBlock", "pre")}><Icon>code</Icon></button>
+              <button
+                type="button"
+                title="Bold"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => runEditorCommand("bold")}
+              >
+                <Icon>format_bold</Icon>
+              </button>
+              <button
+                type="button"
+                title="Italic"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => runEditorCommand("italic")}
+              >
+                <Icon>format_italic</Icon>
+              </button>
+              <button
+                type="button"
+                title="Bullet list"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => runEditorCommand("insertUnorderedList")}
+              >
+                <Icon>format_list_bulleted</Icon>
+              </button>
+              <button
+                type="button"
+                title="Code block"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => runEditorCommand("formatBlock", "pre")}
+              >
+                <Icon>code</Icon>
+              </button>
             </div>
             <div
               id="ticket-description"
@@ -246,20 +284,35 @@ export default function CreateTicketPage() {
               onBlur={updateDescription}
               suppressContentEditableWarning
             />
-            <input type="hidden" name="description" value={description} readOnly />
+            <input
+              type="hidden"
+              name="description"
+              value={description}
+              readOnly
+            />
           </label>
           <label
             className={`upload ${isDragging ? "is-dragging" : ""}`}
-            onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }}
+            onDragOver={(event) => {
+              event.preventDefault();
+              setIsDragging(true);
+            }}
             onDragLeave={() => setIsDragging(false)}
-            onDrop={(event) => { event.preventDefault(); setIsDragging(false); acceptFiles(event.dataTransfer.files); }}
+            onDrop={(event) => {
+              event.preventDefault();
+              setIsDragging(false);
+              acceptFiles(event.dataTransfer.files);
+            }}
           >
             <Icon>cloud_upload</Icon>Attach screenshots or logs
             <input
               type="file"
               multiple
               accept="image/*,.pdf,.log,.txt,.csv,.doc,.docx"
-              onChange={(event) => { acceptFiles(event.target.files); event.target.value = ""; }}
+              onChange={(event) => {
+                acceptFiles(event.target.files);
+                event.target.value = "";
+              }}
             />
             <small>
               {files.length
@@ -271,7 +324,16 @@ export default function CreateTicketPage() {
                 {files.map((file, index) => (
                   <li key={`${file.name}-${index}`}>
                     <span>{file.name}</span>
-                    <button type="button" onClick={(event) => { event.preventDefault(); setFiles((current) => current.filter((_, fileIndex) => fileIndex !== index)); }} aria-label={`Remove ${file.name}`}>
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setFiles((current) =>
+                          current.filter((_, fileIndex) => fileIndex !== index),
+                        );
+                      }}
+                      aria-label={`Remove ${file.name}`}
+                    >
                       <Icon>close</Icon>
                     </button>
                   </li>
@@ -283,11 +345,18 @@ export default function CreateTicketPage() {
             <Icon>auto_awesome</Icon>
             <div>
               <strong>Smart Triage Active</strong>
-              <p>We analyze the subject and description to route this request to the right support queue.</p>
+              <p>
+                We analyze the subject and description to route this request to
+                the right support queue.
+              </p>
             </div>
           </section>
           <div className="form-actions">
-            <button type="button" className="secondary-button" onClick={saveDraft}>
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={saveDraft}
+            >
               Save Draft
             </button>
             <button className="primary-button" type="submit" disabled={loading}>

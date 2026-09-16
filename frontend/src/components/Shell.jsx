@@ -146,7 +146,7 @@ export default function Shell({ children }) {
         JSON.stringify({
           items,
           unreadCount: unread,
-        })
+        }),
       );
     };
 
@@ -170,7 +170,7 @@ export default function Shell({ children }) {
           } catch {
             commentsByTicket[ticket.id] = [];
           }
-        })
+        }),
       );
 
       return relevantTickets.reduce((acc, ticket) => {
@@ -215,126 +215,120 @@ export default function Shell({ children }) {
          * of notifications for existing tickets.
          */
         if (!Object.keys(previousSnapshot).length) {
-          localStorage.setItem(
-            snapshotKey,
-            JSON.stringify(currentSnapshot)
-          );
+          localStorage.setItem(snapshotKey, JSON.stringify(currentSnapshot));
           return;
         }
 
         const newNotifications = [];
 
-        Object.entries(currentSnapshot).forEach(
-          ([ticketId, current]) => {
-            const previous = previousSnapshot[ticketId];
+        Object.entries(currentSnapshot).forEach(([ticketId, current]) => {
+          const previous = previousSnapshot[ticketId];
 
-            if (!previous) {
-              /*
-               * New unassigned ticket for agents/admins.
-               */
-              if (
-                (role === "IT_AGENT" || role === "ADMIN") &&
-                !current.assignedAgentId
-              ) {
-                newNotifications.push({
-                  id: `${ticketId}-new-${Date.now()}`,
-                  ticketId,
-                  text: `New unassigned ticket: ${current.title}`,
-                  createdAt: new Date().toISOString(),
-                });
-              }
-
-              return;
-            }
-
+          if (!previous) {
             /*
-             * Assignment changed
+             * New unassigned ticket for agents/admins.
              */
             if (
-              current.assignedAgentId !== previous.assignedAgentId &&
-              current.assignedAgentId
-            ) {
-              const shouldNotify =
-                role === "ADMIN" ||
-                current.assignedAgentId === user.userId;
-
-              if (shouldNotify) {
-                newNotifications.push({
-                  id: `${ticketId}-assignment-${Date.now()}`,
-                  ticketId,
-                  text: `Ticket assigned to ${
-                    current.assignedAgentName || "an agent"
-                  }: ${current.title}`,
-                  createdAt: new Date().toISOString(),
-                });
-              }
-            }
-
-            /*
-             * Status changed
-             */
-            if (
-              current.status !== previous.status &&
-              current.status !== "RESOLVED"
+              (role === "IT_AGENT" || role === "ADMIN") &&
+              !current.assignedAgentId
             ) {
               newNotifications.push({
-                id: `${ticketId}-status-${Date.now()}`,
+                id: `${ticketId}-new-${Date.now()}`,
                 ticketId,
-                text: `Ticket status changed to ${current.status}: ${current.title}`,
+                text: `New unassigned ticket: ${current.title}`,
                 createdAt: new Date().toISOString(),
               });
             }
 
-            /*
-             * Priority changed
-             */
-            if (current.priority !== previous.priority) {
+            return;
+          }
+
+          /*
+           * Assignment changed
+           */
+          if (
+            current.assignedAgentId !== previous.assignedAgentId &&
+            current.assignedAgentId
+          ) {
+            const shouldNotify =
+              role === "ADMIN" || current.assignedAgentId === user.userId;
+
+            if (shouldNotify) {
               newNotifications.push({
-                id: `${ticketId}-priority-${Date.now()}`,
+                id: `${ticketId}-assignment-${Date.now()}`,
                 ticketId,
-                text: `Ticket priority changed to ${current.priority}: ${current.title}`,
+                text: `Ticket assigned to ${
+                  current.assignedAgentName || "an agent"
+                }: ${current.title}`,
                 createdAt: new Date().toISOString(),
               });
             }
+          }
 
-            /*
-             * Ticket resolved
-             */
-            if (
-              current.resolvedAt &&
-              current.resolvedAt !== previous.resolvedAt
-            ) {
-              newNotifications.push({
-                id: `${ticketId}-resolved-${Date.now()}`,
-                ticketId,
-                text: `Ticket resolved: ${current.title}`,
-                createdAt: new Date().toISOString(),
-              });
-            }
-
-            /*
-             * New comments
-             */
-            const previousCommentIds = new Set(
-              (previous.comments || []).map((comment) => comment.id)
-            );
-
-            const newComments = (current.comments || []).filter(
-              (comment) =>
-                !previousCommentIds.has(comment.id) &&
-                comment.userId !== user.userId
-            );
-
-            newComments.forEach(() => {
-              newNotifications.push({
-                id: `${ticketId}-comment-${Date.now()}-${Math.random()}`,
-                ticketId,
-                text: `New comment on: ${current.title}`,
-                createdAt: new Date().toISOString(),
-              });
+          /*
+           * Status changed
+           */
+          if (
+            current.status !== previous.status &&
+            current.status !== "RESOLVED"
+          ) {
+            newNotifications.push({
+              id: `${ticketId}-status-${Date.now()}`,
+              ticketId,
+              text: `Ticket status changed to ${current.status}: ${current.title}`,
+              createdAt: new Date().toISOString(),
             });
           }
-        );
+
+          /*
+           * Priority changed
+           */
+          if (current.priority !== previous.priority) {
+            newNotifications.push({
+              id: `${ticketId}-priority-${Date.now()}`,
+              ticketId,
+              text: `Ticket priority changed to ${current.priority}: ${current.title}`,
+              createdAt: new Date().toISOString(),
+            });
+          }
+
+          /*
+           * Ticket resolved
+           */
+          if (
+            current.resolvedAt &&
+            current.resolvedAt !== previous.resolvedAt
+          ) {
+            newNotifications.push({
+              id: `${ticketId}-resolved-${Date.now()}`,
+              ticketId,
+              text: `Ticket resolved: ${current.title}`,
+              createdAt: new Date().toISOString(),
+            });
+          }
+
+          /*
+           * New comments
+           */
+          const previousCommentIds = new Set(
+            (previous.comments || []).map((comment) => comment.id),
+          );
+
+          const newComments = (current.comments || []).filter(
+            (comment) =>
+              !previousCommentIds.has(comment.id) &&
+              comment.userId !== user.userId,
+          );
+
+          newComments.forEach(() => {
+            newNotifications.push({
+              id: `${ticketId}-comment-${Date.now()}-${Math.random()}`,
+              ticketId,
+              text: `New comment on: ${current.title}`,
+              createdAt: new Date().toISOString(),
+            });
+          });
+        });
 
         if (newNotifications.length > 0) {
           const updatedNotifications = [
@@ -342,22 +336,15 @@ export default function Shell({ children }) {
             ...notifications,
           ].slice(0, 20);
 
-          const updatedUnread =
-            unreadCount + newNotifications.length;
+          const updatedUnread = unreadCount + newNotifications.length;
 
           setNotifications(updatedNotifications);
           setUnreadCount(updatedUnread);
 
-          saveNotifications(
-            updatedNotifications,
-            updatedUnread
-          );
+          saveNotifications(updatedNotifications, updatedUnread);
         }
 
-        localStorage.setItem(
-          snapshotKey,
-          JSON.stringify(currentSnapshot)
-        );
+        localStorage.setItem(snapshotKey, JSON.stringify(currentSnapshot));
       } catch (error) {
         console.error("Notification polling failed:", error);
       }
@@ -389,7 +376,7 @@ export default function Shell({ children }) {
           JSON.stringify({
             items: notifications,
             unreadCount: 0,
-          })
+          }),
         );
       }
     }
@@ -408,7 +395,7 @@ export default function Shell({ children }) {
         JSON.stringify({
           items: [],
           unreadCount: 0,
-        })
+        }),
       );
     }
   };
@@ -419,7 +406,7 @@ export default function Shell({ children }) {
   const visibleGroups = NAV_GROUPS.map((group) => ({
     ...group,
     items: group.items.filter(
-      (item) => !item.roles || item.roles.includes(role)
+      (item) => !item.roles || item.roles.includes(role),
     ),
   })).filter((group) => group.items.length > 0);
 
@@ -430,16 +417,15 @@ export default function Shell({ children }) {
     role === "ADMIN"
       ? "Admin Console"
       : role === "IT_AGENT"
-      ? "Agent Workspace"
-      : "Employee Portal";
+        ? "Agent Workspace"
+        : "Employee Portal";
 
   /*
    * Active route
    */
   const isActive = (path) => {
     return (
-      location.pathname === path ||
-      location.pathname.startsWith(`${path}/`)
+      location.pathname === path || location.pathname.startsWith(`${path}/`)
     );
   };
 
@@ -456,24 +442,16 @@ export default function Shell({ children }) {
       {/* =========================
           SIDEBAR
       ========================== */}
-      <aside
-        className={`sidebar ${collapsed ? "collapsed" : ""}`}
-      >
+      <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
         <div className="sidebar-inner">
           {/* Brand */}
           <div className="sidebar-header">
             <Link to="/dashboard" className="brand">
               <span className="brand-logo">
                 {theme === "light" ? (
-                  <img
-                    src={Light_LOGO_SRC}
-                    alt="SmartDesk logo"
-                  />
+                  <img src={Light_LOGO_SRC} alt="SmartDesk logo" />
                 ) : (
-                  <img
-                    src={Dark_LOGO_SRC}
-                    alt="SmartDesk logo"
-                  />
+                  <img src={Dark_LOGO_SRC} alt="SmartDesk logo" />
                 )}
               </span>
 
@@ -486,23 +464,13 @@ export default function Shell({ children }) {
             <button
               className="sidebar-toggle"
               type="button"
-              aria-label={
-                collapsed
-                  ? "Expand sidebar"
-                  : "Collapse sidebar"
-              }
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               aria-expanded={!collapsed}
               onClick={() => setCollapsed((value) => !value)}
-              title={
-                collapsed
-                  ? "Expand sidebar"
-                  : "Collapse sidebar"
-              }
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               <Icon>
-                {collapsed
-                  ? "keyboard_arrow_right"
-                  : "keyboard_arrow_left"}
+                {collapsed ? "keyboard_arrow_right" : "keyboard_arrow_left"}
               </Icon>
             </button>
           </div>
@@ -518,47 +486,28 @@ export default function Shell({ children }) {
           {/* Navigation */}
           <div className="sidebar-navigation">
             {visibleGroups.map((group, groupIndex) => (
-              <div
-                className="nav-group"
-                key={group.label}
-              >
-                {groupIndex > 0 && (
-                  <div className="nav-divider" />
-                )}
+              <div className="nav-group" key={group.label}>
+                {groupIndex > 0 && <div className="nav-divider" />}
 
-                {!collapsed && (
-                  <p className="nav-label">
-                    {group.label}
-                  </p>
-                )}
+                {!collapsed && <p className="nav-label">{group.label}</p>}
 
                 <nav>
-                  {group.items.map(
-                    ({ path, icon, label }) => (
-                      <Link
-                        key={path}
-                        to={path}
-                        className={`nav-item ${
-                          isActive(path)
-                            ? "active"
-                            : ""
-                        }`}
-                        title={
-                          collapsed ? label : undefined
-                        }
-                      >
-                        <span className="nav-icon">
-                          <Icon>{icon}</Icon>
-                        </span>
+                  {group.items.map(({ path, icon, label }) => (
+                    <Link
+                      key={path}
+                      to={path}
+                      className={`nav-item ${isActive(path) ? "active" : ""}`}
+                      title={collapsed ? label : undefined}
+                    >
+                      <span className="nav-icon">
+                        <Icon>{icon}</Icon>
+                      </span>
 
-                        <span className="nav-text">
-                          {label}
-                        </span>
+                      <span className="nav-text">{label}</span>
 
-                        <span className="nav-active-indicator" />
-                      </Link>
-                    )
-                  )}
+                      <span className="nav-active-indicator" />
+                    </Link>
+                  ))}
                 </nav>
               </div>
             ))}
@@ -568,20 +517,14 @@ export default function Shell({ children }) {
           <div className="sidebar-bottom">
             <Link
               to="/settings"
-              className={`nav-item ${
-                isActive("/settings") ? "active" : ""
-              }`}
-              title={
-                collapsed ? "Settings" : undefined
-              }
+              className={`nav-item ${isActive("/settings") ? "active" : ""}`}
+              title={collapsed ? "Settings" : undefined}
             >
               <span className="nav-icon">
                 <Icon>settings</Icon>
               </span>
 
-              <span className="nav-text">
-                Settings
-              </span>
+              <span className="nav-text">Settings</span>
 
               <span className="nav-active-indicator" />
             </Link>
@@ -596,9 +539,7 @@ export default function Shell({ children }) {
                 <Icon>logout</Icon>
               </span>
 
-              <span className="nav-text">
-                Logout
-              </span>
+              <span className="nav-text">Logout</span>
             </button>
           </div>
         </div>
@@ -613,13 +554,9 @@ export default function Shell({ children }) {
           <div className="topbar-inner">
             {/* Left side */}
             <div className="topbar-context">
-              <span className="context-label">
-                Workspace
-              </span>
+              <span className="context-label">Workspace</span>
 
-              <span className="context-value">
-                {workspaceLabel}
-              </span>
+              <span className="context-value">{workspaceLabel}</span>
             </div>
 
             {/* Right side */}
@@ -636,17 +573,11 @@ export default function Shell({ children }) {
                 }
                 onClick={() =>
                   setTheme((current) =>
-                    current === "light"
-                      ? "dark"
-                      : "light"
+                    current === "light" ? "dark" : "light",
                   )
                 }
               >
-                <Icon>
-                  {theme === "light"
-                    ? "dark_mode"
-                    : "light_mode"}
-                </Icon>
+                <Icon>{theme === "light" ? "dark_mode" : "light_mode"}</Icon>
               </button>
 
               {/* Help */}
@@ -655,9 +586,7 @@ export default function Shell({ children }) {
                 className="topbar-button"
                 aria-label="Help and documentation"
                 title="Knowledge Base"
-                onClick={() =>
-                  navigate("/knowledge-base")
-                }
+                onClick={() => navigate("/knowledge-base")}
               >
                 <Icon>help</Icon>
               </button>
@@ -667,9 +596,7 @@ export default function Shell({ children }) {
                 <button
                   type="button"
                   className={`topbar-button notification-button ${
-                    showNotifications
-                      ? "notification-open"
-                      : ""
+                    showNotifications ? "notification-open" : ""
                   }`}
                   aria-label="Notifications"
                   aria-expanded={showNotifications}
@@ -680,9 +607,7 @@ export default function Shell({ children }) {
 
                   {unreadCount > 0 && (
                     <span className="notification-badge">
-                      {unreadCount > 99
-                        ? "99+"
-                        : unreadCount}
+                      {unreadCount > 99 ? "99+" : unreadCount}
                     </span>
                   )}
                 </button>
@@ -691,16 +616,12 @@ export default function Shell({ children }) {
                   <div className="notification-popover">
                     <div className="notification-heading">
                       <div>
-                        <strong>
-                          Notifications
-                        </strong>
+                        <strong>Notifications</strong>
 
                         <span>
                           {notifications.length > 0
                             ? `${notifications.length} recent update${
-                                notifications.length === 1
-                                  ? ""
-                                  : "s"
+                                notifications.length === 1 ? "" : "s"
                               }`
                             : "You're all caught up"}
                         </span>
@@ -710,9 +631,7 @@ export default function Shell({ children }) {
                         <button
                           type="button"
                           className="notification-clear"
-                          onClick={
-                            clearNotifications
-                          }
+                          onClick={clearNotifications}
                         >
                           Clear all
                         </button>
@@ -722,63 +641,46 @@ export default function Shell({ children }) {
                     {notifications.length === 0 && (
                       <div className="notification-empty">
                         <span className="notification-empty-icon">
-                          <Icon>
-                            notifications_none
-                          </Icon>
+                          <Icon>notifications_none</Icon>
                         </span>
 
-                        <strong>
-                          No new updates
-                        </strong>
+                        <strong>No new updates</strong>
 
-                        <p>
-                          Ticket activity will appear
-                          here.
-                        </p>
+                        <p>Ticket activity will appear here.</p>
                       </div>
                     )}
 
                     {notifications.length > 0 && (
                       <div className="notification-list">
-                        {notifications.map(
-                          (notification) => (
-                            <button
-                              type="button"
-                              className="notification-item"
-                              key={notification.id}
-                              onClick={() => {
-                                setShowNotifications(
-                                  false
-                                );
-                                navigate(
-                                  `/ticket/${notification.ticketId}`
-                                );
-                              }}
-                            >
-                              <span className="notification-item-icon">
-                                <Icon>
-                                  notifications
-                                </Icon>
+                        {notifications.map((notification) => (
+                          <button
+                            type="button"
+                            className="notification-item"
+                            key={notification.id}
+                            onClick={() => {
+                              setShowNotifications(false);
+                              navigate(`/ticket/${notification.ticketId}`);
+                            }}
+                          >
+                            <span className="notification-item-icon">
+                              <Icon>notifications</Icon>
+                            </span>
+
+                            <span className="notification-item-content">
+                              <span className="notification-item-text">
+                                {notification.text}
                               </span>
 
-                              <span className="notification-item-content">
-                                <span className="notification-item-text">
-                                  {notification.text}
-                                </span>
+                              <small>
+                                {new Date(
+                                  notification.createdAt,
+                                ).toLocaleString()}
+                              </small>
+                            </span>
 
-                                <small>
-                                  {new Date(
-                                    notification.createdAt
-                                  ).toLocaleString()}
-                                </small>
-                              </span>
-
-                              <Icon>
-                                keyboard_arrow_right
-                              </Icon>
-                            </button>
-                          )
-                        )}
+                            <Icon>keyboard_arrow_right</Icon>
+                          </button>
+                        ))}
                       </div>
                     )}
                   </div>
@@ -792,18 +694,12 @@ export default function Shell({ children }) {
                 onClick={() => navigate("/settings")}
                 title="Open profile settings"
               >
-                <span className="avatar">
-                  {initials}
-                </span>
+                <span className="avatar">{initials}</span>
 
                 <span className="user-profile-info">
-                  <strong>
-                    {user?.name || "User"}
-                  </strong>
+                  <strong>{user?.name || "User"}</strong>
 
-                  <small>
-                    {user?.role || ""}
-                  </small>
+                  <small>{user?.role || ""}</small>
                 </span>
 
                 <span className="user-profile-chevron">
@@ -815,9 +711,7 @@ export default function Shell({ children }) {
         </header>
 
         {/* Page content */}
-        <main className="page-content">
-          {children}
-        </main>
+        <main className="page-content">{children}</main>
       </div>
     </div>
   );

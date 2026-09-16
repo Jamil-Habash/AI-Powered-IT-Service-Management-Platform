@@ -13,10 +13,10 @@ import {
   updateTicketStatus,
 } from "../services/ticketService";
 import MarkdownContent from "../components/MarkdownContent";
-import {getAgents} from "../services/userService";
+import { getAgents } from "../services/userService";
 import { getComments, addComment } from "../services/commentService";
 import usePageTitle from "../hooks/usePageTitle";
-import {exportTicketPdf} from "../utils/exportTicketPdf"
+import { exportTicketPdf } from "../utils/exportTicketPdf";
 
 export default function TicketDetailPage() {
   const { id } = useParams();
@@ -31,23 +31,24 @@ export default function TicketDetailPage() {
   const [agents, setAgents] = useState([]);
   const [attachmentError, setAttachmentError] = useState("");
 
-  usePageTitle(
-    ticket ? `Ticket ${id} ${ticket.title}` : `Ticket ${id}`
-  );
+  usePageTitle(ticket ? `Ticket ${id} ${ticket.title}` : `Ticket ${id}`);
 
-  const initials = (name) => (name || "User")
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const initials = (name) =>
+    (name || "User")
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
 
   useEffect(() => {
     getTicket(id)
       .then((response) => setTicket(response.data))
       .catch(() => setError("Unable to load this ticket."));
     getComments(id)
-      .then((response) => setComments(Array.isArray(response.data) ? response.data : []))
+      .then((response) =>
+        setComments(Array.isArray(response.data) ? response.data : []),
+      )
       .catch(() => {});
     // Poll every 3 seconds until AI analysis appears, stop after ~30 seconds
     let attempts = 0;
@@ -70,15 +71,15 @@ export default function TicketDetailPage() {
   };
 
   useEffect(() => {
-      getAgents()
-        .then((response) => {
-          const data = Array.isArray(response.data)
-            ? response.data
-            : response.data?.content || [];
-          setAgents(data);
-        })
-        .catch(() => {});
-    }, []);
+    getAgents()
+      .then((response) => {
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.content || [];
+        setAgents(data);
+      })
+      .catch(() => {});
+  }, []);
 
   const updateTicket = async (update) => {
     setError("");
@@ -131,13 +132,25 @@ export default function TicketDetailPage() {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  if (error) return <Shell><p className="form-error">{error}</p></Shell>;
-  if (!ticket) return <Shell><p>Loading ticket...</p></Shell>;
+  if (error)
+    return (
+      <Shell>
+        <p className="form-error">{error}</p>
+      </Shell>
+    );
+  if (!ticket)
+    return (
+      <Shell>
+        <p>Loading ticket...</p>
+      </Shell>
+    );
 
   const status = ticket.status || "OPEN";
   const priority = ticket.priority || "MEDIUM";
   const statusLabel = status.replace("_", " ");
-  const created = ticket.createdAt ? new Date(ticket.createdAt).toLocaleString() : "Date unavailable";
+  const created = ticket.createdAt
+    ? new Date(ticket.createdAt).toLocaleString()
+    : "Date unavailable";
   return (
     <Shell>
       <PageHeader
@@ -146,10 +159,16 @@ export default function TicketDetailPage() {
         description={`Created ${created}`}
         action={
           <div className="detail-actions">
-            <button className="secondary-button" onClick={() => navigate("/tickets")}>
+            <button
+              className="secondary-button"
+              onClick={() => navigate("/tickets")}
+            >
               <Icon>arrow_back</Icon>Back to Tickets
             </button>
-            <button className="secondary-button" onClick={() => exportTicketPdf(ticket, comments)}>
+            <button
+              className="secondary-button"
+              onClick={() => exportTicketPdf(ticket, comments)}
+            >
               <Icon>picture_as_pdf</Icon>Export PDF
             </button>
           </div>
@@ -165,19 +184,19 @@ export default function TicketDetailPage() {
             <div className="metadata">
               <span>
                 <small>Ticket ID</small>
-                  <b>#TICK-{ticket.id}</b>
+                <b>#TICK-{ticket.id}</b>
               </span>
               <span>
                 <small>Requester</small>
-                  <b>{ticket.createdByName || "Unknown"}</b>
+                <b>{ticket.createdByName || "Unknown"}</b>
               </span>
               <span>
                 <small>Assignee</small>
-                  <b>{ticket.assignedAgentName || "Unassigned"}</b>
+                <b>{ticket.assignedAgentName || "Unassigned"}</b>
               </span>
               <span>
                 <small>Category</small>
-                  <b>{ticket.categoryName || "Uncategorized"}</b>
+                <b>{ticket.categoryName || "Uncategorized"}</b>
               </span>
             </div>
           </section>
@@ -188,37 +207,62 @@ export default function TicketDetailPage() {
               <div className="attachments-section">
                 <div className="panel-heading">
                   <h3>Attachments</h3>
-                  <small>{ticket.attachments.length} file{ticket.attachments.length === 1 ? "" : "s"}</small>
+                  <small>
+                    {ticket.attachments.length} file
+                    {ticket.attachments.length === 1 ? "" : "s"}
+                  </small>
                 </div>
                 <div className="attachments-list">
                   {ticket.attachments.map((attachment) => (
                     <div className="attachment-item" key={attachment.id}>
-                      <Icon>{attachment.contentType?.startsWith("image/") ? "image" : "description"}</Icon>
+                      <Icon>
+                        {attachment.contentType?.startsWith("image/")
+                          ? "image"
+                          : "description"}
+                      </Icon>
                       <div>
                         <strong>{attachment.fileName}</strong>
                         <small>{formatFileSize(attachment.fileSize)}</small>
                       </div>
-                      <button type="button" className="icon-button" title="Open attachment" onClick={() => openAttachment(attachment)}>
+                      <button
+                        type="button"
+                        className="icon-button"
+                        title="Open attachment"
+                        onClick={() => openAttachment(attachment)}
+                      >
                         <Icon>open_in_new</Icon>
                       </button>
                     </div>
                   ))}
                 </div>
-                {attachmentError && <p className="form-error">{attachmentError}</p>}
+                {attachmentError && (
+                  <p className="form-error">{attachmentError}</p>
+                )}
               </div>
             )}
           </section>
           <section className="panel ai-panel">
-            <h2><Icon>auto_awesome</Icon>SmartDesk AI Copilot Analysis</h2>
+            <h2>
+              <Icon>auto_awesome</Icon>SmartDesk AI Copilot Analysis
+            </h2>
             {ticket.aiSummary ? (
               <>
                 <p>{ticket.aiSummary}</p>
                 <div className="ai-suggestions">
-                  <span>Suggested category: <strong>{ticket.aiSuggestedCategory}</strong></span><br></br>
-                  <span>Suggested priority: <strong>{ticket.aiSuggestedPriority}</strong></span>
+                  <span>
+                    Suggested category:{" "}
+                    <strong>{ticket.aiSuggestedCategory}</strong>
+                  </span>
+                  <br></br>
+                  <span>
+                    Suggested priority:{" "}
+                    <strong>{ticket.aiSuggestedPriority}</strong>
+                  </span>
                 </div>
                 <ul>
-                  {ticket.aiSuggestedActions?.map((action, i) => <li key={i}>{action}.</li>)}
+                  {ticket.aiSuggestedActions?.map((action, i) => (
+                    <li key={i}>{action}.</li>
+                  ))}
                 </ul>
               </>
             ) : (
@@ -228,7 +272,11 @@ export default function TicketDetailPage() {
           <section className="panel">
             <div className="panel-heading">
               <h2>Activity & Discussion</h2>
-              <small>{comments.length === 0 ? "No messages" : `${comments.length} message${comments.length > 1 ? "s" : ""}`}</small>
+              <small>
+                {comments.length === 0
+                  ? "No messages"
+                  : `${comments.length} message${comments.length > 1 ? "s" : ""}`}
+              </small>
             </div>
             {comments.map((c) => (
               <div key={c.id} className="comment">
@@ -251,7 +299,11 @@ export default function TicketDetailPage() {
               placeholder="Type your response..."
               rows="3"
             />
-            <button className="primary-button" onClick={handleSendReply} disabled={sendingReply}>
+            <button
+              className="primary-button"
+              onClick={handleSendReply}
+              disabled={sendingReply}
+            >
               {sendingReply ? "Sending..." : "Send Reply"}
             </button>
           </section>
@@ -269,7 +321,8 @@ export default function TicketDetailPage() {
                 <option value="">Unassigned</option>
                 {agents.map((agent) => (
                   <option value={agent.id} key={agent.id}>
-                    {agent.name} {agent.role ? `(${agent.role.replace("_", " ")})` : ""}
+                    {agent.name}{" "}
+                    {agent.role ? `(${agent.role.replace("_", " ")})` : ""}
                   </option>
                 ))}
               </select>

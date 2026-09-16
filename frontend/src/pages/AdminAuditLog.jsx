@@ -31,7 +31,10 @@ export default function AdminAuditLog() {
         title="Audit Log"
         description="A chronological record of ticket actions taken by agents and admins."
         action={
-          <button className="secondary-button" onClick={() => navigate("/dashboard")}>
+          <button
+            className="secondary-button"
+            onClick={() => navigate("/dashboard")}
+          >
             <Icon>arrow_back</Icon>Back to Manage Users
           </button>
         }
@@ -39,7 +42,9 @@ export default function AdminAuditLog() {
       <section className="panel">
         {loading && <p>Loading...</p>}
         {!loading && error && <p className="form-error">{error}</p>}
-        {!loading && !error && logs.length === 0 && <p>No activity recorded yet.</p>}
+        {!loading && !error && logs.length === 0 && (
+          <p>No activity recorded yet.</p>
+        )}
         {!loading && !error && logs.length > 0 && (
           <table className="w-full text-left">
             <thead>
@@ -54,9 +59,13 @@ export default function AdminAuditLog() {
             <tbody>
               {logs.map((log) => (
                 <tr key={log.id} className="border-b text-sm">
-                  <td className="py-2">{new Date(log.createdAt).toLocaleString()}</td>
+                  <td className="py-2">
+                    {new Date(log.createdAt).toLocaleString()}
+                  </td>
                   <td className="py-2">{log.action}</td>
-                  <td className="py-2">{log.targetType} #{log.targetId}</td>
+                  <td className="py-2">
+                    {log.targetType} #{log.targetId}
+                  </td>
                   <td className="py-2">{log.details}</td>
                   <td className="py-2">{log.performedByName}</td>
                 </tr>

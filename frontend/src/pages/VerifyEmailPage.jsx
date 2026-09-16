@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
 import {
-  resendVerificationCode,
-  verifyEmail,
-} from "../services/authService";
+  Light_LOGO_SRC,
+  Dark_LOGO_SRC,
+  Light_PNG_SRC,
+  Dark_PNG_SRC,
+} from "../components/Shell";
+import { resendVerificationCode, verifyEmail } from "../services/authService";
 import usePageTitle from "../hooks/usePageTitle";
 
 const OTP_LENGTH = 6;
@@ -17,22 +19,21 @@ export default function VerifyEmailPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [digits, setDigits] = useState(
-    Array(OTP_LENGTH).fill("")
-  );
+  const [digits, setDigits] = useState(Array(OTP_LENGTH).fill(""));
 
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
   const [countdown, setCountdown] = useState(CODE_EXPIRY_SECONDS);
-  const [resendCountdown, setResendCountdown] =
-    useState(RESEND_SECONDS);
+  const [resendCountdown, setResendCountdown] = useState(RESEND_SECONDS);
   const [toast, setToast] = useState("");
   const [shake, setShake] = useState(false);
 
   const inputsRef = useRef([]);
 
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
-  
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("theme") || "light",
+  );
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
@@ -66,9 +67,7 @@ export default function VerifyEmailPage() {
     }
 
     const timer = setInterval(() => {
-      setCountdown((current) =>
-        current > 0 ? current - 1 : 0
-      );
+      setCountdown((current) => (current > 0 ? current - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
@@ -83,9 +82,7 @@ export default function VerifyEmailPage() {
     }
 
     const timer = setInterval(() => {
-      setResendCountdown((current) =>
-        current > 0 ? current - 1 : 0
-      );
+      setResendCountdown((current) => (current > 0 ? current - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
@@ -107,7 +104,7 @@ export default function VerifyEmailPage() {
     const remainingSeconds = seconds % 60;
 
     return `${String(minutes).padStart(2, "0")}:${String(
-      remainingSeconds
+      remainingSeconds,
     ).padStart(2, "0")}`;
   };
 
@@ -153,17 +150,11 @@ export default function VerifyEmailPage() {
       }
     }
 
-    if (
-      event.key === "ArrowLeft" &&
-      index > 0
-    ) {
+    if (event.key === "ArrowLeft" && index > 0) {
       inputsRef.current[index - 1]?.focus();
     }
 
-    if (
-      event.key === "ArrowRight" &&
-      index < OTP_LENGTH - 1
-    ) {
+    if (event.key === "ArrowRight" && index < OTP_LENGTH - 1) {
       inputsRef.current[index + 1]?.focus();
     }
   };
@@ -196,10 +187,7 @@ export default function VerifyEmailPage() {
     setDigits(nextDigits);
     setError("");
 
-    const focusIndex = Math.min(
-      pasted.length,
-      OTP_LENGTH - 1
-    );
+    const focusIndex = Math.min(pasted.length, OTP_LENGTH - 1);
 
     inputsRef.current[focusIndex]?.focus();
   };
@@ -224,7 +212,7 @@ export default function VerifyEmailPage() {
 
     if (countdown <= 0) {
       setError(
-        "This verification code has expired. Please request a new code."
+        "This verification code has expired. Please request a new code.",
       );
       setShake(true);
 
@@ -242,9 +230,7 @@ export default function VerifyEmailPage() {
 
       setStatus("success");
 
-      sessionStorage.removeItem(
-        "smartdesk_verification_email"
-      );
+      sessionStorage.removeItem("smartdesk_verification_email");
 
       setToast("Email verified successfully.");
 
@@ -252,8 +238,7 @@ export default function VerifyEmailPage() {
         navigate("/login", {
           replace: true,
           state: {
-            message:
-              "Your email has been verified. You can now log in.",
+            message: "Your email has been verified. You can now log in.",
           },
         });
       }, 1000);
@@ -296,8 +281,7 @@ export default function VerifyEmailPage() {
       }, 2500);
     } catch (err) {
       const message =
-        err.response?.data?.error ||
-        "Unable to resend the verification code.";
+        err.response?.data?.error || "Unable to resend the verification code.";
 
       setError(message);
     }
@@ -307,17 +291,11 @@ export default function VerifyEmailPage() {
     return null;
   }
 
-  const isComplete = digits.every(
-    (digit) => digit !== ""
-  );
+  const isComplete = digits.every((digit) => digit !== "");
 
   return (
     <div className="email-verification-page">
-      {toast && (
-        <div className="otp-toast show">
-          {toast}
-        </div>
-      )}
+      {toast && <div className="otp-toast show">{toast}</div>}
 
       <main className="email-verification-card">
         <div className="verification-accent" />
@@ -353,95 +331,54 @@ export default function VerifyEmailPage() {
           </div>
 
           {/* Form */}
-          <form
-            className="verification-form"
-            onSubmit={handleSubmit}
-          >
+          <form className="verification-form" onSubmit={handleSubmit}>
             <label className="otp-label">
               Enter 6-digit authentication code
             </label>
 
-            <div
-              className={`otp-inputs ${
-                shake ? "otp-shake" : ""
-              }`}
-            >
+            <div className={`otp-inputs ${shake ? "otp-shake" : ""}`}>
               {digits.map((digit, index) => (
-                <div
-                  className="otp-input-container"
-                  key={index}
-                >
+                <div className="otp-input-container" key={index}>
                   <input
                     ref={(element) => {
                       inputsRef.current[index] = element;
                     }}
-                    className={`otp-input ${
-                      digit ? "filled" : ""
-                    }`}
+                    className={`otp-input ${digit ? "filled" : ""}`}
                     type="text"
                     inputMode="numeric"
-                    autoComplete={
-                      index === 0
-                        ? "one-time-code"
-                        : "off"
-                    }
+                    autoComplete={index === 0 ? "one-time-code" : "off"}
                     maxLength={1}
                     value={digit}
-                    onChange={(event) =>
-                      handleChange(index, event)
-                    }
-                    onKeyDown={(event) =>
-                      handleKeyDown(index, event)
-                    }
+                    onChange={(event) => handleChange(index, event)}
+                    onKeyDown={(event) => handleKeyDown(index, event)}
                     onPaste={handlePaste}
-                    aria-label={`Verification digit ${
-                      index + 1
-                    }`}
+                    aria-label={`Verification digit ${index + 1}`}
                     disabled={status === "verifying"}
                   />
 
-                  {index === 2 && (
-                    <span className="otp-divider">
-                      -
-                    </span>
-                  )}
+                  {index === 2 && <span className="otp-divider">-</span>}
                 </div>
               ))}
             </div>
 
             <div className="otp-expiry">
-              <span className="material-symbols-outlined">
-                schedule
-              </span>
+              <span className="material-symbols-outlined">schedule</span>
 
               {countdown > 0 ? (
                 <>
-                  Code expires in{" "}
-                  <strong>
-                    {formatTime(countdown)}
-                  </strong>
+                  Code expires in <strong>{formatTime(countdown)}</strong>
                 </>
               ) : (
-                <strong className="expired">
-                  Code expired
-                </strong>
+                <strong className="expired">Code expired</strong>
               )}
             </div>
 
-            {error && (
-              <p className="form-error verification-error">
-                {error}
-              </p>
-            )}
+            {error && <p className="form-error verification-error">{error}</p>}
 
             <button
               className="submit-button verification-submit"
               type="submit"
-              disabled={
-                status === "verifying" ||
-                !isComplete ||
-                countdown <= 0
-              }
+              disabled={status === "verifying" || !isComplete || countdown <= 0}
             >
               {status === "verifying"
                 ? "Verifying..."
@@ -449,12 +386,9 @@ export default function VerifyEmailPage() {
                   ? "Verified"
                   : "Verify & Continue"}
 
-              {status !== "verifying" &&
-                status !== "success" && (
-                  <span className="material-symbols-outlined">
-                    arrow_forward
-                  </span>
-                )}
+              {status !== "verifying" && status !== "success" && (
+                <span className="material-symbols-outlined">arrow_forward</span>
+              )}
             </button>
           </form>
 
@@ -462,14 +396,10 @@ export default function VerifyEmailPage() {
           <div className="verification-actions">
             <div className="resend-text">
               Didn't receive the email?
-
               <button
                 type="button"
                 className="otp-resend"
-                disabled={
-                  resendCountdown > 0 ||
-                  status === "verifying"
-                }
+                disabled={resendCountdown > 0 || status === "verifying"}
                 onClick={handleResend}
               >
                 {resendCountdown > 0
@@ -484,18 +414,14 @@ export default function VerifyEmailPage() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <span className="material-symbols-outlined">
-                  mail
-                </span>
+                <span className="material-symbols-outlined">mail</span>
                 Open Gmail
               </a>
 
               <span>•</span>
 
               <Link to="/register">
-                <span className="material-symbols-outlined">
-                  edit
-                </span>
+                <span className="material-symbols-outlined">edit</span>
                 Change email
               </Link>
             </div>
@@ -504,9 +430,7 @@ export default function VerifyEmailPage() {
           {/* Back to login */}
           <div className="back-to-login">
             <Link to="/login">
-              <span className="material-symbols-outlined">
-                arrow_back
-              </span>
+              <span className="material-symbols-outlined">arrow_back</span>
               Back to Sign in
             </Link>
           </div>
@@ -515,18 +439,12 @@ export default function VerifyEmailPage() {
         {/* Security strip */}
         <div className="verification-security">
           <div>
-            <span className="material-symbols-outlined">
-              verified_user
-            </span>
+            <span className="material-symbols-outlined">verified_user</span>
 
-            <span>
-              Secure email verification
-            </span>
+            <span>Secure email verification</span>
           </div>
 
-          <span className="security-id">
-            SmartDesk
-          </span>
+          <span className="security-id">SmartDesk</span>
         </div>
       </main>
 

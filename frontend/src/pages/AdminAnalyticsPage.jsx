@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
 import { getTickets } from "../services/ticketService";
-import { addCategory, getCategories, updateCategory } from "../services/categoryService";
+import {
+  addCategory,
+  getCategories,
+  updateCategory,
+} from "../services/categoryService";
 import usePageTitle from "../hooks/usePageTitle";
 
 export default function AdminAnalyticsPage() {
@@ -45,7 +49,9 @@ export default function AdminAnalyticsPage() {
   const inProgressTickets = tickets.filter(
     (ticket) => ticket.status === "IN_PROGRESS",
   );
-  const resolvedTickets = tickets.filter((ticket) => ticket.status === "RESOLVED");
+  const resolvedTickets = tickets.filter(
+    (ticket) => ticket.status === "RESOLVED",
+  );
   const ticketCountByName = tickets.reduce((counts, ticket) => {
     const name = ticket.categoryName || "Uncategorized";
     counts[name] = (counts[name] || 0) + 1;
@@ -64,7 +70,8 @@ export default function AdminAnalyticsPage() {
   const agentCounts = Object.entries(
     tickets.reduce((counts, ticket) => {
       if (ticket.assignedAgentName) {
-        counts[ticket.assignedAgentName] = (counts[ticket.assignedAgentName] || 0) + 1;
+        counts[ticket.assignedAgentName] =
+          (counts[ticket.assignedAgentName] || 0) + 1;
       }
       return counts;
     }, {}),
@@ -109,7 +116,11 @@ export default function AdminAnalyticsPage() {
       <div className="stats-grid analytics-stats">
         {[
           ["Open Tickets", openTickets.length, "Current records"],
-          ["High / Critical Priority", priorityTickets.length, "Current records"],
+          [
+            "High / Critical Priority",
+            priorityTickets.length,
+            "Current records",
+          ],
           ["In Progress", inProgressTickets.length, "Current records"],
           ["Resolved (Period)", resolvedTickets.length, "Current records"],
         ].map(([label, value, note]) => (
@@ -130,9 +141,7 @@ export default function AdminAnalyticsPage() {
               <span>
                 {name}
                 <small>
-                  {metric === "volume"
-                    ? `${value} tickets`
-                    : "Unavailable"}
+                  {metric === "volume" ? `${value} tickets` : "Unavailable"}
                 </small>
               </span>
               <i>
@@ -161,24 +170,33 @@ export default function AdminAnalyticsPage() {
         </section>
       </div>
       <section className="panel">
-          <div className="panel-heading">
+        <div className="panel-heading">
           <div>
             <h2>Manage Ticket Categories</h2>
             <p>
-              Configure the taxonomy used for routing, reporting, and ticket intake.
+              Configure the taxonomy used for routing, reporting, and ticket
+              intake.
             </p>
           </div>
-            <button className="primary-button" onClick={openNewCategoryForm}>+ Add Service Category</button>
-          </div>
-          <div className="category-toolbar">
-            <div>
-              <strong>{categoryRows.length}</strong>
-              <span>configured categories</span>
-            </div>
-            <input value={categorySearch} onChange={(event) => setCategorySearch(event.target.value)} placeholder="Filter categories..." aria-label="Filter categories" />
+          <button className="primary-button" onClick={openNewCategoryForm}>
+            + Add Service Category
+          </button>
         </div>
-          {categoryLoading && <p>Loading service categories...</p>}
-          {!categoryLoading && visibleCategories.map((category) => (
+        <div className="category-toolbar">
+          <div>
+            <strong>{categoryRows.length}</strong>
+            <span>configured categories</span>
+          </div>
+          <input
+            value={categorySearch}
+            onChange={(event) => setCategorySearch(event.target.value)}
+            placeholder="Filter categories..."
+            aria-label="Filter categories"
+          />
+        </div>
+        {categoryLoading && <p>Loading service categories...</p>}
+        {!categoryLoading &&
+          visibleCategories.map((category) => (
             <div
               className="category-row"
               key={category.id || category.name}
@@ -192,16 +210,29 @@ export default function AdminAnalyticsPage() {
                 }
               }}
             >
-              <div><strong>{category.name}</strong><small>{category.description || "No description provided"}</small></div>
-              <span><b>{ticketCountByName[category.name] || 0}</b> active tickets</span>
+              <div>
+                <strong>{category.name}</strong>
+                <small>
+                  {category.description || "No description provided"}
+                </small>
+              </div>
+              <span>
+                <b>{ticketCountByName[category.name] || 0}</b> active tickets
+              </span>
               <span className="category-routing">General Service Desk</span>
               <span className="category-status">Active</span>
             </div>
           ))}
-          {!categoryLoading && !visibleCategories.length && <p>No categories match this filter.</p>}
+        {!categoryLoading && !visibleCategories.length && (
+          <p>No categories match this filter.</p>
+        )}
       </section>
       {showCategoryForm && (
-        <div className="modal-backdrop" role="presentation" onClick={closeCategoryForm}>
+        <div
+          className="modal-backdrop"
+          role="presentation"
+          onClick={closeCategoryForm}
+        >
           <form
             className="modal"
             role="dialog"
@@ -225,32 +256,89 @@ export default function AdminAnalyticsPage() {
                     name,
                     description,
                   };
-                  setCategories((current) => editingCategory
-                    ? current.map((category) => category.id === editingCategory.id ? savedCategory : category)
-                    : [...current, savedCategory]);
+                  setCategories((current) =>
+                    editingCategory
+                      ? current.map((category) =>
+                          category.id === editingCategory.id
+                            ? savedCategory
+                            : category,
+                        )
+                      : [...current, savedCategory],
+                  );
                   resetCategoryForm();
                 })
-                .catch(() => setCategoryError(`Unable to ${editingCategory ? "update" : "save"} category.`))
+                .catch(() =>
+                  setCategoryError(
+                    `Unable to ${editingCategory ? "update" : "save"} category.`,
+                  ),
+                )
                 .finally(() => setCategoryLoading(false));
             }}
           >
             <div className="panel-heading">
-              <div><span className="eyebrow">TAXONOMY MANAGEMENT</span><h2>{editingCategory ? "Edit Service Category" : "New Service Category"}</h2></div>
-              <button type="button" className="icon-button" aria-label="Close category form" onClick={closeCategoryForm}><span>×</span></button>
+              <div>
+                <span className="eyebrow">TAXONOMY MANAGEMENT</span>
+                <h2>
+                  {editingCategory
+                    ? "Edit Service Category"
+                    : "New Service Category"}
+                </h2>
+              </div>
+              <button
+                type="button"
+                className="icon-button"
+                aria-label="Close category form"
+                onClick={closeCategoryForm}
+              >
+                <span>×</span>
+              </button>
             </div>
-            <p className="modal-lead">Add a clear category description so teams can route requests consistently.</p>
+            <p className="modal-lead">
+              Add a clear category description so teams can route requests
+              consistently.
+            </p>
             <label>
               Category Name:
-              <input value={newCategory} onChange={(event) => setNewCategory(event.target.value)} placeholder="Cloud Infrastructure & DevOps" required autoFocus />
-            </label><br></br>
+              <input
+                value={newCategory}
+                onChange={(event) => setNewCategory(event.target.value)}
+                placeholder="Cloud Infrastructure & DevOps"
+                required
+                autoFocus
+              />
+            </label>
+            <br></br>
             <label>
               Category Description:
-              <textarea value={categoryDescription} onChange={(event) => setCategoryDescription(event.target.value)} placeholder="Describe the requests this category should receive." rows="4" required />
+              <textarea
+                value={categoryDescription}
+                onChange={(event) => setCategoryDescription(event.target.value)}
+                placeholder="Describe the requests this category should receive."
+                rows="4"
+                required
+              />
             </label>
             {categoryError && <p className="form-error">{categoryError}</p>}
             <div className="form-actions">
-              <button type="button" className="secondary-button" disabled={categoryLoading} onClick={closeCategoryForm}>Cancel</button>
-              <button type="submit" className="primary-button" disabled={categoryLoading}>{categoryLoading ? "Saving..." : editingCategory ? "Update Category" : "Save Category"}</button>
+              <button
+                type="button"
+                className="secondary-button"
+                disabled={categoryLoading}
+                onClick={closeCategoryForm}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="primary-button"
+                disabled={categoryLoading}
+              >
+                {categoryLoading
+                  ? "Saving..."
+                  : editingCategory
+                    ? "Update Category"
+                    : "Save Category"}
+              </button>
             </div>
           </form>
         </div>

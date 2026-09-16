@@ -25,7 +25,9 @@ export default function MarkdownContent({ children }) {
     if (list.length) {
       blocks.push(
         <ul key={`list-${blocks.length}`}>
-          {list.map((item, index) => <li key={index}>{renderInline(item)}</li>)}
+          {list.map((item, index) => (
+            <li key={index}>{renderInline(item)}</li>
+          ))}
         </ul>,
       );
       list = [];
@@ -37,7 +39,11 @@ export default function MarkdownContent({ children }) {
       flushList();
       if (code === null) code = [];
       else {
-        blocks.push(<pre key={`code-${index}`}><code>{code.join("\n")}</code></pre>);
+        blocks.push(
+          <pre key={`code-${index}`}>
+            <code>{code.join("\n")}</code>
+          </pre>,
+        );
         code = null;
       }
       return;
@@ -53,12 +59,21 @@ export default function MarkdownContent({ children }) {
     }
     flushList();
     blocks.push(
-      line.trim() ? <p key={`line-${index}`}>{renderInline(line)}</p> : <div className="markdown-spacer" key={`space-${index}`} />,
+      line.trim() ? (
+        <p key={`line-${index}`}>{renderInline(line)}</p>
+      ) : (
+        <div className="markdown-spacer" key={`space-${index}`} />
+      ),
     );
   });
 
   flushList();
-  if (code !== null) blocks.push(<pre key={`code-${lines.length}`}><code>{code.join("\n")}</code></pre>);
+  if (code !== null)
+    blocks.push(
+      <pre key={`code-${lines.length}`}>
+        <code>{code.join("\n")}</code>
+      </pre>,
+    );
 
   return <div className="markdown-content">{blocks}</div>;
 }

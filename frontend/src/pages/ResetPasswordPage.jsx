@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import { Light_LOGO_SRC, Dark_LOGO_SRC, Light_PNG_SRC, Dark_PNG_SRC } from "../components/Shell";
+import {
+  Light_LOGO_SRC,
+  Dark_LOGO_SRC,
+  Light_PNG_SRC,
+  Dark_PNG_SRC,
+} from "../components/Shell";
 import { resetPassword, validateResetToken } from "../services/authService";
-
 
 function FieldIcon({ path }) {
   return (
@@ -32,13 +36,16 @@ export default function ResetPasswordPage() {
     terms: false,
   });
 
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
-  
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("theme") || "light",
+  );
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
-  const lockPath = "M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z";
+  const lockPath =
+    "M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z";
 
   const [checkingToken, setCheckingToken] = useState(true);
   const [token, setToken] = useState(null);
@@ -74,35 +81,39 @@ export default function ResetPasswordPage() {
   }
 
   const submit = async (event) => {
-      event.preventDefault();
-      setError("");
-  
-      const confirm = event.currentTarget.elements.confirmPassword;
-  
-      confirm.setCustomValidity(
-        form.password === form.confirmPassword ? "": "Passwords do not match"
+    event.preventDefault();
+    setError("");
+
+    const confirm = event.currentTarget.elements.confirmPassword;
+
+    confirm.setCustomValidity(
+      form.password === form.confirmPassword ? "" : "Passwords do not match",
+    );
+
+    if (!passwordValid) {
+      setError(
+        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
       );
-  
-      if (!passwordValid) {
-        setError(
-          "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.");
-        return;
-      }
-  
-      if (!event.currentTarget.checkValidity()) {
-        event.currentTarget.reportValidity();
-        return;
-      }
-      setLoading(true);
-      try {
-        await resetPassword(token, form.password);
-        navigate("/login");
-      } catch (err) {
-        setError(err.response?.data?.error || "This reset link is invalid or has expired.");
-      } finally {
-        setLoading(false);
-      }
-    };
+      return;
+    }
+
+    if (!event.currentTarget.checkValidity()) {
+      event.currentTarget.reportValidity();
+      return;
+    }
+    setLoading(true);
+    try {
+      await resetPassword(token, form.password);
+      navigate("/login");
+    } catch (err) {
+      setError(
+        err.response?.data?.error ||
+          "This reset link is invalid or has expired.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const update = (field) => (event) =>
     setForm((current) => ({
@@ -132,7 +143,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="login-page">
       <main className="login-card">
-        {theme == "light" &&<img src={Light_PNG_SRC} alt="SmartDesk logo" />}
+        {theme == "light" && <img src={Light_PNG_SRC} alt="SmartDesk logo" />}
         {theme == "dark" && <img src={Dark_PNG_SRC} alt="SmartDesk logo" />}
         <h1>Reset Password</h1>
         <p>Enter a new password for your account.</p>
@@ -160,19 +171,23 @@ export default function ResetPasswordPage() {
           <div className="password-requirements">
             <small className={passwordRules.length ? "valid" : ""}>
               {passwordRules.length ? "✓" : "○"} At least 8 characters
-            </small><br></br>
+            </small>
+            <br></br>
 
             <small className={passwordRules.uppercase ? "valid" : ""}>
               {passwordRules.uppercase ? "✓" : "○"} One uppercase letter
-            </small><br></br>
+            </small>
+            <br></br>
 
             <small className={passwordRules.lowercase ? "valid" : ""}>
               {passwordRules.lowercase ? "✓" : "○"} One lowercase letter
-            </small><br></br>
+            </small>
+            <br></br>
 
             <small className={passwordRules.number ? "valid" : ""}>
               {passwordRules.number ? "✓" : "○"} One number
-            </small><br></br>
+            </small>
+            <br></br>
 
             <small className={passwordRules.special ? "valid" : ""}>
               {passwordRules.special ? "✓" : "○"} One special character
@@ -199,7 +214,9 @@ export default function ResetPasswordPage() {
           </button>
         </form>
 
-        <p><Link to="/login">Back to login</Link></p>
+        <p>
+          <Link to="/login">Back to login</Link>
+        </p>
       </main>
     </div>
   );

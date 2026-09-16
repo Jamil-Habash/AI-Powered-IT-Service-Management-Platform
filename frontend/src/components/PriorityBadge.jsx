@@ -7,7 +7,9 @@ const priorityStyles = {
 
 export default function PriorityBadge({ priority }) {
   return (
-    <span className={`px-2 py-1 rounded text-xs font-medium ${priorityStyles[priority] || "bg-gray-100 text-gray-700"}`}>
+    <span
+      className={`px-2 py-1 rounded text-xs font-medium ${priorityStyles[priority] || "bg-gray-100 text-gray-700"}`}
+    >
       {priority}
     </span>
   );

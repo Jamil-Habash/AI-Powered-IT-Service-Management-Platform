@@ -12,7 +12,7 @@ export default function SettingsPage() {
     name: user?.name || "",
     email: user?.email || "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [visible, setVisible] = useState({
     password: false,
@@ -47,10 +47,15 @@ export default function SettingsPage() {
       setError("Passwords do not match.");
       return;
     }
-  
+
     setLoading(true);
     try {
-      const response = await updateUser(user.userId, form.name, form.email, form.password);
+      const response = await updateUser(
+        user.userId,
+        form.name,
+        form.email,
+        form.password,
+      );
       refreshSession(response.data);
       setForm((current) => ({ ...current, password: "", confirmPassword: "" }));
       setMessage("Profile updated successfully.");
@@ -106,24 +111,47 @@ export default function SettingsPage() {
       <form className="panel settings" onSubmit={submit}>
         {error && <p className="form-error">{error}</p>}
         {message && <p className="form-success">{message}</p>}
-        {field("name", "Full Name",user.name,userPath,{
-            value: form.name,
-            onChange: update("name"),
-          } )}
+        {field("name", "Full Name", user.name, userPath, {
+          value: form.name,
+          onChange: update("name"),
+        })}
         <label htmlFor="email">Work Email</label>
         <div className="input-wrap">
           <FieldIcon path={mailPath} />
-          <input id="email" name="email" type="email" value={form.email} onChange={update("email")} required />
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={update("email")}
+            required
+          />
         </div>
         <label htmlFor="password">New Password</label>
         <div className="input-wrap">
           <FieldIcon path={lockPath} />
-          <input id="password" name="password" type={visible.password ? "text" : "password"} value={form.password} onChange={update("password")} minLength="8" placeholder="Leave blank to keep current password" />
+          <input
+            id="password"
+            name="password"
+            type={visible.password ? "text" : "password"}
+            value={form.password}
+            onChange={update("password")}
+            minLength="8"
+            placeholder="Leave blank to keep current password"
+          />
         </div>
         <label htmlFor="confirmPassword">Confirm New Password</label>
         <div className="input-wrap">
           <FieldIcon path={lockPath} />
-          <input id="confirmPassword" name="confirmPassword" type={visible.confirmPassword ? "text" : "password"} value={form.confirmPassword} onChange={update("confirmPassword")} minLength="8" placeholder="Leave blank to keep current password" />
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type={visible.confirmPassword ? "text" : "password"}
+            value={form.confirmPassword}
+            onChange={update("confirmPassword")}
+            minLength="8"
+            placeholder="Leave blank to keep current password"
+          />
         </div>
         <button className="primary-button" type="submit" disabled={loading}>
           {loading ? "Saving..." : "Save Changes"}
