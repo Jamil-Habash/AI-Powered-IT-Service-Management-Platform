@@ -34,3 +34,4 @@ build/
 
 # Spring local configuration
 src/main/resources/application.yaml
+.env

@@ -286,7 +286,6 @@ export default function TicketDetailPage() {
               >
                 <option value="OPEN">Open</option>
                 <option value="IN_PROGRESS">In Progress</option>
-                <option value="RESOLVED">Resolved</option>
               </select>
             </label>
             <label>
@@ -304,14 +303,6 @@ export default function TicketDetailPage() {
                 <option value="CRITICAL">Critical</option>
               </select>
             </label>
-            <h2>Requester Profile</h2>
-            <div className="profile large">
-              <b>{initials(ticket?.createdByName)}</b>
-              <span>
-                <strong>{ticket.createdByName || "Unknown"}</strong><br></br>
-                <small>Requester</small>
-              </span>
-            </div>
             <button
               className="success-button"
               disabled={saving || status === "RESOLVED"}

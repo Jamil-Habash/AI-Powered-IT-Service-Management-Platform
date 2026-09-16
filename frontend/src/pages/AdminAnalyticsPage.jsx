@@ -5,7 +5,7 @@ import { getTickets } from "../services/ticketService";
 import { addCategory, getCategories, updateCategory } from "../services/categoryService";
 import usePageTitle from "../hooks/usePageTitle";
 
-export default function AnalyticsPage() {
+export default function AdminAnalyticsPage() {
   usePageTitle("Analytics Page");
   const [metric, setMetric] = useState("volume");
   const [date, setDate] = useState("Last 30 Days");
@@ -104,17 +104,6 @@ export default function AnalyticsPage() {
         eyebrow="ITSM OPERATIONAL INTELLIGENCE  •  LIVE TELEMETRY"
         title="IT Operations & Analytics"
         description="Real-time performance tracking, ticket volume trends, agent allocation, and service category management."
-        action={
-          <select
-            value={date}
-            onChange={(event) => setDate(event.target.value)}
-          >
-            <option>Last 7 Days</option>
-            <option>Last 30 Days</option>
-            <option>This Quarter</option>
-            <option>Year to Date</option>
-          </select>
-        }
       />
       {error && <p className="form-error">{error}</p>}
       <div className="stats-grid analytics-stats">

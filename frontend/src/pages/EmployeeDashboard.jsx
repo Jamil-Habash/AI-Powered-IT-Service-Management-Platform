@@ -5,8 +5,12 @@ import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
 import TicketTable from "../components/TicketTable";
 import { getTickets } from "../services/ticketService";
+import usePageTitle from "../hooks/usePageTitle";
+import { useAuth } from "../context/AuthContext";
 
-export default function EmployeeDashboard({ user }) {
+export default function EmployeeDashboard() {
+    usePageTitle("Employee Dashboard");
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [tickets, setTickets] = useState([]);
     const [search, setSearch] = useState("");

@@ -14,7 +14,7 @@ export default function LoginPage() {
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+  const [theme, setTheme] = useState(() => localStorage.getItem("smartdesk_theme") || "light");
   
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);

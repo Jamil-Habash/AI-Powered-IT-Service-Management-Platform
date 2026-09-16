@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import Shell from "../components/Shell";
+import PageHeader from "../components/PageHeader";
 import { getTickets } from "../services/ticketService";
 import {
   adminUpdateUser,
@@ -9,8 +10,10 @@ import {
   getUsers,
   activateUser,
 } from "../services/userService";
+import usePageTitle from "../hooks/usePageTitle";
 
-export default function AdminDashboard() {
+export default function AdminManageUsers() {
+    usePageTitle("Manage Users");
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [tickets, setTickets] = useState([]);
@@ -211,29 +214,18 @@ export default function AdminDashboard() {
     return (
     <Shell>
         <div className="admin-dashboard">
-        <section className="panel admin-hero">
-            <div>
-            <p className="eyebrow">
-                USER ADMINISTRATION <span>•</span> SYSTEM ACCESS CONTROL
-            </p>
-            <h1>Manage Users</h1>
-            <p>View, manage, and provision employee and IT agent accounts across the enterprise workspace.</p>
-            </div>
-            <div className="page-actions">
-            <button className="secondary-button" onClick={exportDirectory}>
-                <Icon>download</Icon>Export Directory
-            </button>
-            <button className="secondary-button" onClick={() => navigate("/tickets")}>
-                <Icon>confirmation_number</Icon>Manage Tickets
-            </button>
-            <button className="secondary-button" onClick={() => navigate("/audit-logs")} type="button">
-                <Icon>history</Icon><span>Audit Log</span>
-            </button>
-            <button className="primary-button" onClick={() => navigate("/register")}>
-                <Icon>person_add</Icon>Add New User
-            </button>
-            </div>
-        </section>
+        <PageHeader
+                eyebrow="USER ADMINISTRATION  •  SYSTEM ACCESS CONTROL"
+                title="Manage Users Accounts"
+                description="View, manage, and provision employee and IT agent accounts across the enterprise workspace."
+                action={<div className="page-actions">
+                    <button className="secondary-button" onClick={exportDirectory}>
+                        <Icon>download</Icon>Export Directory
+                    </button>
+                    <button className="primary-button" onClick={() => navigate("/register")}>
+                        <Icon>person_add</Icon>Add New User
+                    </button></div>
+                }/>
 
         <div className="stats-grid admin-stats">
             {[

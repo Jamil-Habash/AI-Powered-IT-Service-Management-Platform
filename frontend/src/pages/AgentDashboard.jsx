@@ -5,8 +5,12 @@ import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
 import TicketTable from "../components/TicketTable";
 import { getTickets } from "../services/ticketService";
+import usePageTitle from "../hooks/usePageTitle";
+import { useAuth } from "../context/AuthContext";
 
-export default function AgentDashboard({ user }) {
+export default function AgentDashboard() {
+    usePageTitle("IT Agent Dashboard");
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [tickets, setTickets] = useState([]);
     const [search, setSearch] = useState("");
@@ -35,9 +39,7 @@ export default function AgentDashboard({ user }) {
     };
     }, []);
 
-    const assignedToMe = tickets.filter(
-    (ticket) => ticket.assignedAgentName === user?.name,
-    );
+    const assignedToMe = tickets.filter((ticket) => ticket.assignedAgentName === user?.name);
     const openTickets = tickets.filter((ticket) => ticket.status === "OPEN");
     const unassignedTickets = tickets.filter((ticket) => !ticket.assignedAgentName);
     const inProgressTickets = tickets.filter((ticket) => ticket.status === "IN_PROGRESS");
