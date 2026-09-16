@@ -1,23 +1,50 @@
+import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Icon from "../components/Icon";
 import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
-import { kbArticles } from "../data/kbArticles";
+import { useAuth } from "../context/AuthContext";
+import {
+  getArticleById,
+  deleteArticle,
+} from "../services/knowledgeBaseService";
 import usePageTitle from "../hooks/usePageTitle";
 
 export default function KnowledgeBaseArticlePage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const article = kbArticles.find((a) => a.id === id);
-  usePageTitle(`Knowledge Base | ${article.title}`);
+  const { user } = useAuth();
+  const [article, setArticle] = useState(null);
+  usePageTitle(`Knowledge Base | ${article?.title}`);
+  const [error, setError] = useState("");
+  const isStaff = user?.role === "IT_AGENT" || user?.role === "ADMIN";
+  const isAdmin = user?.role === "ADMIN";
 
-  if (!article) {
+  useEffect(() => {
+    getArticleById(id)
+      .then((res) => setArticle(res.data))
+      .catch(() =>
+        setError("This guide doesn't exist or may have been moved."),
+      );
+  }, [id]);
+
+  const handleDelete = async () => {
+    if (!window.confirm("Delete this article? This cannot be undone.")) return;
+    try {
+      await deleteArticle(id);
+      navigate("/knowledge-base");
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to delete article.");
+    }
+  };
+
+  if (error) {
     return (
       <Shell>
         <PageHeader
           eyebrow="SELF-SERVICE"
           title="Article not found"
-          description="This guide doesn't exist or may have been moved."
+          description={error}
         />
         <Link to="/knowledge-base" className="text-button">
           <Icon>arrow_back</Icon> Back to Knowledge Base
@@ -26,6 +53,13 @@ export default function KnowledgeBaseArticlePage() {
     );
   }
 
+  if (!article)
+    return (
+      <Shell>
+        <p>Loading...</p>
+      </Shell>
+    );
+
   return (
     <Shell>
       <PageHeader
@@ -33,12 +67,27 @@ export default function KnowledgeBaseArticlePage() {
         title={article.title}
         description="Follow these steps in order. If the issue isn't resolved, create a ticket with the details noted at the end."
         action={
-          <button
-            className="secondary-button"
-            onClick={() => navigate("/knowledge-base")}
-          >
-            <Icon>arrow_back</Icon>Back to Knowledge Base
-          </button>
+          <div style={{ display: "flex", gap: "8px" }}>
+            {isStaff && (
+              <button
+                className="secondary-button"
+                onClick={() => navigate(`/knowledge-base/${id}/edit`)}
+              >
+                <Icon>edit</Icon>Edit
+              </button>
+            )}
+            {isAdmin && (
+              <button className="danger-button" onClick={handleDelete}>
+                <Icon>delete</Icon>Delete
+              </button>
+            )}
+            <button
+              className="secondary-button"
+              onClick={() => navigate("/knowledge-base")}
+            >
+              <Icon>arrow_back</Icon>Back
+            </button>
+          </div>
         }
       />
 

@@ -18,7 +18,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import AdminManageUsers from "./pages/AdminManageUsers";
 import DashboardRedirect from "./components/DashboardRedirect";
-import AdminKnowledgeBase from "./pages/AdminKnowledgeBase";
+import CreateArticlePage from "./pages/CreateArticlePage";
 import "./App.css";
 
 export default function App() {
@@ -60,14 +60,6 @@ export default function App() {
             element={
               <ProtectedRoute role="ADMIN">
                 <AdminAuditLog />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/knowledge-base"
-            element={
-              <ProtectedRoute>
-                <KnowledgeBaseArticlePage />
               </ProtectedRoute>
             }
           />
@@ -124,6 +116,22 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <KnowledgeBaseArticlePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/knowledge-base/new"
+            element={
+              <ProtectedRoute>
+                <CreateArticlePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/knowledge-base/:id/edit"
+            element={
+              <ProtectedRoute>
+                <CreateArticlePage />
               </ProtectedRoute>
             }
           />
