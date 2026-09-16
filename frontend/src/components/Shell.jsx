@@ -53,7 +53,7 @@ const NAV_GROUPS = [
         path: "/employee/dashboard",
         icon: "dashboard",
         label: "Dashboard",
-        roles: ["EMPLOYEE", "IT_AGENT"],
+        roles: ["EMPLOYEE"],
       },
       {
         path: "/tickets",
@@ -92,6 +92,11 @@ export default function Shell({ children }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPinned, setIsPinned] = useState(() => {
+    return localStorage.getItem("smartdesk_sidebar_pinned") === "true";
+  });
+  const sidebarOpen = isHovered || isPinned;
 
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("smartdesk_theme") || "light";
@@ -442,7 +447,11 @@ export default function Shell({ children }) {
       {/* =========================
           SIDEBAR
       ========================== */}
-      <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+      <aside
+        className={`sidebar ${sidebarOpen ? "expanded" : "collapsed"}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <div className="sidebar-inner">
           {/* Brand */}
           <div className="sidebar-header">
@@ -457,31 +466,30 @@ export default function Shell({ children }) {
 
               <span className="brand-content">
                 <strong>SmartDesk</strong>
-                <small>{workspaceLabel}</small>
+                <small>ITSM Platform</small>
               </span>
             </Link>
 
             <button
-              className="sidebar-toggle"
               type="button"
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              aria-expanded={!collapsed}
-              onClick={() => setCollapsed((value) => !value)}
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className="sidebar-toggle"
+              aria-label={isPinned ? "Unpin sidebar" : "Keep sidebar open"}
+              aria-pressed={isPinned}
+              onClick={() => {
+                setIsPinned((value) => {
+                  const newValue = !value;
+                  localStorage.setItem(
+                    "smartdesk_sidebar_pinned",
+                    String(newValue),
+                  );
+                  return newValue;
+                });
+              }}
+              title={isPinned ? "Unpin sidebar" : "Keep sidebar open"}
             >
-              <Icon>
-                {collapsed ? "keyboard_arrow_right" : "keyboard_arrow_left"}
-              </Icon>
+              <Icon>menu</Icon>
             </button>
           </div>
-
-          {/* Workspace badge */}
-          {!collapsed && (
-            <div className="workspace-badge">
-              <span className="workspace-status-dot" />
-              <span>{workspaceLabel}</span>
-            </div>
-          )}
 
           {/* Navigation */}
           <div className="sidebar-navigation">
@@ -489,7 +497,7 @@ export default function Shell({ children }) {
               <div className="nav-group" key={group.label}>
                 {groupIndex > 0 && <div className="nav-divider" />}
 
-                {!collapsed && <p className="nav-label">{group.label}</p>}
+                {sidebarOpen && <p className="nav-label">{group.label}</p>}
 
                 <nav>
                   {group.items.map(({ path, icon, label }) => (
@@ -497,7 +505,7 @@ export default function Shell({ children }) {
                       key={path}
                       to={path}
                       className={`nav-item ${isActive(path) ? "active" : ""}`}
-                      title={collapsed ? label : undefined}
+                      title={!sidebarOpen ? label : undefined}
                     >
                       <span className="nav-icon">
                         <Icon>{icon}</Icon>
@@ -518,7 +526,7 @@ export default function Shell({ children }) {
             <Link
               to="/settings"
               className={`nav-item ${isActive("/settings") ? "active" : ""}`}
-              title={collapsed ? "Settings" : undefined}
+              title={!sidebarOpen ? "Settings" : undefined}
             >
               <span className="nav-icon">
                 <Icon>settings</Icon>
@@ -533,7 +541,7 @@ export default function Shell({ children }) {
               type="button"
               className="nav-item logout-button"
               onClick={handleLogout}
-              title={collapsed ? "Logout" : undefined}
+              title={!sidebarOpen ? "Logout" : undefined}
             >
               <span className="nav-icon">
                 <Icon>logout</Icon>
@@ -554,9 +562,11 @@ export default function Shell({ children }) {
           <div className="topbar-inner">
             {/* Left side */}
             <div className="topbar-context">
-              <span className="context-label">Workspace</span>
-
-              <span className="context-value">{workspaceLabel}</span>
+              <div className="workspace-badge">
+                <span className="context-label">Workspace</span>
+                <span className="workspace-status-dot" />
+                <span>{workspaceLabel}</span>
+              </div>
             </div>
 
             {/* Right side */}

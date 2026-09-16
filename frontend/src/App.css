@@ -5364,3 +5364,21 @@ td strong {
   background: #e5edf8;
   color: #0b1220;
 }
+
+.sidebar-toggle {
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+.sidebar.collapsed .sidebar-toggle {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sidebar.expanded .sidebar-toggle {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
