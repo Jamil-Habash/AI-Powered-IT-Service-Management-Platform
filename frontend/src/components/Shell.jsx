@@ -7,6 +7,7 @@ import lightpng from "../assets/smartdesk_light.png";
 import darkpng from "../assets/smartdesk_dark.png";
 
 import Icon from "./Icon";
+import ChatBot from "./ChatBot";
 import { useAuth } from "../context/AuthContext";
 import { getTickets } from "../services/ticketService";
 import { getComments } from "../services/commentService";
@@ -76,6 +77,12 @@ const NAV_GROUPS = [
         path: "/knowledge-base",
         icon: "menu_book",
         label: "Knowledge Base",
+        roles: ["EMPLOYEE", "IT_AGENT", "ADMIN"],
+      },
+      {
+        path: "/chat",
+        icon: "smart_toy",
+        label: "AI Assistant",
         roles: ["EMPLOYEE", "IT_AGENT", "ADMIN"],
       },
     ],
@@ -723,6 +730,7 @@ export default function Shell({ children }) {
         {/* Page content */}
         <main className="page-content">{children}</main>
       </div>
+      <ChatBot />
     </div>
   );
 }

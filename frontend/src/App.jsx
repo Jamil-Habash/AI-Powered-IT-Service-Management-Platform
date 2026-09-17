@@ -19,6 +19,7 @@ import VerifyEmailPage from "./pages/VerifyEmailPage";
 import AdminManageUsers from "./pages/AdminManageUsers";
 import DashboardRedirect from "./components/DashboardRedirect";
 import CreateArticlePage from "./pages/CreateArticlePage";
+import ChatBotPage from "./pages/ChatBotPage";
 import "./App.css";
 
 export default function App() {
@@ -140,6 +141,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <ChatBotPage />
               </ProtectedRoute>
             }
           />
