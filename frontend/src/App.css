@@ -708,7 +708,6 @@ textarea::placeholder {
   height: 100%;
 }
 
-.visibility-button,
 .password-input button {
   position: absolute;
   top: 5px;
@@ -3323,7 +3322,7 @@ td strong {
 }
 
 .rows-per-page select {
-  width: auto;
+  width: 40px;
 
   padding: 5px 8px;
 
@@ -5830,34 +5829,6 @@ td strong {
 
 .audit-table tbody tr:hover {
   background: var(--surface-soft);
-}
-
-/* =========================================================
-   VISIBILITY TOGGLE (password eye icon)
-   ========================================================= */
-.visibility-button {
-  position: absolute;
-  top: 5px;
-  right: 8px;
-
-  padding: 6px;
-
-  background: transparent;
-  border: none;
-  color: var(--ink-muted);
-
-  cursor: pointer;
-
-  transition: color var(--transition-fast);
-}
-
-.visibility-button:hover {
-  color: var(--blue);
-}
-
-.input-wrap .visibility-button {
-  top: 8px;
-  right: 8px;
 }
 
 /* =========================================================

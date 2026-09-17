@@ -134,7 +134,9 @@ export default function EmployeeDashboard() {
         {!loading && !error && shown.length > 0 && (
           <TicketTable
             rows={shown}
+            variant="queue"
             onSelect={(ticketId) => navigate(`/ticket/${ticketId}`)}
+            selectable={user?.role !== "EMPLOYEE"}
           />
         )}
       </section>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import Icon from "../components/Icon";
 import {
   Light_LOGO_SRC,
   Dark_LOGO_SRC,
@@ -77,14 +76,6 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
               />
-              <button
-                type="button"
-                className="visibility-button"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                <Icon>{showPassword ? "visibility_off" : "visibility"}</Icon>
-              </button>
             </div>
           </label>
           <div

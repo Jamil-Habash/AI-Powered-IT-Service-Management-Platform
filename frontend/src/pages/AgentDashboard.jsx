@@ -137,7 +137,9 @@ export default function AgentDashboard() {
         {!loading && !error && shown.length > 0 && (
           <TicketTable
             rows={shown}
+            variant="queue"
             onSelect={(ticketId) => navigate(`/ticket/${ticketId}`)}
+            selectable={user?.role !== "IT_AGENT"}
           />
         )}
       </section>

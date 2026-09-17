@@ -204,7 +204,7 @@ function QueueTicketTable({
         <div className="pagination-controls">
           <label className="rows-per-page">
             Rows per page:
-            <select value={pageSize}>
+            <select>
               <option>{pageSize}</option>
             </select>
           </label>
