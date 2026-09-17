@@ -81,7 +81,7 @@ const NAV_GROUPS = [
       },
       {
         path: "/chat",
-        icon: "smart_toy",
+        icon: "robot",
         label: "AI Assistant",
         roles: ["EMPLOYEE", "IT_AGENT", "ADMIN"],
       },

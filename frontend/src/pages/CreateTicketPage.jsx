@@ -70,6 +70,7 @@ export default function CreateTicketPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const editorRef = useRef(null);
+  const savedSelectionRef = useRef(null);
 
   useEffect(() => {
     const draft = localStorage.getItem("smartdesk_ticket_draft");
@@ -148,10 +149,40 @@ export default function CreateTicketPage() {
     }
   };
 
-  const runEditorCommand = (command, value) => {
+  const saveSelection = () => {
+    const selection = window.getSelection();
+
+    if (!selection || selection.rangeCount === 0) return;
+
+    const range = selection.getRangeAt(0);
+
+    if (editorRef.current?.contains(range.commonAncestorContainer)) {
+      savedSelectionRef.current = range.cloneRange();
+    }
+  };
+
+  const restoreSelection = () => {
+    const selection = window.getSelection();
+    const range = savedSelectionRef.current;
+
+    if (!selection || !range) return;
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
+  const runEditorCommand = (command, value = null) => {
     editorRef.current?.focus();
+
+    restoreSelection();
+
     document.execCommand(command, false, value);
-    if (editorRef.current) setDescription(htmlToMarkdown(editorRef.current));
+
+    if (editorRef.current) {
+      setDescription(htmlToMarkdown(editorRef.current));
+    }
+
+    saveSelection();
   };
 
   const updateDescription = () => {
@@ -241,18 +272,13 @@ export default function CreateTicketPage() {
               <button
                 type="button"
                 title="Bold"
-                onMouseDown={(event) => event.preventDefault()}
+                onMouseDown={(event) => {
+                  saveSelection();
+                  event.preventDefault();
+                }}
                 onClick={() => runEditorCommand("bold")}
               >
                 <Icon>format_bold</Icon>
-              </button>
-              <button
-                type="button"
-                title="Italic"
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => runEditorCommand("italic")}
-              >
-                <Icon>format_italic</Icon>
               </button>
               <button
                 type="button"

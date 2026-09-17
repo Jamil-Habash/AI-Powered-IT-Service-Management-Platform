@@ -184,7 +184,7 @@ export default function ChatBot() {
           <Icon>close</Icon>
         ) : (
           <>
-            <Icon>smart_toy</Icon>
+            <Icon>robot</Icon>
             <span className="chatbot-badge" />
           </>
         )}
@@ -194,7 +194,7 @@ export default function ChatBot() {
         <div className="chatbot-window">
           <div className="chatbot-header">
             <div className="chatbot-header-info">
-              <Icon>smart_toy</Icon>
+              <Icon>robot</Icon>
               <div>
                 <strong>SmartDesk AI Assistant</strong>
                 <small>Online</small>
