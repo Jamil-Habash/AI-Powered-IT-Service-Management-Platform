@@ -1,16 +1,12 @@
 const priorityStyles = {
-  LOW: "bg-gray-100 text-gray-700",
-  MEDIUM: "bg-blue-100 text-blue-700",
-  HIGH: "bg-orange-100 text-orange-700",
-  CRITICAL: "bg-red-100 text-red-700",
+  LOW: "priority-badge low",
+  MEDIUM: "priority-badge medium",
+  HIGH: "priority-badge high",
+  CRITICAL: "priority-badge critical",
 };
 
 export default function PriorityBadge({ priority }) {
-  return (
-    <span
-      className={`px-2 py-1 rounded text-xs font-medium ${priorityStyles[priority] || "bg-gray-100 text-gray-700"}`}
-    >
-      {priority}
-    </span>
-  );
+  const styleClass = priorityStyles[priority] || "priority-badge default";
+
+  return <span className={styleClass}>{priority}</span>;
 }

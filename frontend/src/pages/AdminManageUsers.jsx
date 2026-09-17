@@ -21,6 +21,7 @@ export default function AdminManageUsers() {
   const [search, setSearch] = useState("");
   const [department, setDepartment] = useState("");
   const [status, setStatus] = useState("");
+  const [verify, setVerify] = useState("");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -63,11 +64,14 @@ export default function AdminManageUsers() {
       item.name || item.createdByName || item.assignedAgentName || "";
     const email = item.email || "";
     const itemStatus = item.active === false ? "INACTIVE" : "ACTIVE";
+    const itemVerifyState =
+      item.isVerified === false ? "NOT VERIFIED" : "VERIFIED";
     return (
       (!search ||
         `${name} ${email}`.toLowerCase().includes(search.toLowerCase())) &&
       (!department || (item.department || item.categoryName) === department) &&
-      (!status || itemStatus === status)
+      (!status || itemStatus === status) &&
+      (!verify || itemVerifyState === verify)
     );
   });
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -86,6 +90,7 @@ export default function AdminManageUsers() {
     setSearch("");
     setDepartment("");
     setStatus("");
+    setVerify("");
     setPage(1);
   };
 
@@ -407,6 +412,17 @@ export default function AdminManageUsers() {
               <option value="">Status: All Statuses</option>
               <option value="ACTIVE">Active</option>
               <option value="INACTIVE">Inactive</option>
+            </select>
+            <select
+              value={verify}
+              onChange={(event) => {
+                setVerify(event.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="">Status: All Statuses</option>
+              <option value="VERIFIED">Verified</option>
+              <option value="NOT VERIFIED">Not Verified</option>
             </select>
             <button className="secondary-button" onClick={resetFilters}>
               <Icon>restart_alt</Icon>Reset Filters

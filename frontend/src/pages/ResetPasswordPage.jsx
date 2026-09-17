@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
+import Icon from "../components/Icon";
 import {
   Light_LOGO_SRC,
   Dark_LOGO_SRC,
@@ -143,8 +144,8 @@ export default function ResetPasswordPage() {
   return (
     <div className="login-page">
       <main className="login-card">
-        {theme == "light" && <img src={Light_PNG_SRC} alt="SmartDesk logo" />}
-        {theme == "dark" && <img src={Dark_PNG_SRC} alt="SmartDesk logo" />}
+        {theme === "light" && <img src={Light_PNG_SRC} alt="SmartDesk logo" />}
+        {theme === "dark" && <img src={Dark_PNG_SRC} alt="SmartDesk logo" />}
         <h1>Reset Password</h1>
         <p>Enter a new password for your account.</p>
 
@@ -166,6 +167,16 @@ export default function ResetPasswordPage() {
               onChange={update("password")}
               required
             />
+            <button
+              type="button"
+              className="visibility-button"
+              onClick={() =>
+                setVisible({ ...visible, password: !visible.password })
+              }
+              aria-label={visible.password ? "Hide password" : "Show password"}
+            >
+              <Icon>{visible.password ? "visibility_off" : "visibility"}</Icon>
+            </button>
           </div>
 
           <div className="password-requirements">
@@ -208,6 +219,23 @@ export default function ResetPasswordPage() {
               onChange={update("confirmPassword")}
               required
             />
+            <button
+              type="button"
+              className="visibility-button"
+              onClick={() =>
+                setVisible({
+                  ...visible,
+                  confirmPassword: !visible.confirmPassword,
+                })
+              }
+              aria-label={
+                visible.confirmPassword ? "Hide password" : "Show password"
+              }
+            >
+              <Icon>
+                {visible.confirmPassword ? "visibility_off" : "visibility"}
+              </Icon>
+            </button>
           </div>
           <button className="primary-button" type="submit" disabled={loading}>
             {loading ? "Resetting..." : "Reset Password"}

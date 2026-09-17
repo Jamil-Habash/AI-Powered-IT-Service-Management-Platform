@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import Icon from "../components/Icon";
 import {
   Light_LOGO_SRC,
   Dark_LOGO_SRC,
@@ -53,8 +54,8 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <main className="login-card">
-        {theme == "light" && <img src={Light_PNG_SRC} alt="SmartDesk logo" />}
-        {theme == "dark" && <img src={Dark_PNG_SRC} alt="SmartDesk logo" />}
+        {theme === "light" && <img src={Light_PNG_SRC} alt="SmartDesk logo" />}
+        {theme === "dark" && <img src={Dark_PNG_SRC} alt="SmartDesk logo" />}
         {error && <p className="form-error">{error}</p>}
         {successMessage && <p className="form-success">{successMessage}</p>}
         <form onSubmit={handleSubmit}>
@@ -76,6 +77,14 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
               />
+              <button
+                type="button"
+                className="visibility-button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                <Icon>{showPassword ? "visibility_off" : "visibility"}</Icon>
+              </button>
             </div>
           </label>
           <div
