@@ -364,8 +364,8 @@ export default function TicketsPage() {
         )}
         {!error && rows.length > 0 && (
           <TicketTable
+            role={user?.role}
             rows={rows}
-            variant="queue"
             onSelect={(ticketId) => navigate(`/ticket/${ticketId}`)}
             selectable={user?.role !== "EMPLOYEE"}
             selectedIds={selectedTicketsIds}

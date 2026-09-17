@@ -81,6 +81,7 @@ export default function AgentDashboard() {
       ticket.id,
       ticket.description,
       ticket.createdAt,
+      ticket.createdByName,
     ]);
 
   return (
@@ -136,8 +137,8 @@ export default function AgentDashboard() {
         {!loading && !error && shown.length === 0 && <p>No tickets found.</p>}
         {!loading && !error && shown.length > 0 && (
           <TicketTable
+            role={user?.role}
             rows={shown}
-            variant="queue"
             onSelect={(ticketId) => navigate(`/ticket/${ticketId}`)}
             selectable={user?.role !== "IT_AGENT"}
           />

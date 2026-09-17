@@ -74,6 +74,7 @@ export default function EmployeeDashboard() {
       ticket.id,
       ticket.description,
       ticket.createdAt,
+      ticket.createdByName,
     ]);
 
   return (
@@ -133,8 +134,8 @@ export default function EmployeeDashboard() {
         {!loading && !error && shown.length === 0 && <p>No tickets found.</p>}
         {!loading && !error && shown.length > 0 && (
           <TicketTable
+            role={user?.role}
             rows={shown}
-            variant="queue"
             onSelect={(ticketId) => navigate(`/ticket/${ticketId}`)}
             selectable={user?.role !== "EMPLOYEE"}
           />
