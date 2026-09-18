@@ -165,7 +165,9 @@ export default function ChatBot() {
     localStorage.removeItem(CONV_KEY);
   };
 
-  const isOnChatPage = location.pathname === "/chat";
+  const isOnChatPage =
+    location.pathname === "/ai/chat" ||
+    location.pathname === `/ai/chat/${conversationId}`;
 
   if (isOnChatPage) return null;
 

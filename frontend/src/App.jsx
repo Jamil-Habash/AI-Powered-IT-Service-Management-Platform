@@ -145,7 +145,15 @@ export default function App() {
             }
           />
           <Route
-            path="/chat"
+            path="/ai/chat"
+            element={
+              <ProtectedRoute>
+                <ChatBotPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ai/chat/:conversationId"
             element={
               <ProtectedRoute>
                 <ChatBotPage />

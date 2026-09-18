@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ai")
+@RequestMapping("/api/ai/chat")
 public class ChatController {
 
     private final ChatService chatService;
@@ -25,19 +25,19 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @PostMapping("/chat")
+    @PostMapping
     public ResponseEntity<ChatResponse> chat(@Valid @RequestBody ChatRequest request,
                                               @AuthenticationPrincipal UserPrincipal currentUser) {
         return ResponseEntity.ok(chatService.chat(request, currentUser));
     }
 
-    @GetMapping("/chat/{conversationId}")
+    @GetMapping("/{conversationId}")
     public ResponseEntity<List<ChatMessageResponse>> getHistory(@PathVariable Long conversationId,
                                                                  @AuthenticationPrincipal UserPrincipal currentUser) {
         return ResponseEntity.ok(chatService.getHistory(conversationId, currentUser));
     }
 
-    @PostMapping("/chat/ticket")
+    @PostMapping("/ticket")
     public ResponseEntity<TicketResponse> createTicketFromChat(@Valid @RequestBody CreateTicketFromChatRequest request,
                                                                 @AuthenticationPrincipal UserPrincipal currentUser) {
         TicketResponse response = chatService.createTicketFromChat(request, currentUser);

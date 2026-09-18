@@ -166,6 +166,10 @@ export default function ChatPage() {
     });
   };
 
+  const getChatHistory = () => {
+    navigate(`/ai/chat/${conversationId}`);
+  };
+
   const clearChat = () => {
     setMessages([]);
     setConversationId(null);
@@ -197,19 +201,15 @@ export default function ChatPage() {
         description="Ask me about IT issues, troubleshooting, or create a support ticket."
         action={
           <div style={{ display: "flex", gap: "8px" }}>
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={clearChat}
-            >
+            <button type="button" className="danger-button" onClick={clearChat}>
               <Icon>delete_sweep</Icon>Clear Chat
             </button>
             <button
               type="button"
               className="primary-button"
-              onClick={createTicketNow}
+              onClick={getChatHistory}
             >
-              <Icon>error</Icon>Escalate to Agent
+              <Icon>history</Icon>Chat History
             </button>
           </div>
         }
