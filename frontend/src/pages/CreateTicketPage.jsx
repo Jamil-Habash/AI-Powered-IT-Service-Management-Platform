@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
+import aiLogo from "../assets/AI_logo.png";
 import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
 import { getCategories } from "../services/categoryService";
@@ -368,7 +369,7 @@ export default function CreateTicketPage() {
             )}
           </label>
           <section className="triage-callout">
-            <Icon>auto_awesome</Icon>
+            <img className="ai-brand-logo" src={aiLogo} alt="" />
             <div>
               <strong>Smart Triage Active</strong>
               <p>

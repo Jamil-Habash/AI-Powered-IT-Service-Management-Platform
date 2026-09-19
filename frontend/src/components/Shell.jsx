@@ -5,6 +5,7 @@ import lightLogo from "../assets/light_logo.png";
 import darkLogo from "../assets/dark_logo.png";
 import lightpng from "../assets/smartdesk_light.png";
 import darkpng from "../assets/smartdesk_dark.png";
+import aiLogo from "../assets/AI_logo.png";
 
 import Icon from "./Icon";
 import ChatBot from "./ChatBot";
@@ -515,7 +516,15 @@ export default function Shell({ children }) {
                       title={!sidebarOpen ? label : undefined}
                     >
                       <span className="nav-icon">
-                        <Icon>{icon}</Icon>
+                        {path === "/ai/chat" ? (
+                          <img
+                            className="sidebar-ai-logo"
+                            src={aiLogo}
+                            alt=""
+                          />
+                        ) : (
+                          <Icon>{icon}</Icon>
+                        )}
                       </span>
 
                       <span className="nav-text">{label}</span>

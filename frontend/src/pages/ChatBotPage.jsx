@@ -1,13 +1,36 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Icon from "../components/Icon";
-import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
-import { chatWithAI } from "../services/chatBotService";
+import {
+  chatWithAI,
+  getChatConversations,
+  getChatHistory,
+} from "../services/chatBotService";
 import usePageTitle from "../hooks/usePageTitle";
+import aiLogo from "../assets/AI_logo.png";
+import aiSmartLogo from "../assets/AI_smartdesk.png";
 
 const STORAGE_KEY = "smartdesk_chat_history";
 const CONV_KEY = "smartdesk_chat_conversation_id";
+const STARTER_PROMPTS = [
+  {
+    icon: "wifi",
+    title: "Troubleshoot connectivity",
+    prompt:
+      "My internet connection is not working. Can you help me troubleshoot it?",
+  },
+  {
+    icon: "vpn_key",
+    title: "Reset my access",
+    prompt: "I need help resetting my account access. What should I do?",
+  },
+  {
+    icon: "computer",
+    title: "Report a device issue",
+    prompt: "My work device is having an issue. Help me diagnose it.",
+  },
+];
 
 function loadInitialState() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -26,6 +49,10 @@ export default function ChatPage() {
   const [messages, setMessages] = useState(() => loadInitialState().messages);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [conversations, setConversations] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState("");
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [conversationId, setConversationId] = useState(
     () => loadInitialState().conversationId,
   );
@@ -64,9 +91,6 @@ export default function ChatPage() {
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
   }, []);
-
-  const welcomeMessage =
-    "Hello! I'm SmartDesk AI Assistant. How can I help you with your IT issue today?";
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -166,8 +190,43 @@ export default function ChatPage() {
     });
   };
 
-  const getChatHistory = () => {
-    navigate(`/ai/chat/${conversationId}`);
+  const showChatHistory = async () => {
+    setHistoryError("");
+    setConversations([]);
+    setIsHistoryOpen(true);
+
+    setHistoryLoading(true);
+    try {
+      const response = await getChatConversations();
+      setConversations(response.data);
+    } catch (_err) {
+      setHistoryError("Unable to load your conversations. Please try again.");
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const openConversation = async (selectedConversationId) => {
+    setHistoryError("");
+    setHistoryLoading(true);
+
+    try {
+      const response = await getChatHistory(selectedConversationId);
+      setMessages(
+        response.data.map((message) => ({
+          ...message,
+          role: message.role.toLowerCase(),
+          timestamp: message.createdAt,
+        })),
+      );
+      setConversationId(selectedConversationId);
+      setIsHistoryOpen(false);
+      inputRef.current?.focus();
+    } catch (_err) {
+      setHistoryError("Unable to open this conversation. Please try again.");
+    } finally {
+      setHistoryLoading(false);
+    }
   };
 
   const clearChat = () => {
@@ -178,70 +237,117 @@ export default function ChatPage() {
   };
 
   const getDisplayMessages = () => {
-    if (messages.length === 0) {
-      return [
-        {
-          id: "welcome",
-          role: "assistant",
-          content: welcomeMessage,
-          timestamp: new Date().toISOString(),
-        },
-      ];
-    }
     return messages.filter((m) => m.role !== "system");
   };
 
   const displayMessages = getDisplayMessages();
+  const hasMessages = displayMessages.length > 0;
 
   return (
     <Shell>
-      <PageHeader
-        eyebrow="AI ASSISTANT"
-        title="SmartDesk AI Assistant"
-        description="Ask me about IT issues, troubleshooting, or create a support ticket."
-        action={
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button type="button" className="danger-button" onClick={clearChat}>
-              <Icon>delete_sweep</Icon>Clear Chat
+      <div className="assistant-workspace">
+        <header className="assistant-toolbar">
+          <div className="assistant-identity">
+            <span className="assistant-mark" aria-hidden="true">
+              <img src={aiSmartLogo} alt="" />
+            </span>
+          </div>
+          <div className="assistant-toolbar-actions">
+            <button
+              type="button"
+              className="assistant-icon-button"
+              onClick={showChatHistory}
+              title="Chat history"
+              aria-label="Chat history"
+            >
+              <Icon>history</Icon>
             </button>
             <button
               type="button"
-              className="primary-button"
-              onClick={getChatHistory}
+              className="assistant-icon-button"
+              onClick={clearChat}
+              title="Start a new chat"
+              aria-label="Start a new chat"
             >
-              <Icon>history</Icon>Chat History
+              <Icon>edit_square</Icon>
             </button>
           </div>
-        }
-      />
-      <div className="chat-page">
-        <div className="chatbot-messages">
-          {displayMessages.map((message) => (
-            <div
-              key={message.id}
-              className={`message ${message.role} ${message.isError ? "error" : ""}`}
-            >
-              <div className="message-content">{message.content}</div>
-              {message.suggestedActions &&
-                message.suggestedActions.length > 0 && (
-                  <div className="message-actions">
-                    {message.suggestedActions.map((action, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        className="action-chip"
-                        onClick={() => handleAction(action)}
-                      >
-                        {action.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
+        </header>
+
+        <div
+          className={`assistant-thread ${hasMessages ? "has-messages" : ""}`}
+        >
+          {!hasMessages && (
+            <div className="assistant-welcome">
+              <span className="assistant-welcome-icon" aria-hidden="true">
+                <img src={aiLogo} alt="" />
+              </span>
+              <p className="assistant-welcome-kicker">SMARTDESK AI</p>
+              <h2>How can I help today?</h2>
+              <p>
+                Describe an IT problem, ask for troubleshooting steps, or get
+                ready to create a support ticket.
+              </p>
+              <div className="assistant-starters">
+                {STARTER_PROMPTS.map((starter) => (
+                  <button
+                    key={starter.title}
+                    type="button"
+                    className="assistant-starter"
+                    onClick={() => {
+                      setInput(starter.prompt);
+                      inputRef.current?.focus();
+                    }}
+                  >
+                    <Icon>{starter.icon}</Icon>
+                    <span>{starter.title}</span>
+                    <Icon>arrow_outward</Icon>
+                  </button>
+                ))}
+              </div>
             </div>
-          ))}
+          )}
+
+          {hasMessages && (
+            <div className="assistant-message-list">
+              {displayMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`message ${message.role} ${message.isError ? "error" : ""}`}
+                >
+                  {message.role === "assistant" && (
+                    <span className="message-avatar" aria-hidden="true">
+                      <img src={aiLogo} alt="" />
+                    </span>
+                  )}
+                  <div>
+                    <div className="message-content">{message.content}</div>
+                    {message.suggestedActions &&
+                      message.suggestedActions.length > 0 && (
+                        <div className="message-actions">
+                          {message.suggestedActions.map((action, i) => (
+                            <button
+                              key={i}
+                              type="button"
+                              className="action-chip"
+                              onClick={() => handleAction(action)}
+                            >
+                              {action.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {loading && (
             <div className="message assistant typing">
+              <span className="message-avatar" aria-hidden="true">
+                <img src={aiLogo} alt="" />
+              </span>
               <div className="message-content">
                 <span className="dot" />
                 <span className="dot" />
@@ -253,40 +359,110 @@ export default function ChatPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="chatbot-input-area">
-          <button
-            type="button"
-            className="chatbot-input-button"
-            onClick={createTicketNow}
-            title="Escalate to a human agent"
-          >
-            <Icon>error</Icon>
-          </button>
-          <textarea
-            ref={inputRef}
-            className="chatbot-input"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={
-              loading
-                ? "AI is thinking..."
-                : "Ask a question about your IT issue..."
-            }
-            disabled={loading}
-            rows={1}
-          />
-          <button
-            type="button"
-            className="chatbot-send"
-            onClick={sendMessage}
-            disabled={loading || !input.trim()}
-            aria-label="Send message"
-          >
-            <Icon>send</Icon>
-          </button>
+        <div className="assistant-composer-wrap">
+          <div className="chatbot-input-area">
+            <button
+              type="button"
+              className="chatbot-input-button"
+              onClick={createTicketNow}
+              title="Escalate to a human agent"
+            >
+              <Icon>error</Icon>
+            </button>
+            <textarea
+              ref={inputRef}
+              className="chatbot-input"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={
+                loading
+                  ? "AI is thinking..."
+                  : "Ask a question about your IT issue..."
+              }
+              disabled={loading}
+              rows={1}
+            />
+            <button
+              type="button"
+              className="chatbot-send"
+              onClick={sendMessage}
+              disabled={loading || !input.trim()}
+              aria-label="Send message"
+            >
+              <Icon>send</Icon>
+            </button>
+          </div>
+          <p className="assistant-composer-note">
+            SmartDesk AI can make mistakes. Verify important information.
+          </p>
         </div>
       </div>
+
+      {isHistoryOpen && (
+        <div
+          className="modal-backdrop"
+          onMouseDown={() => setIsHistoryOpen(false)}
+        >
+          <section
+            className="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="chat-history-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <p className="modal-eyebrow">AI ASSISTANT</p>
+                <h2 id="chat-history-title">Chat History</h2>
+              </div>
+              <button
+                type="button"
+                className="chatbot-input-button"
+                onClick={() => setIsHistoryOpen(false)}
+                aria-label="Close chat history"
+              >
+                <Icon>close</Icon>
+              </button>
+            </div>
+
+            <div className="conversation-history-list">
+              {historyLoading && (
+                <p className="modal-lead">Loading history...</p>
+              )}
+              {historyError && <p className="form-error">{historyError}</p>}
+              {!historyLoading &&
+                !historyError &&
+                conversations.length === 0 && (
+                  <p className="modal-lead">
+                    You do not have any saved conversations yet.
+                  </p>
+                )}
+              {conversations.map((conversation) => (
+                <button
+                  key={conversation.id}
+                  type="button"
+                  className={`conversation-history-item ${String(conversation.id) === String(conversationId) ? "active" : ""}`}
+                  onClick={() => openConversation(conversation.id)}
+                >
+                  <span className="conversation-history-icon">
+                    <Icon>chat_bubble</Icon>
+                  </span>
+                  <span className="conversation-history-copy">
+                    <strong>{conversation.title}</strong>
+                    <small>
+                      {conversation.updatedAt
+                        ? new Date(conversation.updatedAt).toLocaleString()
+                        : "Saved conversation"}
+                    </small>
+                  </span>
+                  <Icon>chevron_right</Icon>
+                </button>
+              ))}
+            </div>
+          </section>
+        </div>
+      )}
     </Shell>
   );
 }

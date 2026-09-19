@@ -2,6 +2,7 @@ package com.smartdesk.project.controller;
 
 import com.smartdesk.project.dto.request.ChatRequest;
 import com.smartdesk.project.dto.request.CreateTicketFromChatRequest;
+import com.smartdesk.project.dto.response.ChatConversationResponse;
 import com.smartdesk.project.dto.response.ChatMessageResponse;
 import com.smartdesk.project.dto.response.ChatResponse;
 import com.smartdesk.project.dto.response.TicketResponse;
@@ -29,6 +30,12 @@ public class ChatController {
     public ResponseEntity<ChatResponse> chat(@Valid @RequestBody ChatRequest request,
                                               @AuthenticationPrincipal UserPrincipal currentUser) {
         return ResponseEntity.ok(chatService.chat(request, currentUser));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ChatConversationResponse>> getConversations(
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+        return ResponseEntity.ok(chatService.getConversations(currentUser));
     }
 
     @GetMapping("/{conversationId}")

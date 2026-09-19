@@ -3,6 +3,8 @@ import api from "./api";
 export const chatWithAI = (message, conversationId = null) =>
   api.post("/ai/chat", { message, conversationId });
 
+export const getChatConversations = () => api.get("/ai/chat");
+
 export const getChatHistory = (conversationId) =>
   api.get(`/ai/chat/${conversationId}`);
 

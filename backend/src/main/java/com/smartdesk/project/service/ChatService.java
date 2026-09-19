@@ -3,6 +3,7 @@ package com.smartdesk.project.service;
 import com.smartdesk.project.dto.request.ChatRequest;
 import com.smartdesk.project.dto.request.CreateTicketFromChatRequest;
 import com.smartdesk.project.dto.request.CreateTicketRequest;
+import com.smartdesk.project.dto.response.ChatConversationResponse;
 import com.smartdesk.project.dto.response.ChatMessageResponse;
 import com.smartdesk.project.dto.response.ChatResponse;
 import com.smartdesk.project.dto.response.TicketResponse;
@@ -61,6 +62,7 @@ public class ChatService {
 
         // Save the user's new message first
         messageRepository.save(new ChatMessage(conversation, ChatRole.USER, request.getMessage()));
+        conversationRepository.save(conversation);
 
         // Rebuild full history (including the message we just saved) for context
         List<ChatMessage> history = messageRepository.findByConversationOrderByCreatedAtAsc(conversation);
@@ -92,6 +94,21 @@ public class ChatService {
         ChatConversation conversation = getOwnedConversation(conversationId, currentUser);
         return messageRepository.findByConversationOrderByCreatedAtAsc(conversation).stream()
                 .map(ChatMessageResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChatConversationResponse> getConversations(UserPrincipal currentUser) {
+        return conversationRepository.findByUserIdOrderByUpdatedAtDesc(currentUser.getUser().getId()).stream()
+                .map(conversation -> {
+                    List<ChatMessage> messages = messageRepository.findByConversationOrderByCreatedAtAsc(conversation);
+                    String title = messages.stream()
+                            .filter(message -> message.getRole() == ChatRole.USER)
+                            .map(ChatMessage::getContent)
+                            .findFirst()
+                            .orElse("New conversation");
+                    return new ChatConversationResponse(conversation.getId(), title, conversation.getUpdatedAt());
+                })
                 .collect(Collectors.toList());
     }
 
