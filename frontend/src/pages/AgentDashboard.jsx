@@ -4,6 +4,7 @@ import Icon from "../components/Icon";
 import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
 import TicketTable from "../components/TicketTable";
+import { DistributionBars, StatusDonut } from "../components/DashboardCharts";
 import { getTickets } from "../services/ticketService";
 import usePageTitle from "../hooks/usePageTitle";
 import { useAuth } from "../context/AuthContext";
@@ -51,6 +52,19 @@ export default function AgentDashboard() {
   );
   const resolvedTickets = tickets.filter(
     (tickets) => tickets.status === "RESOLVED",
+  );
+  const queueStatusItems = [
+    { label: "Open", value: openTickets.length },
+    { label: "In progress", value: inProgressTickets.length },
+    { label: "Unassigned", value: unassignedTickets.length },
+    { label: "Resolved", value: resolvedTickets.length },
+  ];
+  const priorityItems = ["CRITICAL", "HIGH", "MEDIUM", "LOW"].map(
+    (priority) => ({
+      label: priority[0] + priority.slice(1).toLowerCase(),
+      value: assignedToMe.filter((ticket) => ticket.priority === priority)
+        .length,
+    }),
   );
   const shown = tickets
     .slice()
@@ -119,6 +133,18 @@ export default function AgentDashboard() {
             </section>
           ))}
         </div>
+      </div>
+      <div className="dashboard-chart-grid">
+        <StatusDonut
+          title="Queue Health"
+          description="Live distribution of the service desk queue."
+          items={queueStatusItems}
+        />
+        <DistributionBars
+          title="My Work by Priority"
+          description="Assigned tickets that need your attention."
+          items={priorityItems}
+        />
       </div>
       <section className="panel">
         <div className="panel-heading">
