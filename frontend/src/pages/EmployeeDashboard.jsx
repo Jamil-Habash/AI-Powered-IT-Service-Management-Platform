@@ -4,6 +4,7 @@ import Icon from "../components/Icon";
 import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
 import TicketTable from "../components/TicketTable";
+import { DistributionBars, StatusDonut } from "../components/DashboardCharts";
 import { getTickets } from "../services/ticketService";
 import usePageTitle from "../hooks/usePageTitle";
 import { useAuth } from "../context/AuthContext";
@@ -46,6 +47,21 @@ export default function EmployeeDashboard() {
   const resolvedTickets = tickets.filter(
     (ticket) => ticket.status === "RESOLVED",
   );
+  const statusItems = [
+    { label: "Open", value: openTickets.length },
+    { label: "In progress", value: inProgressTickets.length },
+    { label: "Resolved", value: resolvedTickets.length },
+  ];
+  const categoryItems = Object.entries(
+    tickets.reduce((counts, ticket) => {
+      const category = ticket.categoryName || "Uncategorized";
+      counts[category] = (counts[category] || 0) + 1;
+      return counts;
+    }, {}),
+  )
+    .map(([label, value]) => ({ label, value }))
+    .sort((first, second) => second.value - first.value)
+    .slice(0, 4);
   const shown = tickets
     .slice()
     .sort((first, second) => {
@@ -113,6 +129,18 @@ export default function EmployeeDashboard() {
             <p>{label === "Resolved" ? "100% CSAT" : "Avg. 18m SLA"}</p>
           </section>
         ))}
+      </div>
+      <div className="dashboard-chart-grid">
+        <StatusDonut
+          title="Request Status"
+          description="Your current support request mix."
+          items={statusItems}
+        />
+        <DistributionBars
+          title="Requests by Service"
+          description="Where your support requests are concentrated."
+          items={categoryItems}
+        />
       </div>
       <section className="panel">
         <div className="panel-heading">

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
+import { DistributionBars, StatusDonut } from "../components/DashboardCharts";
 import { getTickets } from "../services/ticketService";
 import {
   addCategory,
@@ -76,6 +77,17 @@ export default function AdminAnalyticsPage() {
       return counts;
     }, {}),
   );
+  const operationsStatusItems = [
+    { label: "Open", value: openTickets.length },
+    { label: "In progress", value: inProgressTickets.length },
+    { label: "Resolved", value: resolvedTickets.length },
+  ];
+  const priorityItems = ["CRITICAL", "HIGH", "MEDIUM", "LOW"].map(
+    (priority) => ({
+      label: priority[0] + priority.slice(1).toLowerCase(),
+      value: tickets.filter((ticket) => ticket.priority === priority).length,
+    }),
+  );
   const openNewCategoryForm = () => {
     setEditingCategory(null);
     setNewCategory("");
@@ -130,6 +142,18 @@ export default function AdminAnalyticsPage() {
             <small>{note}</small>
           </section>
         ))}
+      </div>
+      <div className="dashboard-chart-grid">
+        <StatusDonut
+          title="Service Desk Health"
+          description="Current lifecycle distribution across all tickets."
+          items={operationsStatusItems}
+        />
+        <DistributionBars
+          title="Priority Exposure"
+          description="Demand by priority across the operation."
+          items={priorityItems}
+        />
       </div>
       <div className="content-grid analytics-grid">
         <section className="panel chart">
