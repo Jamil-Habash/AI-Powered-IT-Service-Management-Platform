@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Icon from "../components/Icon";
+import aiLogo from "../assets/AI_logo.png";
 import PageHeader from "../components/PageHeader";
 import Shell from "../components/Shell";
 import { useAuth } from "../context/AuthContext";
@@ -243,7 +244,8 @@ export default function TicketDetailPage() {
           </section>
           <section className="panel ai-panel">
             <h2>
-              <Icon>auto_awesome</Icon>SmartDesk AI Copilot Analysis
+              <img className="ai-brand-logo" src={aiLogo} alt="" />
+              SmartDesk AI Copilot Analysis
             </h2>
             {ticket.aiSummary ? (
               <>

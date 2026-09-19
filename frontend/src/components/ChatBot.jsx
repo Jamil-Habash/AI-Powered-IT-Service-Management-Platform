@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Icon from "./Icon";
 import { useAuth } from "../context/AuthContext";
 import { chatWithAI } from "../services/chatBotService";
+import aiLogo from "../assets/AI_logo.png";
 
 const STORAGE_KEY = "smartdesk_chat_history";
 const CONV_KEY = "smartdesk_chat_conversation_id";
@@ -186,7 +187,7 @@ export default function ChatBot() {
           <Icon>close</Icon>
         ) : (
           <>
-            <Icon>robot</Icon>
+            <img className="chatbot-logo" src={aiLogo} alt="" />
             <span className="chatbot-badge" />
           </>
         )}
@@ -196,7 +197,11 @@ export default function ChatBot() {
         <div className="chatbot-window">
           <div className="chatbot-header">
             <div className="chatbot-header-info">
-              <Icon>robot</Icon>
+              <img
+                className="ai-brand-logo widget-ai-logo"
+                src={aiLogo}
+                alt=""
+              />
               <div>
                 <strong>SmartDesk AI Assistant</strong>
                 <small>Online</small>
@@ -206,7 +211,7 @@ export default function ChatBot() {
               <button
                 type="button"
                 className="chatbot-header-button"
-                onClick={() => navigate("/chat")}
+                onClick={() => navigate("/ai/chat")}
                 title="Open full chat"
               >
                 <Icon>open_in_full</Icon>
