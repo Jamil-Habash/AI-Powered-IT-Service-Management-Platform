@@ -1,0 +1,25 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  mail:
+    username: ${GMAIL_USERNAME}
+    password: ${GMAIL_APP_PASSWORD}
+
+  ai:
+    openai:
+      api-key: ${GROQ_API_KEY}
+
+app:
+  frontend-url: ${APP_FRONTEND_URL}
+  jwt:
+    secret: ${JWT_SECRET}
