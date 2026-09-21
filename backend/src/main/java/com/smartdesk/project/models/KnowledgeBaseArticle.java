@@ -15,7 +15,6 @@ public class KnowledgeBaseArticle {
     private String category;
     private String icon;
 
-    // Steps stored as JSON text: [{"title": "...", "description": "..."}, ...]
     @Column(columnDefinition = "TEXT")
     private String stepsJson;
 
@@ -28,31 +27,65 @@ public class KnowledgeBaseArticle {
     private Date updatedAt;
 
     @PrePersist
-    protected void onCreate() { this.createdAt = new Date(); }
+    protected void onCreate() { 
+        this.createdAt = new Date(); 
+    }
 
     @PreUpdate
-    protected void onUpdate() { this.updatedAt = new Date(); }
+    protected void onUpdate() { 
+        this.updatedAt = new Date(); 
+    }
 
-    public KnowledgeBaseArticle() {}
+    public KnowledgeBaseArticle() {
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public Long getId() { 
+        return id; 
+    }
+    public void setId(Long id) { 
+        this.id = id; 
+    }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public String getTitle() { 
+        return title; 
+    }
+    public void setTitle(String title) { 
+        this.title = title; 
+    }
 
-    public String getIcon() { return icon; }
-    public void setIcon(String icon) { this.icon = icon; }
+    public String getCategory() { 
+        return category; 
+    }
+    public void setCategory(String category) { 
+        this.category = category; 
+    }
 
-    public String getStepsJson() { return stepsJson; }
-    public void setStepsJson(String stepsJson) { this.stepsJson = stepsJson; }
+    public String getIcon() { 
+        return icon; 
+    }
+    public void setIcon(String icon) {
+         this.icon = icon; 
+        }
 
-    public User getCreatedBy() { return createdBy; }
-    public void setCreatedBy(User createdBy) { this.createdBy = createdBy; }
+    public String getStepsJson() { 
+        return stepsJson; 
+    }
+    public void setStepsJson(String stepsJson) { 
+        this.stepsJson = stepsJson; 
+    }
 
-    public Date getCreatedAt() { return createdAt; }
-    public Date getUpdatedAt() { return updatedAt; }
+    public User getCreatedBy() { 
+        return createdBy; 
+    }
+    public void setCreatedBy(User createdBy) { 
+        this.createdBy = createdBy; 
+    }
+
+    public Date getCreatedAt() { 
+        return createdAt; 
+    }
+    public Date getUpdatedAt() { 
+        return updatedAt; 
+    }
 }

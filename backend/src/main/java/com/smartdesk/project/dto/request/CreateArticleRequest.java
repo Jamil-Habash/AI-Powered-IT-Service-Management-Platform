@@ -22,15 +22,31 @@ public class CreateArticleRequest {
     @Valid
     private List<StepDto> steps;
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getTitle() { 
+        return title; 
+    }
+    public void setTitle(String title) { 
+        this.title = title; 
+    }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public String getCategory() { 
+        return category; 
+    }
+    public void setCategory(String category) { 
+        this.category = category; 
+    }
 
-    public String getIcon() { return icon; }
-    public void setIcon(String icon) { this.icon = icon; }
+    public String getIcon() { 
+        return icon; 
+    }
+    public void setIcon(String icon) { 
+        this.icon = icon; 
+    }
 
-    public List<StepDto> getSteps() { return steps; }
-    public void setSteps(List<StepDto> steps) { this.steps = steps; }
+    public List<StepDto> getSteps() { 
+        return steps; 
+    }
+    public void setSteps(List<StepDto> steps) { 
+        this.steps = steps; 
+    }
 }

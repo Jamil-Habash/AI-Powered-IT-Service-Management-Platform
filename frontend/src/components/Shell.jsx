@@ -179,7 +179,10 @@ export default function Shell({ children }) {
       await Promise.all(
         relevantTickets.map(async (ticket) => {
           try {
-            commentsByTicket[ticket.id] = await getComments(ticket.id);
+            const response = await getComments(ticket.id);
+            commentsByTicket[ticket.id] = Array.isArray(response.data)
+              ? response.data
+              : [];
           } catch {
             commentsByTicket[ticket.id] = [];
           }
@@ -207,7 +210,10 @@ export default function Shell({ children }) {
 
     const checkForUpdates = async () => {
       try {
-        const tickets = await getTickets();
+        const response = await getTickets();
+        const tickets = Array.isArray(response.data)
+          ? response.data
+          : response.data?.content || [];
 
         if (cancelled || !Array.isArray(tickets)) return;
 

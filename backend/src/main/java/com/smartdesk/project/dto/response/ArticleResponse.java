@@ -38,12 +38,28 @@ public class ArticleResponse {
         return dto;
     }
 
-    public Long getId() { return id; }
-    public String getTitle() { return title; }
-    public String getCategory() { return category; }
-    public String getIcon() { return icon; }
-    public List<StepDto> getSteps() { return steps; }
-    public String getCreatedByName() { return createdByName; }
-    public Date getCreatedAt() { return createdAt; }
-    public Date getUpdatedAt() { return updatedAt; }
+    public Long getId() { 
+        return id; 
+    }
+    public String getTitle() { 
+        return title; 
+    }
+    public String getCategory() { 
+        return category; 
+    }
+    public String getIcon() { 
+        return icon; 
+    }
+    public List<StepDto> getSteps() { 
+        return steps; 
+    }
+    public String getCreatedByName() { 
+        return createdByName; 
+    }
+    public Date getCreatedAt() { 
+        return createdAt; 
+    }
+    public Date getUpdatedAt() { 
+        return updatedAt; 
+    }
 }
